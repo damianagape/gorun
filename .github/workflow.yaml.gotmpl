@@ -1,0 +1,152 @@
+{{- /*
+https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions
+https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+*/ -}}
+name: {{ .ProjectSlug }}
+on:
+  pull_request:
+    paths:
+      - "{{ .ProjectPath }}/**"
+      - "!{{ .ProjectPath }}/README.md"
+  push:
+    branches:
+      - main
+    paths:
+      - "{{ .ProjectPath }}/**"
+      - "!{{ .ProjectPath }}/README.md"
+
+      {{- if eq .ProjectType "docker-images" }}
+      - "!{{ .ProjectPath }}/container-structure-test.yaml"
+      {{- end }}
+jobs:
+  {{ .ProjectSlug }}:
+    name: {{ .ProjectSlug }}
+    runs-on: ubuntu-24.04
+    container: ghcr.io/damianagape/gorun-devcontainer:0.5.100
+    permissions:
+      contents: write
+      id-token: write
+
+      {{- if eq .ProjectType "docker-images" }}
+      packages: write
+      {{- end }}
+    env:
+      DOCKER_BUILDKIT: 1
+      HELM_EXPERIMENTAL_OCI: 1
+      TF_IN_AUTOMATION: 1
+    steps:
+      - name: git clone (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          ref: {{ "${{ github.head_ref }}" }}
+      - name: git clone (not PR)
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v4
+      - name: git clone (fix)
+        {{- /*
+        TODO: remove this workaround when the issue is fixed
+        https://github.com/actions/checkout/issues/1169
+        */}}
+        run: git config --system --add safe.directory "$GITHUB_WORKSPACE"
+      - name: git config user
+        run: git config --global user.name "github-actions" && git config --global user.email "github-actions@github.com"
+
+      - name: gcloud auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: {{ "${{ secrets.GOOGLE_CREDENTIALS }}" }}
+          create_credentials_file: true
+          cleanup_credentials: true
+
+      {{- if eq .ProjectType "docker-images" }}
+      - name: docker buildx
+        uses: docker/setup-buildx-action@v3
+      - name: docker auth (Google Artifact Registry)
+        run: gcloud auth configure-docker "europe-central2-docker.pkg.dev"
+      - name: docker auth (Docker Hub)
+        uses: docker/login-action@v3
+        with:
+          username: {{ "${{ vars.DOCKERHUB_USERNAME }}" }}
+          password: {{ "${{ secrets.DOCKERHUB_TOKEN }}" }}
+      - name: docker auth (GitHub Packages)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: {{ "${{ github.actor }}" }}
+          password: {{ "${{ secrets.GITHUB_TOKEN }}" }}
+
+      - name: build
+        run: ./scripts/docker-image build "{{ .ProjectPath }}"
+      - name: test
+        run: ./scripts/docker-image test "{{ .ProjectPath }}"
+      - name: pre-publish
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: ./scripts/docker-image pre-publish "{{ .ProjectPath }}"
+      - name: publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: ./scripts/docker-image publish "{{ .ProjectPath }}"
+      - name: show
+        run: ./scripts/docker-image show "{{ .ProjectPath }}"
+      {{- end }}
+
+      {{- if eq .ProjectType "helm-charts" }}
+      - name: helm auth (Google Artifact Registry)
+        run: gcloud auth print-access-token | helm registry login --username="oauth2accesstoken" --password-stdin "europe-central2-docker.pkg.dev"
+
+      - name: build
+        run: ./scripts/helm-chart build "{{ .ProjectPath }}"
+      - name: test
+        run: ./scripts/helm-chart test "{{ .ProjectPath }}"
+      - name: pre-publish
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: ./scripts/helm-chart pre-publish "{{ .ProjectPath }}"
+      - name: publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: ./scripts/helm-chart publish "{{ .ProjectPath }}"
+      - name: show
+        run: ./scripts/helm-chart show "{{ .ProjectPath }}"
+      {{- end }}
+
+      {{- if eq .ProjectType "terraform-submodules" }}
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          key: {{ .ProjectSlug }}
+          path: |
+            {{ .ProjectPath }}/.terraform
+            {{ .ProjectPath }}/.terraform.lock.hcl
+
+      - name: build
+        run: ./scripts/terraform-submodule build "{{ .ProjectPath }}"
+      - name: test
+        run: ./scripts/terraform-submodule test "{{ .ProjectPath }}"
+      - name: pre-publish
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: ./scripts/terraform-submodule pre-publish "{{ .ProjectPath }}"
+      - name: publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: ./scripts/terraform-submodule publish "{{ .ProjectPath }}"
+      - name: show
+        run: ./scripts/terraform-submodule show "{{ .ProjectPath }}"
+      {{- end }}
+
+      {{- if eq .ProjectType "terraform-modules" }}
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          key: {{ .ProjectSlug }}
+          path: |
+            {{ .ProjectPath }}/.terraform
+
+      - name: test
+        run: ./scripts/terraform-module test "{{ .ProjectPath }}"
+      - name: init
+        run: terraform -chdir="{{ .ProjectPath }}" init -input=false
+      - name: plan
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: terraform -chdir="{{ .ProjectPath }}" plan -input=false
+      - name: apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform -chdir="{{ .ProjectPath }}" apply -input=false -auto-approve
+      {{- end }}

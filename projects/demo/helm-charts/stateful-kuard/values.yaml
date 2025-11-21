@@ -1,0 +1,16 @@
+image:
+  repository: europe-central2-docker.pkg.dev/gogcp-main-3/private-docker-images/gorun/demo/kuard
+  tag: 0.5.100
+
+serviceAccountName: ""
+
+configEnvs: {}
+secretConfigEnvs: {}
+configFiles: {}
+secretConfigFiles: {}
+
+httpServer:
+  replicas: 1
+  maxUnavailable: 1
+  extraPodLabels: {}
+  extraPodAnnotations: {}

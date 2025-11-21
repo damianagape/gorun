@@ -1,0 +1,56 @@
+{
+  "name": "devcontainer-damianagape-gorun",
+
+  "image": "europe-central2-docker.pkg.dev/gogcp-main-3/private-docker-images/gorun/core/devcontainer:0.5.101",
+  "runArgs": [
+    "--name=devcontainer-damianagape-gorun",
+    "--env-file=${localEnv:HOME}${localEnv:USERPROFILE}/workspace/devcontainer-damianagape.env"
+    //
+  ],
+  "containerEnv": {
+    "DOCKER_BUILDKIT": "1",
+    "HELM_EXPERIMENTAL_OCI": "1"
+  },
+  "mounts": [
+    "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+    "type=volume,source=devcontainer-damianagape-docker,target=/root/.docker",
+    "type=volume,source=devcontainer-damianagape-firebase,target=/root/.config/configstore",
+    "type=volume,source=devcontainer-damianagape-gcloud,target=/root/.config/gcloud",
+    "type=volume,source=devcontainer-damianagape-gemini,target=/root/.gemini",
+    "type=volume,source=devcontainer-damianagape-github,target=/root/.config/gh",
+    "type=volume,source=devcontainer-damianagape-helm,target=/root/.config/helm",
+    "type=volume,source=devcontainer-damianagape-kube,target=/root/.kube",
+    "type=volume,source=devcontainer-damianagape-terraform,target=/root/.terraform.d",
+    "type=volume,source=devcontainer-damianagape-velero,target=/root/.config/velero"
+    //
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "docker.docker",
+        "esbenp.prettier-vscode",
+        "google.geminicodeassist",
+        "googlecloudtools.cloudcode",
+        "hashicorp.hcl",
+        "hashicorp.terraform",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        // Golang
+        "golang.go",
+        // Shell script
+        "foxundermoon.shell-format",
+        "timonwong.shellcheck"
+      ],
+      "settings": {
+        "cloudcode.autoDependencies": "off",
+        // Golang
+        "go.lintTool": "golangci-lint",
+        "go.toolsManagement.autoUpdate": false,
+        // Shell script
+        "shellformat.path": "/usr/local/bin/shfmt"
+      }
+    }
+  }
+}

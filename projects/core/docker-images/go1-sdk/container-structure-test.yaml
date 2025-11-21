@@ -1,0 +1,26 @@
+schemaVersion: 2.0.0
+commandTests:
+  - name: go
+    command: go
+    args:
+      - version
+    expectedOutput:
+      - go version go1\.24\.
+fileExistenceTests:
+  - name: go directory
+    path: /go
+    shouldExist: true
+fileContentTests:
+  - name: operating system
+    path: /etc/os-release
+    expectedContents:
+      - ID=debian
+      - VERSION_CODENAME=bookworm
+metadataTest:
+  user: root:root
+  workdir: /go
+  # entrypoint: []
+  cmd: ["bash"]
+  envVars:
+    - key: GOPATH
+      value: "/go"

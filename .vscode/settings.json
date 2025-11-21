@@ -1,0 +1,42 @@
+{
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.indentSize": 2,
+  "editor.tabSize": 2,
+  "prettier.tabWidth": 2,
+
+  "[dockerfile]": { "editor.defaultFormatter": "docker.docker" },
+  "[hcl]": { "editor.defaultFormatter": "hashicorp.hcl" },
+  "[helm]": { "editor.defaultFormatter": null, "editor.formatOnSave": false },
+  "[ignore]": { "editor.defaultFormatter": "foxundermoon.shell-format" },
+  "[json][jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[shellscript]": { "editor.defaultFormatter": "foxundermoon.shell-format" },
+  "[terraform][terraform-vars]": { "editor.defaultFormatter": "hashicorp.terraform" },
+  "[xml]": { "editor.defaultFormatter": "redhat.vscode-xml" },
+  "[yaml]": { "editor.defaultFormatter": "redhat.vscode-yaml" },
+  "prettier.printWidth": 120,
+  "yaml.format.printWidth": 120,
+
+  "search.exclude": {
+    "**/.terraform": true
+  },
+  "files.associations": {
+    "*.gotmpl": "gotmpl",
+    "*.yaml.gotmpl": "helm",
+    "*.yaml.tftpl": "yaml",
+    "*.yml.gotmpl": "helm",
+    "Dockerfile.bash": "shellscript"
+  },
+  "files.readonlyInclude": {
+    ".gitlab-ci.yml": true,
+    "**/.terraform.lock.hcl": true,
+    "**/*.gotmpl.*": true, // files rendered with Go
+    "**/*.tftpl.*": true, // files rendered by Terraform
+    "**/Chart.lock": true,
+    "bitbucket-pipelines.yml": true,
+    "projects/*/*/*/helm/charts/**/*": true
+  }
+}

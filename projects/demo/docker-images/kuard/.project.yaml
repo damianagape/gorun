@@ -1,0 +1,7 @@
+repository: europe-central2-docker.pkg.dev/gogcp-main-3/private-docker-images/gorun/demo/kuard
+tag: 0.5.100
+aliases:
+  - # https://hub.docker.com/r/damianagape/gorun-kuard
+    repository: damianagape/gorun-kuard
+  - # https://github.com/users/damianagape/packages/container/package/gogcp-kuard
+    repository: ghcr.io/damianagape/gorun-kuard

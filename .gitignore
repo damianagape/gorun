@@ -1,0 +1,22 @@
+*debug*
+
+# system
+.DS_Store
+*.bak
+*.swp
+*.tmp
+*~
+desktop.ini
+thumbs.db
+
+# helm
+/projects/*/*/*/helm/charts/*.tgz
+/projects/*/*/*/helm/tmpcharts*
+/projects/*/helm-charts/*.tgz
+
+# terraform
+/projects/*/terraform-*/*/.terraform
+/projects/*/terraform-*/*/*tfstate*
+/projects/*/terraform-*/*/*tfvars*
+/projects/*/terraform-submodules/*.zip
+/projects/*/terraform-submodules/*/.terraform.lock.hcl

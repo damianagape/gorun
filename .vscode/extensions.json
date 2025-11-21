@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "docker.docker",
+    "esbenp.prettier-vscode",
+    "google.geminicodeassist",
+    "googlecloudtools.cloudcode",
+    "hashicorp.hcl",
+    "hashicorp.terraform",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    // Golang
+    "golang.go",
+    // Shell script
+    "foxundermoon.shell-format",
+    "timonwong.shellcheck"
+  ]
+}

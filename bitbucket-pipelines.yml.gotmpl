@@ -1,0 +1,214 @@
+{{- /*
+https://support.atlassian.com/bitbucket-cloud/docs/bitbucket-pipelines-configuration-reference/
+https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/#Default-variables
+*/ -}}
+image: damianagape/gorun-devcontainer:0.5.100
+definitions:
+  caches:
+    {{- range . }}
+
+    {{- if eq .ProjectType "terraform-submodules" }}
+    {{ .ProjectSlug }}-0: {{ .ProjectPath }}/.terraform
+    {{ .ProjectSlug }}-1: {{ .ProjectPath }}/.terraform.lock.hcl
+    {{- end }}
+
+    {{- if eq .ProjectType "terraform-modules" }}
+    {{ .ProjectSlug }}-0: {{ .ProjectPath }}/.terraform
+    {{- end }}
+
+    {{- end }}{{/* range . */}}
+  scripts:
+    - &auth |
+      set -e
+      echo "$GOOGLE_CREDENTIALS" | gcloud auth activate-service-account --key-file="/dev/stdin"
+      export GOOGLE_APPLICATION_CREDENTIALS="/tmp/GOOGLE_APPLICATION_CREDENTIALS.json" && echo "$GOOGLE_CREDENTIALS" >"$GOOGLE_APPLICATION_CREDENTIALS"
+      gcloud auth configure-docker "europe-central2-docker.pkg.dev"
+      gcloud auth print-access-token | helm registry login --username="oauth2accesstoken" --password-stdin "europe-central2-docker.pkg.dev"
+  steps:
+    {{- range . }}
+
+    {{- if eq .ProjectType "docker-images" }}
+    - step: &test-{{ .ProjectSlug }}
+        name: test {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - *auth
+          - ./scripts/docker-image build "{{ .ProjectPath }}"
+          - ./scripts/docker-image test "{{ .ProjectPath }}"
+          - ./scripts/docker-image pre-publish "{{ .ProjectPath }}"
+          - ./scripts/docker-image show "{{ .ProjectPath }}"
+    - step: &publish-{{ .ProjectSlug }}
+        name: publish {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - *auth
+          - ./scripts/docker-image build "{{ .ProjectPath }}"
+          - ./scripts/docker-image test "{{ .ProjectPath }}"
+          - ./scripts/docker-image publish "{{ .ProjectPath }}"
+          - ./scripts/docker-image show "{{ .ProjectPath }}"
+    {{- end }}
+
+    {{- if eq .ProjectType "helm-charts" }}
+    - step: &test-{{ .ProjectSlug }}
+        name: test {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "{{ .ProjectPath }}"
+          - ./scripts/helm-chart test "{{ .ProjectPath }}"
+          - ./scripts/helm-chart pre-publish "{{ .ProjectPath }}"
+          - ./scripts/helm-chart show "{{ .ProjectPath }}"
+    - step: &publish-{{ .ProjectSlug }}
+        name: publish {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "{{ .ProjectPath }}"
+          - ./scripts/helm-chart test "{{ .ProjectPath }}"
+          - ./scripts/helm-chart publish "{{ .ProjectPath }}"
+          - ./scripts/helm-chart show "{{ .ProjectPath }}"
+    {{- end }}
+
+    {{- if eq .ProjectType "terraform-submodules" }}
+    - step: &test-{{ .ProjectSlug }}
+        name: test {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        caches:
+          - {{ .ProjectSlug }}-0
+          - {{ .ProjectSlug }}-1
+        script:
+          - *auth
+          - ./scripts/terraform-submodule build "{{ .ProjectPath }}"
+          - ./scripts/terraform-submodule test "{{ .ProjectPath }}"
+          - ./scripts/terraform-submodule pre-publish "{{ .ProjectPath }}"
+          - ./scripts/terraform-submodule show "{{ .ProjectPath }}"
+    - step: &publish-{{ .ProjectSlug }}
+        name: publish {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        caches:
+          - {{ .ProjectSlug }}-0
+          - {{ .ProjectSlug }}-1
+        script:
+          - *auth
+          - ./scripts/terraform-submodule build "{{ .ProjectPath }}"
+          - ./scripts/terraform-submodule test "{{ .ProjectPath }}"
+          - ./scripts/terraform-submodule publish "{{ .ProjectPath }}"
+          - ./scripts/terraform-submodule show "{{ .ProjectPath }}"
+    {{- end }}
+
+    {{- if eq .ProjectType "terraform-modules" }}
+    - step: &test-{{ .ProjectSlug }}
+        name: test {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        caches:
+          - {{ .ProjectSlug }}-0
+        script:
+          - *auth
+          - ./scripts/terraform-module test "{{ .ProjectPath }}"
+    - step: &plan-{{ .ProjectSlug }}
+        name: plan {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        caches:
+          - {{ .ProjectSlug }}-0
+        script:
+          - *auth
+          - terraform -chdir="{{ .ProjectPath }}" init -input="false"
+          - terraform -chdir="{{ .ProjectPath }}" plan -input="false"
+    - step: &apply-{{ .ProjectSlug }}
+        name: apply {{ .ProjectSlug }}
+        condition:
+          changesets:
+            includePaths:
+              - "{{ .ProjectPath }}/**"
+        caches:
+          - {{ .ProjectSlug }}-0
+        script:
+          - *auth
+          - terraform -chdir="{{ .ProjectPath }}" init -input="false"
+          - terraform -chdir="{{ .ProjectPath }}" apply -input="false" -auto-approve
+        trigger: manual
+    {{- end }}
+
+    {{- end }}{{/* range . */}}
+
+pipelines:
+  pull-requests:
+    main:
+      - parallel:
+          {{- range . }}
+
+          {{- if or (eq .ProjectType "docker-images") (eq .ProjectType "helm-charts") (eq .ProjectType "terraform-submodules") }}
+          - step: *test-{{ .ProjectSlug }}
+          {{- end }}
+
+          {{- if eq .ProjectType "terraform-modules" }}
+          - step: *test-{{ .ProjectSlug }}
+          {{- end }}
+
+          {{- end }}{{/* range . */}}
+      - parallel:
+          {{- range . }}
+
+          {{- if eq .ProjectType "terraform-modules" }}
+          - step: *plan-{{ .ProjectSlug }}
+          {{- end }}
+
+          {{- end }}{{/* range . */}}
+  branches:
+    main:
+      - parallel:
+          {{- range . }}
+
+          {{- if or (eq .ProjectType "docker-images") (eq .ProjectType "helm-charts") (eq .ProjectType "terraform-submodules") }}
+          - step: *publish-{{ .ProjectSlug }}
+          {{- end }}
+
+          {{- end }}{{/* range . */}}
+      - parallel:
+          {{- range . }}
+
+          {{- if eq .ProjectType "terraform-modules" }}
+          - step: *plan-{{ .ProjectSlug }}
+          {{- end }}
+
+          {{- end }}{{/* range . */}}
+      - parallel:
+          {{- range . }}
+
+          {{- if eq .ProjectType "terraform-modules" }}
+          - step: *apply-{{ .ProjectSlug }}
+          {{- end }}
+
+          {{- end }}{{/* range . */}}

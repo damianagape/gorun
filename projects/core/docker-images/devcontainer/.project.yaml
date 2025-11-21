@@ -1,0 +1,7 @@
+repository: europe-central2-docker.pkg.dev/gogcp-main-3/private-docker-images/gorun/core/devcontainer
+tag: 0.5.101
+aliases:
+  - # https://hub.docker.com/r/damianagape/gorun-devcontainer
+    repository: damianagape/gorun-devcontainer
+  - # https://github.com/users/damianagape/packages/container/package/gogcp-devcontainer
+    repository: ghcr.io/damianagape/gorun-devcontainer
