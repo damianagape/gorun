@@ -5,7 +5,7 @@ commandTests:
     args:
       - --version
     expectedOutput:
-      - v22\.
+      - v24\.
   - name: npm
     command: npm
     args:
