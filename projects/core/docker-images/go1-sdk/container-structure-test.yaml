@@ -23,4 +23,4 @@ metadataTest:
   cmd: ["bash"]
   envVars:
     - key: GOPATH
-      value: "/go"
+      value: /go

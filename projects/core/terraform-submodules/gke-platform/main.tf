@@ -358,6 +358,10 @@ resource "helm_release" "prometheus_operator_crds" {
   chart      = "prometheus-operator-crds"
   name       = "prometheus-operator-crds"
   namespace  = kubernetes_namespace.prometheus_operator.metadata[0].name
+
+  values = [
+    file("${path.module}/helm/values/prometheus-operator-crds.yaml"),
+  ]
 }
 
 #######################################
@@ -448,6 +452,7 @@ resource "google_project_iam_custom_role" "velero_server" {
     "compute.snapshots.create",
     "compute.snapshots.useReadOnly",
     "compute.snapshots.delete",
+    "compute.snapshots.setLabels",
     "compute.zones.get",
     "storage.objects.create",
     "storage.objects.delete",

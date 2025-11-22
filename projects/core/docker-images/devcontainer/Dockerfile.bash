@@ -88,14 +88,14 @@ npm install --global \
   firebase-tools
 
 # cilium: https://github.com/cilium/cilium-cli/releases
-cilium_version="0.18.3"
+cilium_version="0.18.8"
 wget https://github.com/cilium/cilium-cli/releases/download/v${cilium_version}/cilium-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/cilium.tar.gz
 tar -zxvf cilium.tar.gz
 mv cilium /usr/local/bin/cilium
 
 # cmctl: https://github.com/cert-manager/cmctl/releases
-cmctl_version="2.1.1"
+cmctl_version="2.3.0"
 wget https://github.com/cert-manager/cmctl/releases/download/v${cmctl_version}/cmctl_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/cmctl
 
@@ -124,7 +124,7 @@ tar -zxvf helm.tar.gz
 mv ${TARGETOS}-${TARGETARCH}/helm /usr/local/bin/helm
 
 # hubble: https://github.com/cilium/hubble/releases
-hubble_version="1.17.2"
+hubble_version="1.18.3"
 wget https://github.com/cilium/hubble/releases/download/v${hubble_version}/hubble-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/hubble.tar.gz
 tar -zxvf hubble.tar.gz
@@ -143,14 +143,14 @@ unzip terraform.zip
 mv terraform /usr/local/bin/terraform
 
 # velero: https://github.com/vmware-tanzu/velero/releases
-velero_version="1.15.2"
+velero_version="1.17.1"
 wget https://github.com/vmware-tanzu/velero/releases/download/v${velero_version}/velero-v${velero_version}-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/velero.tar.gz
 tar -zxvf velero.tar.gz
 mv velero-v${velero_version}-${TARGETOS}-${TARGETARCH}/velero /usr/local/bin/velero
 
 # yq: https://github.com/mikefarah/yq/releases
-yq_version="4.48.2"
+yq_version="4.49.1"
 wget https://github.com/mikefarah/yq/releases/download/v${yq_version}/yq_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/yq
 
