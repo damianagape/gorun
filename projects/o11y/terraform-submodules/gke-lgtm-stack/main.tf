@@ -79,11 +79,11 @@ resource "helm_release" "grafana" {
     }),
   ]
 
-  set_sensitive {
+  set_sensitive = [{
     name  = "grafana\\.ini.smtp.password"
     type  = "string"
     value = data.kubernetes_secret.smtp.data["password"]
-  }
+  }]
 
   timeout = 300
 }

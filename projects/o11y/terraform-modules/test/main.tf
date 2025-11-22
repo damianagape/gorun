@@ -78,26 +78,26 @@ resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
 ### OpenTelemetry & Grafana
 #######################################
 
-module "test_lgtm_stack" {
-  source = "../../terraform-submodules/gke-lgtm-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-lgtm-stack/0.7.100.zip"
+# module "test_lgtm_stack" {
+#   source = "../../terraform-submodules/gke-lgtm-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-lgtm-stack/0.7.100.zip"
+#
+#   google_project           = data.google_project.this
+#   google_container_cluster = data.google_container_cluster.this
+#
+#   grafana_domain = "grafana.gogke-test-7.damianagape.pl"
+#   grafana_email  = "grafana@gogke-test-7.damianagape.pl"
+# }
 
-  google_project           = data.google_project.this
-  google_container_cluster = data.google_container_cluster.this
-
-  grafana_domain = "grafana.gogke-test-7.damianagape.pl"
-  grafana_email  = "grafana@gogke-test-7.damianagape.pl"
-}
-
-module "test_otel_collectors" {
-  source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
-  depends_on = [
-    helm_release.opentelemetry_operator,
-  ]
-
-  loki_entrypoint  = module.test_lgtm_stack.loki_entrypoint
-  mimir_entrypoint = module.test_lgtm_stack.mimir_entrypoint
-  tempo_entrypoint = module.test_lgtm_stack.tempo_entrypoint
-}
+# module "test_otel_collectors" {
+#   source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
+#   depends_on = [
+#     helm_release.opentelemetry_operator,
+#   ]
+#
+#   loki_entrypoint  = module.test_lgtm_stack.loki_entrypoint
+#   mimir_entrypoint = module.test_lgtm_stack.mimir_entrypoint
+#   tempo_entrypoint = module.test_lgtm_stack.tempo_entrypoint
+# }
 
 module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"
