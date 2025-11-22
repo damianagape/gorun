@@ -1,15 +1,15 @@
 dependencies:
 - name: cert-manager
   repository: https://charts.jetstack.io
-  version: v1.17.1
+  version: v1.19.1
 - name: cilium
   repository: https://helm.cilium.io
-  version: 1.17.2
+  version: 1.18.4
 - name: prometheus-operator-crds
   repository: https://prometheus-community.github.io/helm-charts
-  version: 18.0.1
+  version: 25.0.0
 - name: velero
   repository: https://vmware-tanzu.github.io/helm-charts
-  version: 8.5.0
-digest: sha256:c40643380712821c339cdc543200e97ca23f6d7c21fd69f67ac683af8c40a86a
-generated: "2025-04-08T08:56:39.731060044Z"
+  version: 11.2.0
+digest: sha256:98657b64aef6825ceecbaa85e53419b78b9386f5d6ebc7fa26bb0b09c7062f04
+generated: "2025-11-22T11:08:13.736416387Z"

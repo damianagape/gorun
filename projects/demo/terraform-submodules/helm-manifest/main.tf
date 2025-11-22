@@ -9,9 +9,9 @@ resource "helm_release" "this" {
   name        = lower(trim(substr(replace(local.reference, "/[\\W]+/", "-"), -53, -1), "-"))
   description = local.reference
 
-  set {
+  set = [{
     name  = "manifest"
     type  = "string"
     value = yamlencode(var.manifest)
-  }
+  }]
 }

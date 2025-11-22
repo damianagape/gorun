@@ -13,9 +13,9 @@ function main {
   local datetime
   datetime="$(date --utc '+%Y%m%d%H%M%S')" # yyyymmddHHMMSS
 
-  # https://stateful-kuard.gogke-test-3.damianagape.pl/-/env
-  # https://stateful-kuard.gogke-test-3.damianagape.pl/fs/var/lib/kuard/
-  local kube_context="gke_gogcp-test-3_europe-central2-a_gogke-test-3"
+  # https://stateful-kuard.gogke-test-7.damianagape.pl/-/env
+  # https://stateful-kuard.gogke-test-7.damianagape.pl/fs/var/lib/kuard/
+  local kube_context="gke_gogcp-test-7_europe-central2-a_gogke-test-7"
   local kube_namespace="kuard"
   local kube_statefulset="stateful-kuard-http-server"
   local kube_pod="${kube_statefulset}-0"

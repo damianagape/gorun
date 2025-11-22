@@ -33,7 +33,7 @@ apt install --yes \
 echo "ALL ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers
 
 # golang: https://go.dev/dl/
-go_version="1.24.1"
+go_version="1.25.4"
 wget https://go.dev/dl/go${go_version}.${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/go.tar.gz
 tar --directory=/usr/local -zxvf go.tar.gz
@@ -88,24 +88,24 @@ npm install --global \
   firebase-tools
 
 # cilium: https://github.com/cilium/cilium-cli/releases
-cilium_version="0.18.3"
+cilium_version="0.18.8"
 wget https://github.com/cilium/cilium-cli/releases/download/v${cilium_version}/cilium-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/cilium.tar.gz
 tar -zxvf cilium.tar.gz
 mv cilium /usr/local/bin/cilium
 
 # cmctl: https://github.com/cert-manager/cmctl/releases
-cmctl_version="2.1.1"
+cmctl_version="2.3.0"
 wget https://github.com/cert-manager/cmctl/releases/download/v${cmctl_version}/cmctl_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/cmctl
 
 # container-structure-test: https://github.com/GoogleContainerTools/container-structure-test/releases
-cst_version="1.19.3"
+cst_version="1.22.0"
 wget https://github.com/GoogleContainerTools/container-structure-test/releases/download/v${cst_version}/container-structure-test-${TARGETOS}-${TARGETARCH} \
   --output-document=/usr/local/bin/container-structure-test
 
 # golangci-lint: https://github.com/golangci/golangci-lint/releases
-golangci_lint_version="1.64.6"
+golangci_lint_version="2.6.2"
 wget https://github.com/golangci/golangci-lint/releases/download/v${golangci_lint_version}/golangci-lint-${golangci_lint_version}-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/golangci-lint.tar.gz
 tar -zxvf golangci-lint.tar.gz
@@ -117,40 +117,40 @@ wget https://github.com/mattolenik/hclq/releases/download/${hclq_version}/hclq-$
   --output-document=/usr/local/bin/hclq
 
 # helm: https://github.com/helm/helm/releases
-helm_version="3.17.1"
+helm_version="4.0.0"
 wget https://get.helm.sh/helm-v${helm_version}-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/helm.tar.gz
 tar -zxvf helm.tar.gz
 mv ${TARGETOS}-${TARGETARCH}/helm /usr/local/bin/helm
 
 # hubble: https://github.com/cilium/hubble/releases
-hubble_version="1.17.2"
+hubble_version="1.18.3"
 wget https://github.com/cilium/hubble/releases/download/v${hubble_version}/hubble-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/hubble.tar.gz
 tar -zxvf hubble.tar.gz
 mv hubble /usr/local/bin/hubble
 
 # shfmt: https://github.com/mvdan/sh/releases
-shfmt_version="3.11.0"
+shfmt_version="3.12.0"
 wget https://github.com/mvdan/sh/releases/download/v${shfmt_version}/shfmt_v${shfmt_version}_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/shfmt
 
 # terraform: https://developer.hashicorp.com/terraform/downloads
-terraform_version="1.11.1"
+terraform_version="1.14.0"
 wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_${TARGETOS}_${TARGETARCH}.zip \
   --output-document=/tmp/terraform.zip
 unzip terraform.zip
 mv terraform /usr/local/bin/terraform
 
 # velero: https://github.com/vmware-tanzu/velero/releases
-velero_version="1.15.2"
+velero_version="1.17.1"
 wget https://github.com/vmware-tanzu/velero/releases/download/v${velero_version}/velero-v${velero_version}-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/velero.tar.gz
 tar -zxvf velero.tar.gz
 mv velero-v${velero_version}-${TARGETOS}-${TARGETARCH}/velero /usr/local/bin/velero
 
 # yq: https://github.com/mikefarah/yq/releases
-yq_version="4.45.1"
+yq_version="4.49.1"
 wget https://github.com/mikefarah/yq/releases/download/v${yq_version}/yq_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/yq
 

@@ -106,7 +106,7 @@ commandTests:
     args:
       - version
     expectedOutput:
-      - go version go1\.24\.
+      - go version go1\.25\.
   - name: go installation
     command: which
     args:
@@ -158,7 +158,7 @@ commandTests:
     args:
       - --version
     expectedOutput:
-      - v22\.
+      - v24\.
   - # https://www.npmjs.com/
     name: npm
     command: npm

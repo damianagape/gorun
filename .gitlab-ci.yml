@@ -1,5 +1,5 @@
 default:
-  image: damianagape/gorun-devcontainer:0.5.100
+  image: damianagape/gorun-devcontainer:0.7.100
   before_script:
     - echo "$GOOGLE_CREDENTIALS" | gcloud auth activate-service-account --key-file="/dev/stdin"
     - export GOOGLE_APPLICATION_CREDENTIALS="/tmp/GOOGLE_APPLICATION_CREDENTIALS.json" && echo "$GOOGLE_CREDENTIALS" >"$GOOGLE_APPLICATION_CREDENTIALS"
@@ -121,50 +121,50 @@ publish-core-image-java21-sdk:
     - ./scripts/docker-image test "projects/core/docker-images/java21-sdk"
     - ./scripts/docker-image publish "projects/core/docker-images/java21-sdk"
     - ./scripts/docker-image show "projects/core/docker-images/java21-sdk"
-test-core-image-node22-rte:
+test-core-image-node24-rte:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       changes:
-        - "projects/core/docker-images/node22-rte/**"
+        - "projects/core/docker-images/node24-rte/**"
   script:
-    - ./scripts/docker-image build "projects/core/docker-images/node22-rte"
-    - ./scripts/docker-image test "projects/core/docker-images/node22-rte"
-    - ./scripts/docker-image pre-publish "projects/core/docker-images/node22-rte"
-    - ./scripts/docker-image show "projects/core/docker-images/node22-rte"
-publish-core-image-node22-rte:
+    - ./scripts/docker-image build "projects/core/docker-images/node24-rte"
+    - ./scripts/docker-image test "projects/core/docker-images/node24-rte"
+    - ./scripts/docker-image pre-publish "projects/core/docker-images/node24-rte"
+    - ./scripts/docker-image show "projects/core/docker-images/node24-rte"
+publish-core-image-node24-rte:
   stage: publish
   rules:
     - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
       changes:
-        - "projects/core/docker-images/node22-rte/**"
+        - "projects/core/docker-images/node24-rte/**"
   script:
-    - ./scripts/docker-image build "projects/core/docker-images/node22-rte"
-    - ./scripts/docker-image test "projects/core/docker-images/node22-rte"
-    - ./scripts/docker-image publish "projects/core/docker-images/node22-rte"
-    - ./scripts/docker-image show "projects/core/docker-images/node22-rte"
-test-core-image-node22-sdk:
+    - ./scripts/docker-image build "projects/core/docker-images/node24-rte"
+    - ./scripts/docker-image test "projects/core/docker-images/node24-rte"
+    - ./scripts/docker-image publish "projects/core/docker-images/node24-rte"
+    - ./scripts/docker-image show "projects/core/docker-images/node24-rte"
+test-core-image-node24-sdk:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       changes:
-        - "projects/core/docker-images/node22-sdk/**"
+        - "projects/core/docker-images/node24-sdk/**"
   script:
-    - ./scripts/docker-image build "projects/core/docker-images/node22-sdk"
-    - ./scripts/docker-image test "projects/core/docker-images/node22-sdk"
-    - ./scripts/docker-image pre-publish "projects/core/docker-images/node22-sdk"
-    - ./scripts/docker-image show "projects/core/docker-images/node22-sdk"
-publish-core-image-node22-sdk:
+    - ./scripts/docker-image build "projects/core/docker-images/node24-sdk"
+    - ./scripts/docker-image test "projects/core/docker-images/node24-sdk"
+    - ./scripts/docker-image pre-publish "projects/core/docker-images/node24-sdk"
+    - ./scripts/docker-image show "projects/core/docker-images/node24-sdk"
+publish-core-image-node24-sdk:
   stage: publish
   rules:
     - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
       changes:
-        - "projects/core/docker-images/node22-sdk/**"
+        - "projects/core/docker-images/node24-sdk/**"
   script:
-    - ./scripts/docker-image build "projects/core/docker-images/node22-sdk"
-    - ./scripts/docker-image test "projects/core/docker-images/node22-sdk"
-    - ./scripts/docker-image publish "projects/core/docker-images/node22-sdk"
-    - ./scripts/docker-image show "projects/core/docker-images/node22-sdk"
+    - ./scripts/docker-image build "projects/core/docker-images/node24-sdk"
+    - ./scripts/docker-image test "projects/core/docker-images/node24-sdk"
+    - ./scripts/docker-image publish "projects/core/docker-images/node24-sdk"
+    - ./scripts/docker-image show "projects/core/docker-images/node24-sdk"
 test-core-tfmod-main:
   stage: test
   rules:
