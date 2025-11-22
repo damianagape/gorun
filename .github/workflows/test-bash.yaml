@@ -12,7 +12,7 @@ jobs:
   test-bash:
     name: test-bash
     runs-on: ubuntu-24.04
-    container: damianagape/devcontainer:0.5.100
+    container: ghcr.io/damianagape/gorun-devcontainer:0.7.100
     steps:
       - name: git clone (PR)
         if: github.event_name == 'pull_request'

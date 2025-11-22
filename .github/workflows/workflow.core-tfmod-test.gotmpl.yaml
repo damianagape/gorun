@@ -14,7 +14,7 @@ jobs:
   core-tfmod-test:
     name: core-tfmod-test
     runs-on: ubuntu-24.04
-    container: damianagape/devcontainer:0.5.100
+    container: ghcr.io/damianagape/gorun-devcontainer:0.7.100
     permissions:
       contents: write
       id-token: write
