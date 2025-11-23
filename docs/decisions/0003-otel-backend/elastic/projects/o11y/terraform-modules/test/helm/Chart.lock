@@ -1,0 +1,12 @@
+dependencies:
+- name: eck-operator
+  repository: https://helm.elastic.co
+  version: 2.16.1
+- name: opentelemetry-collector
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.117.3
+- name: opentelemetry-operator
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.82.0
+digest: sha256:447f86713cef98c0d3919492e63e4f3cb225fd9b95e0001d6cc3855003803990
+generated: "2025-04-12T11:59:47.182209667Z"
