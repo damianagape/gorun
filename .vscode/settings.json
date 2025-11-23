@@ -21,7 +21,8 @@
   "yaml.format.printWidth": 120,
 
   "search.exclude": {
-    "**/.terraform": true
+    "**/.terraform": true,
+    "docs/decisions/*/**": true
   },
   "files.associations": {
     "*.gotmpl": "gotmpl",
