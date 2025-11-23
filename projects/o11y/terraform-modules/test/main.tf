@@ -75,24 +75,54 @@ resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
 }
 
 #######################################
-### OpenTelemetry
+### Elastic Cloud on Kubernetes (ECK)
 #######################################
 
-# module "test_otel_collectors" {
-#   source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
-#   depends_on = [
-#     helm_release.opentelemetry_operator,
-#   ]
-#
-#   loki_entrypoint  = module.test_lgtm_stack.loki_entrypoint
-#   mimir_entrypoint = module.test_lgtm_stack.mimir_entrypoint
-#   tempo_entrypoint = module.test_lgtm_stack.tempo_entrypoint
-# }
+resource "kubernetes_namespace" "elastic_system" {
+  metadata {
+    name = "elastic-system"
+  }
+}
+
+resource "helm_release" "elastic_operator" {
+  repository = "${path.module}/helm/charts"
+  chart      = "eck-operator"
+  name       = "elastic-operator"
+  namespace  = kubernetes_namespace.elastic_system.metadata[0].name
+
+  values = [
+    file("${path.module}/helm/values/eck-operator.yaml"),
+    templatefile("${path.module}/assets/elastic_operator.yaml.tftpl", {
+    }),
+  ]
+}
+
+#######################################
+### OpenTelemetry & Elastic stack
+#######################################
+
+module "test_elastic_stack" {
+  source = "../../terraform-submodules/k8s-elastic-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-elastic-stack/0.7.100.zip"
+
+  kibana_domain = "kibana.gogke-test-7.damianagape.pl"
+  kibana_email  = "kibana@gogke-test-7.damianagape.pl"
+}
+
+module "test_otel_collectors" {
+  source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
+  depends_on = [
+    helm_release.opentelemetry_operator,
+  ]
+
+  elasticsearch_entrypoint = module.test_elastic_stack.elasticsearch_entrypoint
+  metricbeat_entrypoint    = module.test_elastic_stack.metricbeat_entrypoint
+}
 
 module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"
 
   blackbox_exporter_urls = [
+    "https://kibana.gogke-test-7.damianagape.pl/login",
     "https://stateful-kuard.gogke-test-7.damianagape.pl/healthy",
     "https://stateless-kuard.gogke-test-7.damianagape.pl/healthy",
   ]

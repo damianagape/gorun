@@ -1,1 +1,0 @@
-Go software development kit
