@@ -48,9 +48,10 @@ pros:
 cons:
 
 - very complex setup and poor Helm charts quality (very poor!)
+- version compatibility burden (hope-it-will-work driven development)
 - a lot of backing services: PostgreSQL, Minio/GCS/S3, Kafka (something more?)
 - 3 different query languages: LogQL, PromQL, TraceQL
-- Grafana dashboards as code management is broken by import/export and datasources mapping issues
+- Grafana dashboards as code management is unusable due to import/export and datasources quirks
 - bad performance of Loki full-text search
 
 ### Elastic stack: Elasticsearch, Kibana, APM Server + Elastic Cloud on Kubernetes (ECK)
@@ -64,16 +65,20 @@ docs:
   - [crd](https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-kibana-k8s-elastic-co-v1.html)
 - apm server
   - [crd](https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-apm-k8s-elastic-co-v1.html)
+  - [config](https://www.elastic.co/docs/solutions/observability/apm/apm-server/configure)
   - [otel](https://www.elastic.co/docs/solutions/observability/apm/opentelemetry)
 - [otel](https://www.elastic.co/what-is/opentelemetry)
 
 pros:
 
-- todo
+- top quality docs
+- top quality Kubernetes operator - it's a pleasure to deploy this stack
+- one version for all components - no version compatibility burden
+- one storage driver, one data format to work with, one scaling mechanism - it's just possible to learn and master this tool; this knowledge is also usable in another places, not just for observability - it's good to know Elasticsearch
 
 cons:
 
-- Java consumes a lot of memory
+- Java... consumes a lot of memory
 
 ### SigNoz
 

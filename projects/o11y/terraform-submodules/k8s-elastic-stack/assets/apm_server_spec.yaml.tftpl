@@ -1,0 +1,30 @@
+version: "${elastic_version}"
+config:
+  apm-server:
+    host: 0.0.0.0:8200
+  processors:
+    otlp:
+      enabled: true
+      grpc:
+        host: 0.0.0.0:4317
+        port: 4317
+      http:
+        enabled: false
+podTemplate:
+  metadata:
+    creationTimestamp: "1999-12-31T23:59:59Z" # bug: kubernetes_manifest apply throws error without this line
+  spec:
+    containers:
+      - name: apm-server
+        resources:
+          requests:
+            cpu: 1m
+            memory: 1Mi
+          limits: {}
+
+elasticsearchRef:
+  name: "${elasticsearch_name}"
+  namespace: "${elasticsearch_namespace}"
+kibanaRef:
+  name: "${kibana_name}"
+  namespace: "${kibana_namespace}"
