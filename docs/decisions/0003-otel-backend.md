@@ -58,6 +58,14 @@ cons:
 docs:
 
 - [eck](https://www.elastic.co/elastic-cloud-kubernetes)
+- elasticsearch
+  - [crd](https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-elasticsearch-k8s-elastic-co-v1.html)
+- kibana
+  - [crd](https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-kibana-k8s-elastic-co-v1.html)
+- apm server
+  - [crd](https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-apm-k8s-elastic-co-v1.html)
+  - [otel](https://www.elastic.co/docs/solutions/observability/apm/opentelemetry)
+- [otel](https://www.elastic.co/what-is/opentelemetry)
 
 pros:
 
