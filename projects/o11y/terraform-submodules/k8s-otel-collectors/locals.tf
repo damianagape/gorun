@@ -1,8 +1,7 @@
 locals {
   common_config = yamldecode(templatefile("${path.module}/assets/common_config.yaml.tftpl", {
-    loki_entrypoint  = var.loki_entrypoint
-    mimir_entrypoint = var.mimir_entrypoint
-    tempo_entrypoint = var.tempo_entrypoint
+    elasticsearch_entrypoint = var.elasticsearch_entrypoint
+    metricbeat_entrypoint    = var.metricbeat_entrypoint
   }))
   file_config = merge(local.common_config, yamldecode(file("${path.module}/assets/file_config.yaml")))
   otlp_config = merge(local.common_config, yamldecode(file("${path.module}/assets/otlp_config.yaml")))
