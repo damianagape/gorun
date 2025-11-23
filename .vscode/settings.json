@@ -22,7 +22,8 @@
 
   "search.exclude": {
     "**/.terraform": true,
-    "docs/decisions/*/**": true
+    "docs/decisions/*/**": true,
+    "projects/*/*/*/helm/charts": true
   },
   "files.associations": {
     "*.gotmpl": "gotmpl",

@@ -46,21 +46,6 @@ module "test_vault" {
   ]
 }
 
-module "grafana_vault" {
-  source = "../../terraform-submodules/k8s-vault" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-vault/0.7.100.zip"
-  depends_on = [
-    module.test_platform,
-  ]
-
-  vault_name = "grafana"
-
-  iam_readers = [
-    "user:dagape.test@gmail.com",
-  ]
-  iam_writers = [
-  ]
-}
-
 #######################################
 ### Workspaces
 #######################################
