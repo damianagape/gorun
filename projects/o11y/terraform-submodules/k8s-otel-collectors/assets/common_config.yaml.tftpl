@@ -90,7 +90,7 @@ exporters:
     tls:
       insecure: true
     headers:
-      Authorization: "Bearer ${elastic_apm_server_token}"
+      Authorization: "Bearer $${env:ELASTIC_APM_SERVER_TOKEN}"
 
   debug/logs:
     verbosity: detailed
