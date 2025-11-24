@@ -108,15 +108,15 @@ module "test_elastic_stack" {
   kibana_email  = "kibana@gogke-test-7.damianagape.pl"
 }
 
-# module "test_otel_collectors" {
-#   source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
-#   depends_on = [
-#     helm_release.opentelemetry_operator,
-#   ]
-#
-#   elasticsearch_entrypoint = module.test_elastic_stack.elasticsearch_entrypoint
-#   metricbeat_entrypoint    = module.test_elastic_stack.metricbeat_entrypoint
-# }
+module "test_otel_collectors" {
+  source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
+  depends_on = [
+    helm_release.opentelemetry_operator,
+  ]
+
+  elastic_apm_server_endpoint = module.test_elastic_stack.apm_server_endpoint
+  elastic_apm_server_token    = module.test_elastic_stack.apm_server_token
+}
 
 module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"

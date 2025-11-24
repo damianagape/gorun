@@ -1,15 +1,7 @@
 version: "${elastic_version}"
+count: 1
 config:
-  apm-server:
-    host: 0.0.0.0:8200
-  processors:
-    otlp:
-      enabled: true
-      grpc:
-        host: 0.0.0.0:4317
-        port: 4317
-      http:
-        enabled: false
+  apm-server.host: 0.0.0.0:8200
 podTemplate:
   metadata:
     creationTimestamp: "1999-12-31T23:59:59Z" # bug: kubernetes_manifest apply throws error without this line
@@ -20,7 +12,14 @@ podTemplate:
           requests:
             cpu: 1m
             memory: 1Mi
-          limits: {}
+          limits:
+            cpu: 300m
+            memory: 2Gi
+
+http:
+  tls:
+    selfSignedCertificate:
+      disabled: true
 
 elasticsearchRef:
   name: "${elasticsearch_name}"

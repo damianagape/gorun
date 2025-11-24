@@ -3,15 +3,15 @@ service:
     logs:
       receivers: [otlp]
       processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlphttp/elasticsearch]
+      exporters: [otlp/elastic]
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlphttp/elasticsearch]
+      exporters: [otlp/elastic]
     traces:
       receivers: [otlp]
       processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlphttp/elasticsearch]
+      exporters: [otlp/elastic]
 
   extensions:
     - health_check

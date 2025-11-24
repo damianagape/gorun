@@ -3,7 +3,7 @@ service:
     logs:
       receivers: [filelog]
       processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlphttp/elasticsearch]
+      exporters: [otlp/elastic]
 
   extensions:
     - health_check

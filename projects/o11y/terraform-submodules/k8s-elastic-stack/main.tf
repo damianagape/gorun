@@ -108,39 +108,53 @@ module "kibana_gateway_http_route" {
 ### APM Server
 #######################################
 
-# resource "kubernetes_namespace" "apm_server" {
-#   metadata {
-#     name = "o11y-apm-server"
-#   }
-# }
-#
-# resource "kubernetes_manifest" "apm_server" {
-#   manifest = {
-#     apiVersion = "apm.k8s.elastic.co/v1" # https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-apm-k8s-elastic-co-v1.html
-#     kind       = "ApmServer"
-#     metadata = {
-#       name      = "apm-server"
-#       namespace = kubernetes_namespace.apm_server.metadata[0].name
-#       labels = {
-#         "app.kubernetes.io/instance" = "apm-server"
-#         "app.kubernetes.io/name"     = "apm-server"
-#         "app.kubernetes.io/version"  = local.elastic_version
-#       }
-#       annotations = {
-#         "eck.k8s.elastic.co/license" = "basic"
-#       }
-#     }
-#     spec = yamldecode(templatefile("${path.module}/assets/apm_server_spec.yaml.tftpl", {
-#       elastic_version = local.elastic_version
-#
-#       elasticsearch_name      = kubernetes_manifest.elasticsearch.manifest.metadata.name
-#       elasticsearch_namespace = kubernetes_manifest.elasticsearch.manifest.metadata.namespace
-#       kibana_name             = kubernetes_manifest.kibana.manifest.metadata.name
-#       kibana_namespace        = kubernetes_manifest.kibana.manifest.metadata.namespace
-#     }))
-#   }
-#
-#   field_manager {
-#     force_conflicts = true
-#   }
-# }
+resource "kubernetes_namespace" "apm_server" {
+  metadata {
+    name = "o11y-apm-server"
+  }
+}
+
+resource "kubernetes_manifest" "apm_server" {
+  manifest = {
+    apiVersion = "apm.k8s.elastic.co/v1" # https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-apm-k8s-elastic-co-v1.html
+    kind       = "ApmServer"
+    metadata = {
+      name      = "apm-server"
+      namespace = kubernetes_namespace.apm_server.metadata[0].name
+      labels = {
+        "app.kubernetes.io/instance" = "apm-server"
+        "app.kubernetes.io/name"     = "apm-server"
+        "app.kubernetes.io/version"  = local.elastic_version
+      }
+      annotations = {
+        "eck.k8s.elastic.co/license" = "basic"
+      }
+    }
+    spec = yamldecode(templatefile("${path.module}/assets/apm_server_spec.yaml.tftpl", {
+      elastic_version = local.elastic_version
+
+      elasticsearch_name      = kubernetes_manifest.elasticsearch.manifest.metadata.name
+      elasticsearch_namespace = kubernetes_manifest.elasticsearch.manifest.metadata.namespace
+      kibana_name             = kubernetes_manifest.kibana.manifest.metadata.name
+      kibana_namespace        = kubernetes_manifest.kibana.manifest.metadata.namespace
+    }))
+  }
+
+  field_manager {
+    force_conflicts = true
+  }
+}
+
+data "kubernetes_service" "apm_server" {
+  metadata {
+    name      = "${kubernetes_manifest.apm_server.manifest.metadata.name}-apm-http"
+    namespace = kubernetes_manifest.apm_server.manifest.metadata.namespace
+  }
+}
+
+data "kubernetes_secret" "apm_server_token" {
+  metadata {
+    name      = "${kubernetes_manifest.apm_server.manifest.metadata.name}-apm-token"
+    namespace = kubernetes_manifest.apm_server.manifest.metadata.namespace
+  }
+}

@@ -1,7 +1,7 @@
 locals {
   common_config = yamldecode(templatefile("${path.module}/assets/common_config.yaml.tftpl", {
-    elasticsearch_entrypoint = var.elasticsearch_entrypoint
-    metricbeat_entrypoint    = var.metricbeat_entrypoint
+    elastic_apm_server_endpoint = var.elastic_apm_server_endpoint
+    elastic_apm_server_token    = nonsensitive(var.elastic_apm_server_token)
   }))
   file_config = merge(local.common_config, yamldecode(file("${path.module}/assets/file_config.yaml")))
   otlp_config = merge(local.common_config, yamldecode(file("${path.module}/assets/otlp_config.yaml")))
@@ -12,7 +12,4 @@ locals {
 
   otlp_grpc_port = 4317
   otlp_http_port = 4318
-
-  otlp_grpc_entrypoint = "http://${local.otlp_grpc_host}:${local.otlp_grpc_port}"
-  otlp_http_entrypoint = "http://${local.otlp_http_host}:${local.otlp_http_port}"
 }

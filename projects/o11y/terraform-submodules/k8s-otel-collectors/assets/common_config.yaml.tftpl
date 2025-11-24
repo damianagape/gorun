@@ -85,13 +85,12 @@ processors:
     timeout: 10s
 
 exporters:
-  otlphttp/elasticsearch:
-    endpoint: "${elasticsearch_entrypoint}"
-
-  prometheusremotewrite/metricbeat:
-    endpoint: "${metricbeat_entrypoint}/write"
-    resource_to_telemetry_conversion:
-      enabled: true
+  otlp/elastic:
+    endpoint: "${elastic_apm_server_endpoint}"
+    tls:
+      insecure: true
+    headers:
+      Authorization: "Bearer ${elastic_apm_server_token}"
 
   debug/logs:
     verbosity: detailed
@@ -105,6 +104,7 @@ exporters:
 extensions:
   health_check:
     endpoint: 0.0.0.0:13133
+    path: /
 #
 #
 # service:

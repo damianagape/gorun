@@ -66,7 +66,7 @@ docs:
 - apm server
   - [crd](https://www.elastic.co/guide/en/cloud-on-k8s/2.16/k8s-api-apm-k8s-elastic-co-v1.html)
   - [config](https://www.elastic.co/docs/solutions/observability/apm/apm-server/configure)
-  - [otel](https://www.elastic.co/docs/solutions/observability/apm/opentelemetry)
+  - [otel](https://www.elastic.co/docs/solutions/observability/apm/opentelemetry/upstream-opentelemetry-collectors-language-sdks)
 - [otel](https://www.elastic.co/what-is/opentelemetry)
 
 pros:
