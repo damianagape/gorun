@@ -49,7 +49,7 @@ cons:
 
 - very complex setup and poor Helm charts quality (very poor!)
 - version compatibility burden (hope-it-will-work driven development)
-- a lot of backing services: PostgreSQL, Minio/GCS/S3, Kafka (something more?)
+- a lot of backing services to manage: PostgreSQL, Minio/GCS/S3, Kafka (something more?)
 - 3 different query languages: LogQL, PromQL, TraceQL
 - Grafana dashboards as code management is unusable due to import/export and datasources quirks
 - bad performance of Loki full-text search
@@ -82,13 +82,35 @@ cons:
 
 ### SigNoz
 
+```
+$ kubectl get pod
+NAME                                          READY   STATUS      RESTARTS        AGE
+chi-signoz-clickhouse-cluster-0-0-0           1/1     Running     0               9m5s
+signoz-0                                      1/1     Running     0               9m26s
+signoz-clickhouse-operator-7df8948f8c-jzb7q   2/2     Running     2 (9m15s ago)   9m26s
+signoz-otel-collector-8586c84f59-k9pwc        1/1     Running     0               9m26s
+signoz-schema-migrator-async-init-rjvpj       0/1     Completed   0               9m25s
+signoz-schema-migrator-sync-init-crv8g        0/1     Completed   0               9m25s
+signoz-zookeeper-0                            1/1     Running     0               9m26s
+
+$ kubectl top pod
+NAME                                          CPU(cores)   MEMORY(bytes)
+chi-signoz-clickhouse-cluster-0-0-0           79m          519Mi
+signoz-0                                      2m           55Mi
+signoz-clickhouse-operator-7df8948f8c-jzb7q   2m           24Mi
+signoz-otel-collector-8586c84f59-k9pwc        3m           24Mi
+signoz-zookeeper-0                            9m           750Mi
+```
+
 docs:
 
 - [gcp](https://signoz.io/docs/install/kubernetes/gcp/)
+- [helm](https://github.com/SigNoz/charts/tree/main/charts/signoz)
 
 pros:
 
-- todo
+- pretty simple setup: SigNoz, ClickHouse, ZooKeeper (on the other hand it would be better to not maintain ZooKeeper...)
+- easy deployment; works out-of-the-box
 
 cons:
 

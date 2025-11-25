@@ -121,7 +121,7 @@ module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"
 
   blackbox_exporter_urls = [
-    "https://signoz.gogke-test-7.damianagape.pl/",
+    "https://signoz.gogke-test-7.damianagape.pl/api/v1/health",
     "https://stateful-kuard.gogke-test-7.damianagape.pl/healthy",
     "https://stateless-kuard.gogke-test-7.damianagape.pl/healthy",
   ]
