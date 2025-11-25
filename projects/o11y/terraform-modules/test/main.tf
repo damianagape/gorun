@@ -98,31 +98,30 @@ resource "helm_release" "elastic_operator" {
 }
 
 #######################################
-### OpenTelemetry & Elastic stack
+### OpenTelemetry & SigNoz
 #######################################
 
-module "test_elastic_stack" {
-  source = "../../terraform-submodules/k8s-elastic-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-elastic-stack/0.7.100.zip"
+module "test_signoz" {
+  source = "../../terraform-submodules/k8s-signoz" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-signoz/0.7.100.zip"
 
-  kibana_domain = "kibana.gogke-test-7.damianagape.pl"
-  kibana_email  = "kibana@gogke-test-7.damianagape.pl"
+  signoz_domain = "signoz.gogke-test-7.damianagape.pl"
 }
 
-module "test_otel_collectors" {
-  source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
-  depends_on = [
-    helm_release.opentelemetry_operator,
-  ]
-
-  elastic_apm_server_endpoint = module.test_elastic_stack.apm_server_endpoint
-  elastic_apm_server_token    = module.test_elastic_stack.apm_server_token
-}
+# module "test_otel_collectors" {
+#   source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
+#   depends_on = [
+#     helm_release.opentelemetry_operator,
+#   ]
+#
+#   elastic_apm_server_endpoint = module.test_elastic_stack.apm_server_endpoint
+#   elastic_apm_server_token    = module.test_elastic_stack.apm_server_token
+# }
 
 module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"
 
   blackbox_exporter_urls = [
-    "https://kibana.gogke-test-7.damianagape.pl/login",
+    "https://signoz.gogke-test-7.damianagape.pl/",
     "https://stateful-kuard.gogke-test-7.damianagape.pl/healthy",
     "https://stateless-kuard.gogke-test-7.damianagape.pl/healthy",
   ]
