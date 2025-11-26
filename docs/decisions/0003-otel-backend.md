@@ -18,22 +18,22 @@ We need to store and visualize OpenTelemetry signals. Stack requirements:
 docs:
 
 - [grafana](https://grafana.com/oss/grafana/)
-  - [helm](https://grafana.com/docs/grafana/latest/setup-grafana/installation/helm/)
+  - [helm chart](https://grafana.com/docs/grafana/latest/setup-grafana/installation/helm/)
   - [config](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/)
   - [oauth](https://grafana.com/docs/grafana/latest/setup-grafana/configure-access/configure-authentication/google/)
-  - [tf provider](https://registry.terraform.io/providers/grafana/grafana/latest)
+  - [terraform provider](https://registry.terraform.io/providers/grafana/grafana/latest)
 - [loki](https://grafana.com/oss/loki/)
-  - [helm](https://grafana.com/docs/loki/latest/setup/install/helm/)
+  - [helm chart](https://grafana.com/docs/loki/latest/setup/install/helm/)
   - [config](https://grafana.com/docs/loki/latest/configure/)
   - [gcs](https://grafana.com/docs/loki/latest/configure/storage/#gcp-deployment-gcs-single-store), [more gcs](https://grafana.com/docs/loki/latest/setup/install/helm/configure-storage/)
   - [otel](https://grafana.com/docs/loki/latest/send-data/otel/#configure-the-opentelemetry-collector-to-write-logs-into-loki)
 - [mimir](https://grafana.com/oss/mimir/)
-  - [helm](https://grafana.com/docs/mimir/latest/set-up/helm-chart/), [more helm](https://grafana.com/docs/helm-charts/tempo-distributed/next/get-started-helm-charts/)
+  - [helm chart](https://grafana.com/docs/mimir/latest/set-up/helm-chart/), [more helm](https://grafana.com/docs/helm-charts/tempo-distributed/next/get-started-helm-charts/)
   - [config](https://grafana.com/docs/mimir/latest/configure/configuration-parameters/)
   - [gcs](https://grafana.com/docs/mimir/latest/configure/configure-object-storage-backend/#gcs)
   - [otel](https://grafana.com/docs/mimir/latest/configure/configure-otel-collector/#use-the-opentelemetry-protocol)
 - [tempo](https://grafana.com/oss/tempo/)
-  - [helm](https://grafana.com/docs/tempo/latest/set-up-for-tracing/setup-tempo/deploy/kubernetes/helm-chart/)
+  - [helm chart](https://grafana.com/docs/tempo/latest/set-up-for-tracing/setup-tempo/deploy/kubernetes/helm-chart/)
   - [config](https://grafana.com/docs/tempo/latest/configuration/manifest/)
   - [gcs](https://grafana.com/docs/tempo/latest/configuration/hosted-storage/gcs/)
 - [otel](https://grafana.com/oss/opentelemetry/)
@@ -68,10 +68,11 @@ docs:
   - [config](https://www.elastic.co/docs/solutions/observability/apm/apm-server/configure)
   - [otel](https://www.elastic.co/docs/solutions/observability/apm/opentelemetry/upstream-opentelemetry-collectors-language-sdks)
 - [otel](https://www.elastic.co/what-is/opentelemetry)
+- [terraform provider](https://registry.terraform.io/providers/elastic/elasticstack/latest)
 
 pros:
 
-- top quality docs
+- top quality docs, but amount of them is overwhelming
 - top quality Kubernetes operator - it's a pleasure to deploy this stack
 - one version for all components - no version compatibility burden
 - one storage driver, one data format to work with, one scaling mechanism - it's just possible to learn and master this tool; this knowledge is also usable in another places, not just for observability - it's good to know Elasticsearch
@@ -105,7 +106,9 @@ signoz-zookeeper-0                            9m           750Mi
 docs:
 
 - [gcp](https://signoz.io/docs/install/kubernetes/gcp/)
-- [helm](https://github.com/SigNoz/charts/tree/main/charts/signoz)
+- [helm chart](https://github.com/SigNoz/charts/tree/main/charts/signoz)
+- [otel](https://signoz.io/docs/opentelemetry-collection-agents/opentelemetry-collector/configuration/)
+- [terraform provider](https://registry.terraform.io/providers/SigNoz/signoz/latest)
 
 pros:
 

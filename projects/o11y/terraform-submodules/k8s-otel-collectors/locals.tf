@@ -1,6 +1,6 @@
 locals {
   common_config = yamldecode(templatefile("${path.module}/assets/common_config.yaml.tftpl", {
-    elastic_apm_server_endpoint = var.elastic_apm_server_endpoint
+    signoz_endpoint = var.signoz_endpoint
   }))
   file_config = merge(local.common_config, yamldecode(file("${path.module}/assets/file_config.yaml")))
   otlp_config = merge(local.common_config, yamldecode(file("${path.module}/assets/otlp_config.yaml")))

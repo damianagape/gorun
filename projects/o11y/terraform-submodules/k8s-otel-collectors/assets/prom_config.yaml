@@ -3,7 +3,7 @@ service:
     metrics:
       receivers: [prometheus]
       processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlp/elastic]
+      exporters: [otlp/signoz]
 
   extensions:
     - health_check

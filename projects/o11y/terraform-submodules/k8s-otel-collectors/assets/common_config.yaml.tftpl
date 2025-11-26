@@ -85,12 +85,10 @@ processors:
     timeout: 10s
 
 exporters:
-  otlp/elastic:
-    endpoint: "${elastic_apm_server_endpoint}"
+  otlp/signoz:
+    endpoint: "${signoz_endpoint}"
     tls:
       insecure: true
-    headers:
-      Authorization: "Bearer $${env:ELASTIC_APM_SERVER_TOKEN}"
 
   debug/logs:
     verbosity: detailed
