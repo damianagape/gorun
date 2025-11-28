@@ -54,6 +54,40 @@ cons:
 - Grafana dashboards as code management is unusable due to import/export and datasources quirks
 - bad performance of Loki full-text search
 
+```
+$ kubectl get pod --all-namespaces
+NAMESPACE                        NAME                                                       READY   STATUS      RESTARTS       AGE
+o11y-grafana                     grafana-9f94bf475-mgwnm                                    1/1     Running     0              7m35s
+o11y-grafana                     postgresql-0                                               1/1     Running     0              8m
+o11y-loki                        loki-backend-0                                             2/2     Running     0              40m
+o11y-loki                        loki-canary-mdhtt                                          1/1     Running     0              40m
+o11y-loki                        loki-canary-nt28z                                          1/1     Running     0              40m
+o11y-loki                        loki-canary-xqjhk                                          1/1     Running     0              40m
+o11y-loki                        loki-chunks-cache-0                                        2/2     Running     0              40m
+o11y-loki                        loki-gateway-66d996559-s6vl2                               1/1     Running     0              40m
+o11y-loki                        loki-read-7599bf4f47-qlbff                                 1/1     Running     0              40m
+o11y-loki                        loki-results-cache-0                                       2/2     Running     0              40m
+o11y-loki                        loki-write-0                                               1/1     Running     0              40m
+o11y-mimir                       mimir-compactor-0                                          1/1     Running     0              39m
+o11y-mimir                       mimir-distributor-69456b5684-rzsp9                         1/1     Running     0              39m
+o11y-mimir                       mimir-ingester-0                                           1/1     Running     0              39m
+o11y-mimir                       mimir-nginx-85b87885c7-x9x8x                               1/1     Running     0              39m
+o11y-mimir                       mimir-overrides-exporter-69c5b4c87c-4vhv4                  1/1     Running     0              39m
+o11y-mimir                       mimir-querier-7d49f57c59-b9sz9                             1/1     Running     0              39m
+o11y-mimir                       mimir-query-frontend-5589f6f695-cxkdr                      1/1     Running     0              39m
+o11y-mimir                       mimir-query-scheduler-b54c64fc7-8k6rc                      1/1     Running     0              39m
+o11y-mimir                       mimir-rollout-operator-56d57dcbfc-fqqwn                    1/1     Running     0              39m
+o11y-mimir                       mimir-ruler-64dbcf5cb7-hrg44                               1/1     Running     0              39m
+o11y-mimir                       mimir-store-gateway-0                                      1/1     Running     0              39m
+o11y-tempo                       tempo-compactor-67d7ffd6d4-j7kpb                           1/1     Running     2 (39m ago)    39m
+o11y-tempo                       tempo-distributor-54b9466f-cqppk                           1/1     Running     2 (39m ago)    39m
+o11y-tempo                       tempo-gateway-59d88db97c-thhng                             1/1     Running     0              39m
+o11y-tempo                       tempo-ingester-0                                           1/1     Running     1 (39m ago)    39m
+o11y-tempo                       tempo-memcached-0                                          1/1     Running     0              39m
+o11y-tempo                       tempo-querier-c965c47cd-nmgh7                              1/1     Running     2 (39m ago)    39m
+o11y-tempo                       tempo-query-frontend-5b84c86f96-552n4                      1/1     Running     1 (39m ago)    39m
+```
+
 ### Elastic stack: Elasticsearch, Kibana, APM Server + Elastic Cloud on Kubernetes (ECK)
 
 docs:
@@ -80,6 +114,14 @@ pros:
 cons:
 
 - JVM... consumes a lot of memory
+
+```
+$ kubectl get pod --all-namespaces
+NAMESPACE                        NAME                                                       READY   STATUS      RESTARTS       AGE
+o11y-apm-server                  apm-server-apm-server-586ddbff46-9f2nb                     1/1     Running     0              40m
+o11y-elasticsearch               elasticsearch-es-default-0                                 1/1     Running     0              40m
+o11y-kibana                      kibana-kb-5d544544f7-vs65t                                 1/1     Running     0              40m
+```
 
 ### SigNoz
 
@@ -111,6 +153,62 @@ cons:
   - https://github.com/SigNoz/signoz/issues/7002
   - https://github.com/SigNoz/charts/issues/610
 
+```
+$ kubectl get pod --all-namespaces
+NAMESPACE                        NAME                                                       READY   STATUS      RESTARTS       AGE
+o11y-signoz                      chi-signoz-clickhouse-cluster-0-0-0                        1/1     Running     0              26m
+o11y-signoz                      signoz-0                                                   1/1     Running     0              26m
+o11y-signoz                      signoz-clickhouse-operator-7df8948f8c-jj2vk                2/2     Running     2 (26m ago)    26m
+o11y-signoz                      signoz-otel-collector-66d94cf979-ncvlx                     1/1     Running     0              26m
+o11y-signoz                      signoz-schema-migrator-async-init-6dxjc                    0/1     Completed   0              26m
+o11y-signoz                      signoz-schema-migrator-sync-init-dbdc7                     0/1     Completed   0              26m
+o11y-signoz                      signoz-zookeeper-0                                         1/1     Running     0              26m
+```
+
 ## Decision Outcome
 
 todo
+
+```
+$ kubectl top pod --all-namespaces
+NAMESPACE                        NAME                                                       CPU(cores)   MEMORY(bytes)
+o11y-grafana                     grafana-9f94bf475-mgwnm                                    17m          124Mi
+o11y-grafana                     postgresql-0                                               17m          51Mi
+o11y-loki                        loki-backend-0                                             7m           139Mi
+o11y-loki                        loki-canary-mdhtt                                          2m           16Mi
+o11y-loki                        loki-canary-nt28z                                          2m           16Mi
+o11y-loki                        loki-canary-xqjhk                                          2m           13Mi
+o11y-loki                        loki-chunks-cache-0                                        1m           3Mi
+o11y-loki                        loki-gateway-66d996559-s6vl2                               4m           11Mi
+o11y-loki                        loki-read-7599bf4f47-qlbff                                 15m          73Mi
+o11y-loki                        loki-results-cache-0                                       1m           6Mi
+o11y-loki                        loki-write-0                                               15m          80Mi
+o11y-mimir                       mimir-compactor-0                                          5m           21Mi
+o11y-mimir                       mimir-distributor-69456b5684-rzsp9                         5m           26Mi
+o11y-mimir                       mimir-ingester-0                                           6m           23Mi
+o11y-mimir                       mimir-nginx-85b87885c7-x9x8x                               1m           11Mi
+o11y-mimir                       mimir-overrides-exporter-69c5b4c87c-4vhv4                  3m           16Mi
+o11y-mimir                       mimir-querier-7d49f57c59-b9sz9                             6m           30Mi
+o11y-mimir                       mimir-query-frontend-5589f6f695-cxkdr                      6m           21Mi
+o11y-mimir                       mimir-query-scheduler-b54c64fc7-8k6rc                      4m           16Mi
+o11y-mimir                       mimir-rollout-operator-56d57dcbfc-fqqwn                    1m           9Mi
+o11y-mimir                       mimir-ruler-64dbcf5cb7-hrg44                               6m           29Mi
+o11y-mimir                       mimir-store-gateway-0                                      74m          24Mi
+o11y-tempo                       tempo-compactor-67d7ffd6d4-j7kpb                           2m           26Mi
+o11y-tempo                       tempo-distributor-54b9466f-cqppk                           2m           25Mi
+o11y-tempo                       tempo-gateway-59d88db97c-thhng                             1m           11Mi
+o11y-tempo                       tempo-ingester-0                                           2m           25Mi
+o11y-tempo                       tempo-memcached-0                                          1m           1Mi
+o11y-tempo                       tempo-querier-c965c47cd-nmgh7                              2m           28Mi
+o11y-tempo                       tempo-query-frontend-5b84c86f96-552n4                      1m           22Mi
+
+o11y-apm-server                  apm-server-apm-server-586ddbff46-9f2nb                     1m           10Mi
+o11y-elasticsearch               elasticsearch-es-default-0                                 29m          2602Mi
+o11y-kibana                      kibana-kb-5d544544f7-vs65t                                 25m          616Mi
+
+o11y-signoz                      chi-signoz-clickhouse-cluster-0-0-0                        93m          548Mi
+o11y-signoz                      signoz-0                                                   2m           134Mi
+o11y-signoz                      signoz-clickhouse-operator-7df8948f8c-jj2vk                1m           22Mi
+o11y-signoz                      signoz-otel-collector-66d94cf979-ncvlx                     2m           45Mi
+o11y-signoz                      signoz-zookeeper-0                                         7m           757Mi
+```
