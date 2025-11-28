@@ -1,3 +1,17 @@
+#######################################
+### ClickHouse
+#######################################
+
+resource "kubernetes_namespace" "clickhouse" {
+  metadata {
+    name = "o11y-clickhouse"
+  }
+}
+
+#######################################
+### SigNoz
+#######################################
+
 resource "kubernetes_namespace" "signoz" {
   metadata {
     name = "o11y-signoz"

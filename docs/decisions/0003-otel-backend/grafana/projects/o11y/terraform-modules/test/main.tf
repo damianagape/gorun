@@ -78,6 +78,18 @@ resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
 ### OpenTelemetry & Grafana
 #######################################
 
+module "grafana_vault" {
+  source = "../../../core/terraform-submodules/k8s-vault" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-vault/0.7.100.zip"
+
+  vault_name = "grafana"
+
+  iam_readers = [
+    "user:dagape.test@gmail.com",
+  ]
+  iam_writers = [
+  ]
+}
+
 module "test_lgtm_stack" {
   source = "../../terraform-submodules/gke-lgtm-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-lgtm-stack/0.7.100.zip"
 
