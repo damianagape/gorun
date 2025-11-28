@@ -75,29 +75,6 @@ resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
 }
 
 #######################################
-### Elastic Cloud on Kubernetes (ECK)
-#######################################
-
-resource "kubernetes_namespace" "elastic_system" {
-  metadata {
-    name = "elastic-system"
-  }
-}
-
-resource "helm_release" "elastic_operator" {
-  repository = "${path.module}/helm/charts"
-  chart      = "eck-operator"
-  name       = "elastic-operator"
-  namespace  = kubernetes_namespace.elastic_system.metadata[0].name
-
-  values = [
-    file("${path.module}/helm/values/eck-operator.yaml"),
-    templatefile("${path.module}/assets/elastic_operator.yaml.tftpl", {
-    }),
-  ]
-}
-
-#######################################
 ### OpenTelemetry & SigNoz
 #######################################
 
@@ -105,6 +82,18 @@ module "test_signoz" {
   source = "../../terraform-submodules/k8s-signoz" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-signoz/0.7.100.zip"
 
   signoz_domain = "signoz.gogke-test-7.damianagape.pl"
+}
+
+module "test_signoz_availability_monitor" {
+  source = "../../terraform-submodules/gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+
+  google_project = data.google_project.this
+
+  request_host     = "signoz.gogke-test-7.damianagape.pl"
+  request_path     = "/api/v1/health"
+  response_content = "" # TODO
+
+  notification_emails = ["dagape.test@gmail.com"]
 }
 
 module "test_otel_collectors" {

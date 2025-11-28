@@ -106,18 +106,6 @@ module "grafana_gateway_http_route" {
   health_check_path = "/healthz"
 }
 
-module "grafana_availability_monitor" {
-  source = "../gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
-
-  google_project = var.google_project
-
-  request_host     = var.grafana_domain
-  request_path     = "/healthz"
-  response_content = "Ok"
-
-  notification_emails = ["dagape.test@gmail.com"]
-}
-
 #######################################
 ### Loki
 #######################################
