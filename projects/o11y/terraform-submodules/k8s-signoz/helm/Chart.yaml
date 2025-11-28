@@ -2,7 +2,11 @@ apiVersion: v2
 name: undefined
 version: 0.0.0
 dependencies:
+  - # https://github.com/SigNoz/charts/tree/main/charts/clickhouse
+    repository: https://charts.signoz.io
+    name: clickhouse
+    version: 24.1.18
   - # https://github.com/SigNoz/charts/tree/main/charts/signoz
     repository: https://charts.signoz.io
     name: signoz
-    version: 0.102.1
+    version: 0.103.0

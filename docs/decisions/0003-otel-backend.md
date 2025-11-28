@@ -49,7 +49,7 @@ cons:
 
 - very complex setup and poor Helm charts quality (very poor!)
 - version compatibility burden (hope-it-will-work driven development)
-- a lot of backing services to manage: PostgreSQL, Minio/GCS/S3, Kafka (something more?)
+- a lot of backing services to manage: PostgreSQL, 3x Minio/GCS/S3, Kafka (something more?)
 - 3 different query languages: LogQL, PromQL, TraceQL
 - Grafana dashboards as code management is unusable due to import/export and datasources quirks
 - bad performance of Loki full-text search
@@ -79,36 +79,28 @@ pros:
 
 cons:
 
-- Java... consumes a lot of memory
+- JVM... consumes a lot of memory
 
 ### SigNoz
 
-```
-$ kubectl get pod
-NAME                                          READY   STATUS      RESTARTS        AGE
-chi-signoz-clickhouse-cluster-0-0-0           1/1     Running     0               9m5s
-signoz-0                                      1/1     Running     0               9m26s
-signoz-clickhouse-operator-7df8948f8c-jzb7q   2/2     Running     2 (9m15s ago)   9m26s
-signoz-otel-collector-8586c84f59-k9pwc        1/1     Running     0               9m26s
-signoz-schema-migrator-async-init-rjvpj       0/1     Completed   0               9m25s
-signoz-schema-migrator-sync-init-crv8g        0/1     Completed   0               9m25s
-signoz-zookeeper-0                            1/1     Running     0               9m26s
-
-$ kubectl top pod
-NAME                                          CPU(cores)   MEMORY(bytes)
-chi-signoz-clickhouse-cluster-0-0-0           79m          519Mi
-signoz-0                                      2m           55Mi
-signoz-clickhouse-operator-7df8948f8c-jzb7q   2m           24Mi
-signoz-otel-collector-8586c84f59-k9pwc        3m           24Mi
-signoz-zookeeper-0                            9m           750Mi
-```
-
 docs:
 
-- [gcp](https://signoz.io/docs/install/kubernetes/gcp/)
-- [helm chart](https://github.com/SigNoz/charts/tree/main/charts/signoz)
-- [otel](https://signoz.io/docs/opentelemetry-collection-agents/opentelemetry-collector/configuration/)
-- [terraform provider](https://registry.terraform.io/providers/SigNoz/signoz/latest)
+- [signoz](https://signoz.io/)
+  - [source code](https://github.com/SigNoz/signoz)
+  - [helm chart](https://github.com/SigNoz/charts/tree/main/charts/signoz)
+  - [terraform provider](https://registry.terraform.io/providers/SigNoz/signoz/latest), [more](https://github.com/SigNoz/terraform-provider-signoz)
+  - [gcp deployment](https://signoz.io/docs/install/kubernetes/gcp/)
+  - [external clickhouse](https://signoz.io/docs/operate/clickhouse/external-clickhouse/)
+  - [otel config](https://signoz.io/docs/opentelemetry-collection-agents/opentelemetry-collector/configuration/)
+  - [awesome otel](https://github.com/SigNoz/Awesome-OpenTelemetry)
+- [clickhouse](https://clickhouse.com/)
+  - [source code](https://github.com/ClickHouse/ClickHouse)
+  - [helm chart](https://github.com/SigNoz/charts/tree/main/charts/clickhouse), [by bitnami](https://github.com/bitnami/charts/tree/main/bitnami/clickhouse)
+- zookeeper
+  - https://github.com/SigNoz/signoz/issues/7002
+  - https://github.com/SigNoz/charts/issues/610
+- https://signoz.io/blog/logs-performance-benchmark/
+- https://clickhouse.com/blog/signoz-observability-solution-with-clickhouse-and-open-telemetry
 
 pros:
 
@@ -117,7 +109,7 @@ pros:
 
 cons:
 
-- todo
+- no official Helm chart for ClickHouse
 
 ## Decision Outcome
 

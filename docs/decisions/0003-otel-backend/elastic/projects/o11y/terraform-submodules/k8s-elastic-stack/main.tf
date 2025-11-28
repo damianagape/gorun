@@ -52,6 +52,10 @@ resource "kubernetes_namespace" "kibana" {
   metadata {
     name = "o11y-kibana"
   }
+
+  timeouts {
+    delete = "20m"
+  }
 }
 
 resource "kubernetes_manifest" "kibana" {

@@ -2,4 +2,12 @@ global:
   storageClass: standard-rwo
 
 clickhouse:
-  installCustomStorageClass: true
+  enabled: false
+externalClickhouse:
+  host: <clickhouse-endpoint>
+  httpPort: 8123
+  tcpPort: 9000
+  cluster: cluster
+  secure: false
+  user: <ch-user>
+  password: <ch-password>
