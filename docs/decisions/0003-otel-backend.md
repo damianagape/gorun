@@ -90,26 +90,26 @@ docs:
   - [helm chart](https://github.com/SigNoz/charts/tree/main/charts/signoz)
   - [terraform provider](https://registry.terraform.io/providers/SigNoz/signoz/latest), [more](https://github.com/SigNoz/terraform-provider-signoz)
   - [gcp deployment](https://signoz.io/docs/install/kubernetes/gcp/)
-  - [external clickhouse](https://signoz.io/docs/operate/clickhouse/external-clickhouse/)
   - [otel config](https://signoz.io/docs/opentelemetry-collection-agents/opentelemetry-collector/configuration/)
   - [awesome otel](https://github.com/SigNoz/Awesome-OpenTelemetry)
-- [clickhouse](https://clickhouse.com/)
+- [external clickhouse](https://signoz.io/docs/operate/clickhouse/external-clickhouse/)
+  - [clickhouse](https://clickhouse.com/)
   - [source code](https://github.com/ClickHouse/ClickHouse)
   - [helm chart](https://github.com/SigNoz/charts/tree/main/charts/clickhouse), [by bitnami](https://github.com/bitnami/charts/tree/main/bitnami/clickhouse)
-- zookeeper
-  - https://github.com/SigNoz/signoz/issues/7002
-  - https://github.com/SigNoz/charts/issues/610
 - https://signoz.io/blog/logs-performance-benchmark/
 - https://clickhouse.com/blog/signoz-observability-solution-with-clickhouse-and-open-telemetry
 
 pros:
 
-- pretty simple setup: SigNoz, ClickHouse, ZooKeeper (on the other hand it would be better to not maintain ZooKeeper...)
+- pretty simple setup: SigNoz, ClickHouse, ZooKeeper
 - easy deployment; works out-of-the-box
 
 cons:
 
 - no official Helm chart for ClickHouse
+- it would be better to not maintain ZooKeeper
+  - https://github.com/SigNoz/signoz/issues/7002
+  - https://github.com/SigNoz/charts/issues/610
 
 ## Decision Outcome
 
