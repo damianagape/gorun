@@ -1,5 +1,5 @@
 # Monitoring
 
-## SigNoz instances
+## ClickStack instances
 
-- [signoz.gogke-test-7.damianagape.pl](https://signoz.gogke-test-7.damianagape.pl/home)
+- [hyperdx.gogke-test-7.damianagape.pl](https://hyperdx.gogke-test-7.damianagape.pl)

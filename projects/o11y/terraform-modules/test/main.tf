@@ -75,41 +75,41 @@ resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
 }
 
 #######################################
-### OpenTelemetry & SigNoz
+### OpenTelemetry & ClickStack
 #######################################
 
-module "test_signoz" {
-  source = "../../terraform-submodules/k8s-signoz" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-signoz/0.7.100.zip"
+module "test_clickstack" {
+  source = "../../terraform-submodules/k8s-clickstack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-clickstack/0.7.100.zip"
 
-  signoz_domain = "signoz.gogke-test-7.damianagape.pl"
+  hyperdx_domain = "hyperdx.gogke-test-7.damianagape.pl"
 }
 
-module "test_signoz_availability_monitor" {
-  source = "../../terraform-submodules/gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+# module "test_clickstack_availability_monitor" {
+#   source = "../../terraform-submodules/gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+#
+#   google_project = data.google_project.this
+#
+#   request_host     = "clickstack.gogke-test-7.damianagape.pl"
+#   request_path     = "/api/v1/health"
+#   response_content = "{\"status\":\"ok\"}"
+#
+#   notification_emails = ["dagape.test@gmail.com"]
+# }
 
-  google_project = data.google_project.this
-
-  request_host     = "signoz.gogke-test-7.damianagape.pl"
-  request_path     = "/api/v1/health"
-  response_content = "{\"status\":\"ok\"}"
-
-  notification_emails = ["dagape.test@gmail.com"]
-}
-
-module "test_otel_collectors" {
-  source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
-  depends_on = [
-    helm_release.opentelemetry_operator,
-  ]
-
-  signoz_endpoint = module.test_signoz.signoz_endpoint
-}
+# module "test_otel_collectors" {
+#   source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
+#   depends_on = [
+#     helm_release.opentelemetry_operator,
+#   ]
+#
+#   clickstack_endpoint = module.test_clickstack.clickstack_endpoint
+# }
 
 module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"
 
   blackbox_exporter_urls = [
-    "https://signoz.gogke-test-7.damianagape.pl/api/v1/health",
+    # "https://clickstack.gogke-test-7.damianagape.pl/api/v1/health",
     "https://stateful-kuard.gogke-test-7.damianagape.pl/healthy",
     "https://stateless-kuard.gogke-test-7.damianagape.pl/healthy",
   ]

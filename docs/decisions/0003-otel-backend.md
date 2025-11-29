@@ -4,12 +4,12 @@
 
 We need to store and visualize OpenTelemetry signals. Stack requirements:
 
-- open-source,
-- self-hosted,
-- free for commercial use,
-- low resource consumption: CPU, memory, storage,
+- open-source, self-hosted, free for commercial use,
 - easy to deploy and maintain,
-- features: logs storage, metrics storage, traces storage, visualization, alerts, OAuth2 support, configuration as code.
+- low resource consumption: CPU, memory, storage,
+- single dashboard to display all signals,
+- single query language,
+- features: logs storage, metrics storage, traces storage, visualization, alerts, configuration as code, OAuth2 support.
 
 ## Considered Options
 
@@ -52,7 +52,7 @@ cons:
 - a lot of services to manage
 - 3 different query languages: LogQL, PromQL, TraceQL
 - Grafana dashboards as code management is unusable due to import/export and datasources quirks
-- bad performance of Loki full-text search
+- [bad performance of Loki full-text search](https://signoz.io/blog/logs-performance-benchmark/)
 
 ```
 $ kubectl get pod --all-namespaces
@@ -142,10 +142,12 @@ pros:
 - top quality Kubernetes operator - it's a pleasure to deploy this stack
 - one version for all components - no version compatibility burden
 - one storage driver, one data format to work with, one scaling mechanism - it's just possible to learn and master this tool; this knowledge is also usable in another places, not just for observability - it's good to know Elasticsearch
+- best full-text search support for logs
 
 cons:
 
 - JVM... consumes a lot of memory
+- [elasticsearch is not designed as a analytical database](https://signoz.io/blog/logs-performance-benchmark/)
 
 ```
 $ kubectl get pod --all-namespaces
@@ -168,7 +170,7 @@ docs:
 - [signoz](https://signoz.io/)
   - [source code](https://github.com/SigNoz/signoz)
   - [helm chart](https://github.com/SigNoz/charts/tree/main/charts/signoz)
-  - [terraform provider](https://registry.terraform.io/providers/SigNoz/signoz/latest), [more](https://github.com/SigNoz/terraform-provider-signoz)
+  - [terraform provider](https://registry.terraform.io/providers/SigNoz/signoz/latest), [source code](https://github.com/SigNoz/terraform-provider-signoz)
   - [gcp deployment](https://signoz.io/docs/install/kubernetes/gcp/)
   - [otel config](https://signoz.io/docs/opentelemetry-collection-agents/opentelemetry-collector/configuration/)
   - [awesome otel](https://github.com/SigNoz/Awesome-OpenTelemetry)
@@ -176,7 +178,6 @@ docs:
   - [clickhouse](https://clickhouse.com/)
   - [source code](https://github.com/ClickHouse/ClickHouse)
   - helm chart [by signoz](https://github.com/SigNoz/charts/tree/main/charts/clickhouse), [by bitnami](https://github.com/bitnami/charts/tree/main/bitnami/clickhouse)
-- https://signoz.io/blog/logs-performance-benchmark/
 - https://clickhouse.com/blog/signoz-observability-solution-with-clickhouse-and-open-telemetry
 
 pros:
@@ -186,7 +187,6 @@ pros:
 
 cons:
 
-- no official Helm chart for ClickHouse
 - it would be better to not maintain ZooKeeper, but probably will be replaced with ClickHouse Keeper
   - https://github.com/SigNoz/signoz/issues/7002
   - https://github.com/SigNoz/charts/issues/610
@@ -209,6 +209,26 @@ o11y-signoz                      signoz-0                                       
 o11y-signoz                      signoz-clickhouse-operator-7df8948f8c-jj2vk                1m           22Mi
 o11y-signoz                      signoz-otel-collector-66d94cf979-ncvlx                     2m           45Mi
 o11y-signoz                      signoz-zookeeper-0                                         7m           757Mi
+```
+
+### ClickStack: ClickHouse, HyperDX
+
+docs:
+
+- [clickstack](https://clickhouse.com/use-cases/observability)
+  - [docs](https://clickhouse.com/docs/use-cases/observability/clickstack)
+  - [helm](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm)
+  - [gcp](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm-cloud#google-kubernetes-engine-gke)
+- [clickhouse](https://clickhouse.com/)
+  - [repo](https://github.com/ClickHouse/ClickHouse)
+- [hyperdx](https://www.hyperdx.io/)
+  - [repo](https://github.com/hyperdxio/hyperdx)
+  - [charts](https://github.com/hyperdxio/helm-charts)
+  - [otel](https://www.hyperdx.io/docs/install/opentelemetry)
+
+```
+$ kubectl get pod --all-namespaces
+$ kubectl top pod --all-namespaces
 ```
 
 ## Decision Outcome
