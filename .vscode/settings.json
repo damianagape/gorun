@@ -22,7 +22,7 @@
 
   "search.exclude": {
     "**/.terraform": true,
-    "docs/decisions/*/**": true,
+    "docs/decisions/0003-otel-backend": true,
     "projects/*/*/*/helm/charts": true
   },
   "files.associations": {

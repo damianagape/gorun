@@ -22,25 +22,24 @@ resource "helm_release" "clickstack" {
   ]
 
   lifecycle {
-    # TODO true
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
 
-# data "kubernetes_service" "clickstack" {
-#   metadata {
-#     name      = helm_release.clickstack.metadata.name
-#     namespace = helm_release.clickstack.metadata.namespace
-#   }
-# }
+data "kubernetes_service" "hyperdx" {
+  metadata {
+    name      = "${helm_release.clickstack.metadata.name}-app"
+    namespace = helm_release.clickstack.metadata.namespace
+  }
+}
 
-# module "clickstack_gateway_http_route" {
-#   source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-2-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.3.100.zip"
-#
-#   kubernetes_service = data.kubernetes_service.clickstack
-#
-#   domain            = var.clickstack_domain
-#   service_port      = 8080
-#   container_port    = 8080
-#   health_check_path = "/api/v1/health"
-# }
+module "hyperdx_gateway_http_route" {
+  source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-2-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.3.100.zip"
+
+  kubernetes_service = data.kubernetes_service.hyperdx
+
+  domain            = var.hyperdx_domain
+  service_port      = 3000
+  container_port    = 3000
+  health_check_path = "/api/health"
+}

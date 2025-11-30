@@ -217,18 +217,34 @@ docs:
 
 - [clickstack](https://clickhouse.com/use-cases/observability)
   - [docs](https://clickhouse.com/docs/use-cases/observability/clickstack)
-  - [helm](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm)
-  - [gcp](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm-cloud#google-kubernetes-engine-gke)
+  - [tables and schemas](https://clickhouse.com/docs/use-cases/observability/clickstack/ingesting-data/schemas)
 - [clickhouse](https://clickhouse.com/)
   - [repo](https://github.com/ClickHouse/ClickHouse)
 - [hyperdx](https://www.hyperdx.io/)
   - [repo](https://github.com/hyperdxio/hyperdx)
   - [charts](https://github.com/hyperdxio/helm-charts)
-  - [otel](https://www.hyperdx.io/docs/install/opentelemetry)
+- deploy
+  - [helm](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm)
+  - [gcp](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm-cloud#google-kubernetes-engine-gke)
+  - [config](https://clickhouse.com/docs/use-cases/observability/clickstack/config#helm)
+- otel demo
+  - [docs](https://clickhouse.com/docs/use-cases/observability/clickstack/getting-started/remote-demo-data#otel-demo)
+  - [repo](https://github.com/ClickHouse/opentelemetry-demo), [forked from](https://github.com/open-telemetry/opentelemetry-demo)
 
 ```
 $ kubectl get pod --all-namespaces
+NAMESPACE                        NAME                                                       READY   STATUS                   RESTARTS      AGE
+o11y-clickstack                  clickstack-app-7c5c97f665-4ktf5                            1/1     Running                  0             118s
+o11y-clickstack                  clickstack-clickhouse-b48668b89-8lwn7                      1/1     Running                  0             118s
+o11y-clickstack                  clickstack-mongodb-7957dc8685-sjv7q                        1/1     Running                  0             118s
+o11y-clickstack                  clickstack-otel-collector-6b47bdc857-fxzbj                 1/1     Running                  0             118s
+
 $ kubectl top pod --all-namespaces
+NAMESPACE                        NAME                                                       CPU(cores)   MEMORY(bytes)
+o11y-clickstack                  clickstack-app-7c5c97f665-4ktf5                            120m         432Mi
+o11y-clickstack                  clickstack-clickhouse-b48668b89-8lwn7                      63m          220Mi
+o11y-clickstack                  clickstack-mongodb-7957dc8685-sjv7q                        9m           66Mi
+o11y-clickstack                  clickstack-otel-collector-6b47bdc857-fxzbj                 37m          50Mi
 ```
 
 ## Decision Outcome
