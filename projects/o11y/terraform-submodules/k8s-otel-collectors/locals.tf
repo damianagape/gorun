@@ -1,6 +1,6 @@
 locals {
   common_config = yamldecode(templatefile("${path.module}/assets/common_config.yaml.tftpl", {
-    signoz_endpoint = var.signoz_endpoint
+    clickstack_endpoint = var.clickstack_endpoint
   }))
   file_config = merge(local.common_config, yamldecode(file("${path.module}/assets/file_config.yaml")))
   otlp_config = merge(local.common_config, yamldecode(file("${path.module}/assets/otlp_config.yaml")))

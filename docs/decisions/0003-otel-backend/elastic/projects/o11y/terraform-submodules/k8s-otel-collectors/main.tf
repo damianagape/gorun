@@ -8,9 +8,9 @@ resource "kubernetes_namespace" "otlp_collector" {
   }
 }
 
-resource "kubernetes_secret" "otlp_collector_elastic" {
+resource "kubernetes_secret" "otlp_collector_envs" {
   metadata {
-    name      = "elastic"
+    name      = "otlp-collector-envs"
     namespace = kubernetes_namespace.otlp_collector.metadata[0].name
   }
   data = {
@@ -29,7 +29,7 @@ resource "kubernetes_manifest" "otlp_collector" {
     spec = {
       mode    = "deployment"
       config  = local.otlp_config
-      envFrom = [{ secretRef = { name = kubernetes_secret.otlp_collector_elastic.metadata[0].name } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.otlp_collector_envs.metadata[0].name } }]
 
       replicas = 1
       resources = {
@@ -76,9 +76,9 @@ resource "kubernetes_namespace" "file_collector" {
   }
 }
 
-resource "kubernetes_secret" "file_collector_elastic" {
+resource "kubernetes_secret" "file_collector_envs" {
   metadata {
-    name      = "elastic"
+    name      = "file-collector-envs"
     namespace = kubernetes_namespace.file_collector.metadata[0].name
   }
   data = {
@@ -97,7 +97,7 @@ resource "kubernetes_manifest" "file_collector" {
     spec = {
       mode    = "daemonset"
       config  = local.file_config
-      envFrom = [{ secretRef = { name = kubernetes_secret.file_collector_elastic.metadata[0].name } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.file_collector_envs.metadata[0].name } }]
 
       volumes = [
         { name = "varlogpods", hostPath = { path = "/var/log/pods" } },
@@ -174,9 +174,9 @@ resource "kubernetes_cluster_role_binding" "prom_targetallocator" {
   }
 }
 
-resource "kubernetes_secret" "prom_collector_elastic" {
+resource "kubernetes_secret" "prom_collector_envs" {
   metadata {
-    name      = "elastic"
+    name      = "prom-collector-envs"
     namespace = kubernetes_namespace.prom_collector.metadata[0].name
   }
   data = {
@@ -195,7 +195,7 @@ resource "kubernetes_manifest" "prom_collector" {
     spec = {
       mode    = "statefulset"
       config  = local.prom_config
-      envFrom = [{ secretRef = { name = kubernetes_secret.prom_collector_elastic.metadata[0].name } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.prom_collector_envs.metadata[0].name } }]
 
       targetAllocator = { # https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api/opentelemetrycollectors.md#opentelemetrycollectorspectargetallocator-1
         enabled        = true

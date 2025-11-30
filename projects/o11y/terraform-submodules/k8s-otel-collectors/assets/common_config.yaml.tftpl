@@ -85,10 +85,13 @@ processors:
     timeout: 10s
 
 exporters:
-  otlp/signoz:
-    endpoint: "${signoz_endpoint}"
+  otlp/clickstack:
+    endpoint: "${clickstack_endpoint}"
     tls:
       insecure: true
+    headers:
+      Authorization: "$${env:CLICKSTACK_API_KEY}"
+    compression: gzip
 
   debug/logs:
     verbosity: detailed

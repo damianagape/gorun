@@ -17,6 +17,9 @@ resource "helm_release" "clickstack" {
   values = [
     file("${path.module}/helm/values/clickstack.yaml"),
     templatefile("${path.module}/assets/clickstack.yaml.tftpl", {
+      name      = "clickstack"
+      namespace = kubernetes_namespace.clickstack.metadata[0].name
+
       hyperdx_domain = var.hyperdx_domain
     }),
   ]

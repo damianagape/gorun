@@ -8,6 +8,16 @@ resource "kubernetes_namespace" "otlp_collector" {
   }
 }
 
+resource "kubernetes_secret" "otlp_collector_envs" {
+  metadata {
+    name      = "otlp-collector-envs"
+    namespace = kubernetes_namespace.otlp_collector.metadata[0].name
+  }
+  data = {
+    CLICKSTACK_API_KEY = var.clickstack_api_key
+  }
+}
+
 resource "kubernetes_manifest" "otlp_collector" {
   manifest = {
     apiVersion = "opentelemetry.io/v1beta1"
@@ -17,8 +27,9 @@ resource "kubernetes_manifest" "otlp_collector" {
       namespace = kubernetes_namespace.otlp_collector.metadata[0].name
     }
     spec = {
-      mode   = "deployment"
-      config = local.otlp_config
+      mode    = "deployment"
+      config  = local.otlp_config
+      envFrom = [{ secretRef = { name = kubernetes_secret.otlp_collector_envs.metadata[0].name } }]
 
       replicas = 1
       resources = {
@@ -65,6 +76,16 @@ resource "kubernetes_namespace" "file_collector" {
   }
 }
 
+resource "kubernetes_secret" "file_collector_envs" {
+  metadata {
+    name      = "file-collector-envs"
+    namespace = kubernetes_namespace.file_collector.metadata[0].name
+  }
+  data = {
+    CLICKSTACK_API_KEY = var.clickstack_api_key
+  }
+}
+
 resource "kubernetes_manifest" "file_collector" {
   manifest = {
     apiVersion = "opentelemetry.io/v1beta1"
@@ -74,8 +95,9 @@ resource "kubernetes_manifest" "file_collector" {
       namespace = kubernetes_namespace.file_collector.metadata[0].name
     }
     spec = {
-      mode   = "daemonset"
-      config = local.file_config
+      mode    = "daemonset"
+      config  = local.file_config
+      envFrom = [{ secretRef = { name = kubernetes_secret.file_collector_envs.metadata[0].name } }]
 
       volumes = [
         { name = "varlogpods", hostPath = { path = "/var/log/pods" } },
@@ -152,6 +174,16 @@ resource "kubernetes_cluster_role_binding" "prom_targetallocator" {
   }
 }
 
+resource "kubernetes_secret" "prom_collector_envs" {
+  metadata {
+    name      = "prom-collector-envs"
+    namespace = kubernetes_namespace.prom_collector.metadata[0].name
+  }
+  data = {
+    CLICKSTACK_API_KEY = var.clickstack_api_key
+  }
+}
+
 resource "kubernetes_manifest" "prom_collector" {
   manifest = {
     apiVersion = "opentelemetry.io/v1beta1"
@@ -161,8 +193,9 @@ resource "kubernetes_manifest" "prom_collector" {
       namespace = kubernetes_namespace.prom_collector.metadata[0].name
     }
     spec = {
-      mode   = "statefulset"
-      config = local.prom_config
+      mode    = "statefulset"
+      config  = local.prom_config
+      envFrom = [{ secretRef = { name = kubernetes_secret.prom_collector_envs.metadata[0].name } }]
 
       targetAllocator = { # https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api/opentelemetrycollectors.md#opentelemetrycollectorspectargetallocator-1
         enabled        = true

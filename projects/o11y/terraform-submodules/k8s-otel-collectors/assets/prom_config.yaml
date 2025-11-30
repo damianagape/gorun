@@ -3,7 +3,7 @@ service:
     metrics:
       receivers: [prometheus]
       processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlp/signoz]
+      exporters: [otlp/clickstack]
 
   extensions:
     - health_check

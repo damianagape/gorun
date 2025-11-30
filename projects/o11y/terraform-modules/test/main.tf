@@ -96,14 +96,15 @@ module "test_clickstack_availability_monitor" {
   notification_emails = ["dagape.test@gmail.com"]
 }
 
-# module "test_otel_collectors" {
-#   source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
-#   depends_on = [
-#     helm_release.opentelemetry_operator,
-#   ]
-#
-#   clickstack_endpoint = module.test_clickstack.clickstack_endpoint
-# }
+module "test_otel_collectors" {
+  source = "../../terraform-submodules/k8s-otel-collectors" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-otel-collectors/0.7.100.zip"
+  depends_on = [
+    helm_release.opentelemetry_operator,
+  ]
+
+  clickstack_endpoint = module.test_clickstack.clickstack_endpoint
+  clickstack_api_key  = module.test_clickstack.clickstack_api_key
+}
 
 module "test_prom_exporters" {
   source = "../../terraform-submodules/k8s-prom-exporters" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-prom-exporters/0.7.100.zip"
