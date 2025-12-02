@@ -1,7 +1,7 @@
 service:
   pipelines:
     metrics:
-      receivers: []
+      receivers: [kubeletstats]
       processors: [memory_limiter, filter, k8sattributes, batch]
       exporters: [otlp/clickstack]
 

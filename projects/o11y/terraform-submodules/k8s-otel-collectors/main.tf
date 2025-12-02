@@ -152,12 +152,8 @@ resource "kubernetes_manifest" "file_collector" {
       config  = local.file_config
       envFrom = [{ secretRef = { name = kubernetes_secret.file_collector_envs.metadata[0].name } }]
 
-      volumes = [
-        { name = "varlogpods", hostPath = { path = "/var/log/pods" } },
-      ]
-      volumeMounts = [
-        { name = "varlogpods", mountPath = "/var/log/pods", readOnly = true },
-      ]
+      volumes      = [{ name = "varlogpods", hostPath = { path = "/var/log/pods" } }]
+      volumeMounts = [{ name = "varlogpods", mountPath = "/var/log/pods", readOnly = true }]
 
       resources = {
         requests = { cpu = "1m", memory = "1Mi" }
@@ -293,13 +289,6 @@ resource "kubernetes_manifest" "node_collector" {
       mode    = "daemonset"
       config  = local.node_config
       envFrom = [{ secretRef = { name = kubernetes_secret.node_collector_envs.metadata[0].name } }]
-
-      volumes = [
-        { name = "varlogpods", hostPath = { path = "/var/log/pods" } },
-      ]
-      volumeMounts = [
-        { name = "varlogpods", mountPath = "/var/log/pods", readOnly = true },
-      ]
 
       resources = {
         requests = { cpu = "1m", memory = "1Mi" }

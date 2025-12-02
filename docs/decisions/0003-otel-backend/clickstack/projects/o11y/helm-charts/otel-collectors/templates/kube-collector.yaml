@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: o11y-kube-collector
+  labels:
+    app.kubernetes.io/component: kube-collector
+    app.kubernetes.io/name: kube-collector
+    {{- include "otel-collectors.metadataLabels" $ | nindent 4 }}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: o11y-kube-collector
+  name: kube-collector-envs
+  labels:
+    app.kubernetes.io/component: kube-collector
+    app.kubernetes.io/name: kube-collector
+    {{- include "otel-collectors.metadataLabels" $ | nindent 4 }}
+data:
+  {{- include "otel-collectors.envs" $ | nindent 4 }}
+
+---
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  namespace: o11y-kube-collector
+  name: kube
+  labels:
+    app.kubernetes.io/component: kube-collector
+    app.kubernetes.io/name: kube-collector
+    {{- include "otel-collectors.metadataLabels" $ | nindent 4 }}
+spec:
+  config:
+    {{- include "otel-collectors.kubeCollectorConfig" $ | nindent 4 }}
+  envFrom:
+  - secretRef:
+      name: kube-collector-envs
+
+  mode: deployment
+  replicas: 1 # do not scale up!
+  resources:
+    requests:
+      cpu: 1m
+      memory: 1Mi
+    limits: {}
+  podAnnotations:
+    checksum/envs: "{{ include "otel-collectors.envsChecksum" $ }}"
+    prometheus.io/scrape: "false"
+  observability:
+    metrics:
+      enableMetrics: false
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: o11y-kube-collector
+  labels:
+    app.kubernetes.io/component: kube-collector
+    app.kubernetes.io/name: kube-collector
+    {{- include "otel-collectors.metadataLabels" $ | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: o11y-otel-collector
+subjects:
+- kind: ServiceAccount
+  namespace: o11y-kube-collector
+  name: kube-collector

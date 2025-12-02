@@ -1,3 +1,4 @@
+{{- define "otel-collectors.commonCollectorConfig" -}}
 receivers:
   otlp:
     protocols:
@@ -34,7 +35,7 @@ receivers:
   prometheus: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/prometheusreceiver/README.md
     config:
       scrape_configs:
-        - job_name: opentelemetry-collector
+        - job_name: otel-collector
           scrape_interval: 1m
           static_configs:
             - targets:
@@ -83,18 +84,18 @@ processors:
       labels:
         - from: pod
           key_regex: (.*)
-          tag_name: $$1
+          tag_name: $1
 
   batch: # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
     timeout: 10s
 
 exporters:
   otlp/clickstack:
-    endpoint: "${clickstack_endpoint}"
+    endpoint: "{{ .Values.clickstack_endpoint }}"
     tls:
       insecure: true
     headers:
-      Authorization: "$${env:CLICKSTACK_API_KEY}"
+      Authorization: "${env:CLICKSTACK_API_KEY}"
     compression: gzip
 
   #
@@ -138,3 +139,77 @@ extensions:
 #     - health_check
 #
 #
+{{- end -}}
+
+{{- define "otel-collectors.fileCollectorConfig" -}}
+{{ include "otel-collectors.commonCollectorConfig" $ }}
+service:
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+
+  extensions:
+    - health_check
+{{- end -}}
+
+{{- define "otel-collectors.kubeCollectorConfig" -}}
+{{ include "otel-collectors.commonCollectorConfig" $ }}
+service:
+  pipelines:
+    metrics:
+      receivers: [k8s_cluster]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+
+  extensions:
+    - health_check
+{{- end -}}
+
+{{- define "otel-collectors.nodeCollectorConfig" -}}
+{{ include "otel-collectors.commonCollectorConfig" $ }}
+service:
+  pipelines:
+    metrics:
+      receivers: [kubeletstats]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+
+  extensions:
+    - health_check
+{{- end -}}
+
+{{- define "otel-collectors.otlpCollectorConfig" -}}
+{{ include "otel-collectors.commonCollectorConfig" $ }}
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+
+  extensions:
+    - health_check
+{{- end -}}
+
+{{- define "otel-collectors.promCollectorConfig" -}}
+{{ include "otel-collectors.commonCollectorConfig" $ }}
+service:
+  pipelines:
+    metrics:
+      receivers: [prometheus]
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+
+  extensions:
+    - health_check
+{{- end -}}
