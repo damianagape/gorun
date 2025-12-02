@@ -8,6 +8,13 @@
 
 ## Kubernetes resources
 
+Deleting and recreating non-production Kubernetes nodes:
+
+```
+$ ./scripts/dev stop
+$ ./scripts/dev start
+```
+
 Get containers CPU and memory requests:
 
 ```
