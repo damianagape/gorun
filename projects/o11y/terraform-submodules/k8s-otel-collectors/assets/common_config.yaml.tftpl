@@ -93,14 +93,21 @@ exporters:
       Authorization: "$${env:CLICKSTACK_API_KEY}"
     compression: gzip
 
-  debug/logs:
-    verbosity: detailed
-
-  debug/metrics:
-    verbosity: detailed
-
-  debug/traces:
-    verbosity: detailed
+  #
+  #
+  # prometheusremotewrite/prometheus: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
+  #   endpoint: http://127.0.0.1:9090/api/v1/push
+  #
+  # debug/logs:
+  #   verbosity: detailed
+  #
+  # debug/metrics:
+  #   verbosity: detailed
+  #
+  # debug/traces:
+  #   verbosity: detailed
+  #
+  #
 
 extensions:
   health_check:

@@ -1,3 +1,56 @@
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/k8sattributesprocessor/README.md#role-based-access-control
+resource "kubernetes_cluster_role" "opentelemetry_collector" {
+  metadata {
+    name = "opentelemetry-collector"
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["pods", "namespaces", "nodes"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments", "replicasets", "statefulsets", "daemonsets"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["batch"]
+    resources  = ["jobs", "cronjobs"]
+    verbs      = ["get", "list", "watch"]
+  }
+}
+
+# https://github.com/open-telemetry/opentelemetry-operator/tree/main/cmd/otel-allocator#rbac
+resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
+  metadata {
+    name = "opentelemetry-targetallocator"
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps", "endpoints", "namespaces", "nodes", "nodes/metrics", "pods", "serviceaccounts", "services"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["discovery.k8s.io"]
+    resources  = ["endpointslices"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["networking.k8s.io"]
+    resources  = ["ingresses"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["monitoring.coreos.com"]
+    resources  = ["servicemonitors", "podmonitors", "probes", "scrapeconfigs"]
+    verbs      = ["*"]
+  }
+  rule {
+    non_resource_urls = ["/metrics"]
+    verbs             = ["get"]
+  }
+}
+
 #######################################
 ### otlp
 #######################################
@@ -137,6 +190,148 @@ resource "kubernetes_cluster_role_binding" "file_collector" {
     kind      = "ServiceAccount"
     name      = data.kubernetes_service_account.file_collector.metadata[0].name
     namespace = data.kubernetes_service_account.file_collector.metadata[0].namespace
+  }
+}
+
+#######################################
+### kube
+#######################################
+
+resource "kubernetes_namespace" "kube_collector" {
+  metadata {
+    name = "o11y-kube-collector"
+  }
+}
+
+resource "kubernetes_secret" "kube_collector_envs" {
+  metadata {
+    name      = "kube-collector-envs"
+    namespace = kubernetes_namespace.kube_collector.metadata[0].name
+  }
+  data = {
+    CLICKSTACK_API_KEY = var.clickstack_api_key
+  }
+}
+
+resource "kubernetes_manifest" "kube_collector" {
+  manifest = {
+    apiVersion = "opentelemetry.io/v1beta1"
+    kind       = "OpenTelemetryCollector"
+    metadata = {
+      name      = "kube"
+      namespace = kubernetes_namespace.kube_collector.metadata[0].name
+    }
+    spec = {
+      mode    = "deployment"
+      config  = local.kube_config
+      envFrom = [{ secretRef = { name = kubernetes_secret.kube_collector_envs.metadata[0].name } }]
+
+      replicas = 1
+      resources = {
+        requests = { cpu = "1m", memory = "1Mi" }
+        limits   = {}
+      }
+      observability  = { metrics = { enableMetrics = false } }
+      podAnnotations = { "prometheus.io/scrape" = false }
+    }
+  }
+}
+
+data "kubernetes_service_account" "kube_collector" {
+  metadata {
+    name      = "${kubernetes_manifest.kube_collector.manifest.metadata.name}-collector"
+    namespace = kubernetes_manifest.kube_collector.manifest.metadata.namespace
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "kube_collector" {
+  metadata {
+    name = "${data.kubernetes_service_account.kube_collector.metadata[0].namespace}-${data.kubernetes_service_account.kube_collector.metadata[0].name}"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "opentelemetry-collector"
+  }
+  subject {
+    api_group = ""
+    kind      = "ServiceAccount"
+    name      = data.kubernetes_service_account.kube_collector.metadata[0].name
+    namespace = data.kubernetes_service_account.kube_collector.metadata[0].namespace
+  }
+}
+
+#######################################
+### node
+#######################################
+
+resource "kubernetes_namespace" "node_collector" {
+  metadata {
+    name = "o11y-node-collector"
+  }
+}
+
+resource "kubernetes_secret" "node_collector_envs" {
+  metadata {
+    name      = "node-collector-envs"
+    namespace = kubernetes_namespace.node_collector.metadata[0].name
+  }
+  data = {
+    CLICKSTACK_API_KEY = var.clickstack_api_key
+  }
+}
+
+resource "kubernetes_manifest" "node_collector" {
+  manifest = {
+    apiVersion = "opentelemetry.io/v1beta1"
+    kind       = "OpenTelemetryCollector"
+    metadata = {
+      name      = "node"
+      namespace = kubernetes_namespace.node_collector.metadata[0].name
+    }
+    spec = {
+      mode    = "daemonset"
+      config  = local.node_config
+      envFrom = [{ secretRef = { name = kubernetes_secret.node_collector_envs.metadata[0].name } }]
+
+      volumes = [
+        { name = "varlogpods", hostPath = { path = "/var/log/pods" } },
+      ]
+      volumeMounts = [
+        { name = "varlogpods", mountPath = "/var/log/pods", readOnly = true },
+      ]
+
+      resources = {
+        requests = { cpu = "1m", memory = "1Mi" }
+        limits   = {}
+      }
+      observability  = { metrics = { enableMetrics = false } }
+      podAnnotations = { "prometheus.io/scrape" = false }
+    }
+  }
+}
+
+data "kubernetes_service_account" "node_collector" {
+  metadata {
+    name      = "${kubernetes_manifest.node_collector.manifest.metadata.name}-collector"
+    namespace = kubernetes_manifest.node_collector.manifest.metadata.namespace
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "node_collector" {
+  metadata {
+    name = "${data.kubernetes_service_account.node_collector.metadata[0].namespace}-${data.kubernetes_service_account.node_collector.metadata[0].name}"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "opentelemetry-collector"
+  }
+  subject {
+    api_group = ""
+    kind      = "ServiceAccount"
+    name      = data.kubernetes_service_account.node_collector.metadata[0].name
+    namespace = data.kubernetes_service_account.node_collector.metadata[0].namespace
   }
 }
 

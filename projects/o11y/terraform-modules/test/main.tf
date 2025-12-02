@@ -21,79 +21,16 @@ resource "helm_release" "opentelemetry_operator" {
   ]
 }
 
-# https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/k8sattributesprocessor/README.md#role-based-access-control
-resource "kubernetes_cluster_role" "opentelemetry_collector" {
-  metadata {
-    name = "opentelemetry-collector"
-  }
-  rule {
-    api_groups = [""]
-    resources  = ["pods", "namespaces", "nodes"]
-    verbs      = ["get", "list", "watch"]
-  }
-  rule {
-    api_groups = ["apps"]
-    resources  = ["deployments", "replicasets", "statefulsets", "daemonsets"]
-    verbs      = ["get", "list", "watch"]
-  }
-  rule {
-    api_groups = ["batch"]
-    resources  = ["jobs", "cronjobs"]
-    verbs      = ["get", "list", "watch"]
-  }
-}
-
-# https://github.com/open-telemetry/opentelemetry-operator/tree/main/cmd/otel-allocator#rbac
-resource "kubernetes_cluster_role" "opentelemetry_targetallocator" {
-  metadata {
-    name = "opentelemetry-targetallocator"
-  }
-  rule {
-    api_groups = [""]
-    resources  = ["configmaps", "endpoints", "namespaces", "nodes", "nodes/metrics", "pods", "serviceaccounts", "services"]
-    verbs      = ["get", "list", "watch"]
-  }
-  rule {
-    api_groups = ["discovery.k8s.io"]
-    resources  = ["endpointslices"]
-    verbs      = ["get", "list", "watch"]
-  }
-  rule {
-    api_groups = ["networking.k8s.io"]
-    resources  = ["ingresses"]
-    verbs      = ["get", "list", "watch"]
-  }
-  rule {
-    api_groups = ["monitoring.coreos.com"]
-    resources  = ["servicemonitors", "podmonitors", "probes", "scrapeconfigs"]
-    verbs      = ["*"]
-  }
-  rule {
-    non_resource_urls = ["/metrics"]
-    verbs             = ["get"]
-  }
-}
-
 #######################################
 ### OpenTelemetry & ClickStack
 #######################################
 
 module "test_clickstack" {
-  source = "../../terraform-submodules/k8s-clickstack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/k8s-clickstack/0.7.100.zip"
-
-  hyperdx_domain = "hyperdx.gogke-test-7.damianagape.pl"
-}
-
-module "test_clickstack_availability_monitor" {
-  source = "../../terraform-submodules/gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+  source = "../../terraform-submodules/gke-clickstack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-clickstack/0.7.100.zip"
 
   google_project = data.google_project.this
 
-  request_host     = "hyperdx.gogke-test-7.damianagape.pl"
-  request_path     = "/api/health"
-  response_content = "{\"data\":\"OK\"" # without closing curly brace
-
-  notification_emails = ["dagape.test@gmail.com"]
+  hyperdx_domain = "hyperdx.gogke-test-7.damianagape.pl"
 }
 
 module "test_otel_collectors" {

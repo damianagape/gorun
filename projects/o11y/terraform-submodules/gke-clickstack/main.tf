@@ -46,3 +46,15 @@ module "hyperdx_gateway_http_route" {
   container_port    = 3000
   health_check_path = "/api/health"
 }
+
+module "hyperdx_availability_monitor" {
+  source = "../gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+
+  google_project = var.google_project
+
+  request_host     = var.hyperdx_domain
+  request_path     = "/api/health"
+  response_content = "{\"data\":\"OK\"" # without closing curly brace
+
+  notification_emails = ["dagape.test@gmail.com"]
+}
