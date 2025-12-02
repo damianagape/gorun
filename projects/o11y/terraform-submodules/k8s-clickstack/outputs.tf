@@ -1,5 +1,6 @@
 output "clickstack_endpoint" {
-  value = "${helm_release.clickstack.metadata.name}-otel-collector.${helm_release.clickstack.metadata.namespace}.svc.cluster.local:4317"
+  description = "OTLP/gRPC host and port"
+  value       = "${helm_release.clickstack.metadata.name}-otel-collector.${helm_release.clickstack.metadata.namespace}.svc.cluster.local:4317"
 }
 
 output "clickstack_api_key" {
