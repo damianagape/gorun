@@ -218,6 +218,7 @@ docs:
 - [clickstack](https://clickhouse.com/use-cases/observability)
   - [docs](https://clickhouse.com/docs/use-cases/observability/clickstack)
   - [tables and schemas](https://clickhouse.com/docs/use-cases/observability/clickstack/ingesting-data/schemas)
+  - [dashboards](https://clickhouse.com/docs/use-cases/observability/clickstack/dashboards#presets)
 - [clickhouse](https://clickhouse.com/)
   - [repo](https://github.com/ClickHouse/ClickHouse)
 - [hyperdx](https://www.hyperdx.io/)
@@ -227,7 +228,11 @@ docs:
   - [helm](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm)
   - [gcp](https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm-cloud#google-kubernetes-engine-gke)
   - [config](https://clickhouse.com/docs/use-cases/observability/clickstack/config#helm)
-- otel demo
+- config
+  - [otel k8s](https://opentelemetry.io/docs/platforms/kubernetes/collector/components/)
+  - [otel chart](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector)
+  - [hyperdx k8s](https://www.hyperdx.io/docs/install/kubernetes)
+- demo
   - [docs](https://clickhouse.com/docs/use-cases/observability/clickstack/getting-started/remote-demo-data#otel-demo)
   - [repo](https://github.com/ClickHouse/opentelemetry-demo), [forked from](https://github.com/open-telemetry/opentelemetry-demo)
 

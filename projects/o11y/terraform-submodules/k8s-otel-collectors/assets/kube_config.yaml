@@ -1,9 +1,0 @@
-service:
-  pipelines:
-    metrics:
-      receivers: [k8s_cluster]
-      processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlp/clickstack]
-
-  extensions:
-    - health_check

@@ -28,8 +28,22 @@ receivers:
       enabled: true
 
   k8s_cluster: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sclusterreceiver
+    auth_type: serviceAccount
+    allocatable_types_to_report:
+      - cpu
+      - memory
+      - ephemeral-storage
+      - pods
 
   kubeletstats: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
+    auth_type: serviceAccount
+    endpoint: "https://$${env:K8S_NODE_NAME}:10250"
+    insecure_skip_verify: true
+    metric_groups:
+      - container
+      - pod
+      - node
+      - volume
 
   prometheus: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/prometheusreceiver/README.md
     config:
@@ -59,6 +73,10 @@ processors:
 
   k8sattributes: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/k8sattributesprocessor/README.md
     auth_type: serviceAccount
+    %{~ if mode == "daemonset" }
+    filter:
+      node_from_env_var: K8S_NODE_NAME
+    %{~ endif }
     passthrough: false
     pod_association:
       - sources:
@@ -97,44 +115,31 @@ exporters:
       Authorization: "$${env:CLICKSTACK_API_KEY}"
     compression: gzip
 
-  #
-  #
-  # prometheusremotewrite/prometheus: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
-  #   endpoint: http://127.0.0.1:9090/api/v1/push
-  #
-  # debug/logs:
-  #   verbosity: detailed
-  #
-  # debug/metrics:
-  #   verbosity: detailed
-  #
-  # debug/traces:
-  #   verbosity: detailed
-  #
-  #
-
 extensions:
   health_check:
     endpoint: 0.0.0.0:13133
     path: /
-#
-#
-# service:
-#   pipelines:
-#     logs:
-#       receivers: []
-#       processors: []
-#       exporters: [debug/logs]
-#     metrics:
-#       receivers: []
-#       processors: []
-#       exporters: [debug/metrics]
-#     traces:
-#       receivers: []
-#       processors: []
-#       exporters: [debug/traces]
-#
-#   extensions:
-#     - health_check
-#
-#
+
+service:
+  pipelines:
+    %{~ if length(logs_receivers) > 0 }
+    logs:
+      receivers: ${jsonencode(logs_receivers)}
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+    %{~ endif }
+    %{~ if length(metrics_receivers) > 0 }
+    metrics:
+      receivers: ${jsonencode(metrics_receivers)}
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+    %{~ endif }
+    %{~ if length(traces_receivers) > 0 }
+    traces:
+      receivers: ${jsonencode(traces_receivers)}
+      processors: [memory_limiter, filter, k8sattributes, batch]
+      exporters: [otlp/clickstack]
+    %{~ endif }
+
+  extensions:
+    - health_check

@@ -84,7 +84,7 @@ processors:
       labels:
         - from: pod
           key_regex: (.*)
-          tag_name: $1
+          tag_name: $$1
 
   batch: # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
     timeout: 10s

@@ -1,7 +1,7 @@
 output "otlp_grpc_endpoint" {
-  value = "${local.otlp_collector_host}:4317"
+  value = "${kubernetes_manifest.otlp_collector.manifest.metadata.name}-collector.${kubernetes_manifest.otlp_collector.manifest.metadata.namespace}.svc.cluster.local:4317"
 }
 
 output "otlp_http_endpoint" {
-  value = "http://${local.otlp_collector_host}:4318"
+  value = "http://${kubernetes_manifest.otlp_collector.manifest.metadata.name}-collector.${kubernetes_manifest.otlp_collector.manifest.metadata.namespace}.svc.cluster.local:4318"
 }

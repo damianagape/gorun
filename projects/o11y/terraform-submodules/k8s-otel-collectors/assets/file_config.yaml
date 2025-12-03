@@ -1,9 +1,0 @@
-service:
-  pipelines:
-    logs:
-      receivers: [filelog]
-      processors: [memory_limiter, filter, k8sattributes, batch]
-      exporters: [otlp/clickstack]
-
-  extensions:
-    - health_check
