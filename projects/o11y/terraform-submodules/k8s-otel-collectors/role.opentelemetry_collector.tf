@@ -6,7 +6,12 @@ resource "kubernetes_cluster_role" "opentelemetry_collector" {
   }
   rule {
     api_groups = [""]
-    resources  = ["pods", "pods/status", "namespaces", "namespaces/status", "nodes", "nodes/spec", "nodes/stats", "events", "resourcequotas", "services"]
+    resources  = ["pods", "pods/status", "namespaces", "namespaces/status", "nodes", "nodes/spec", "nodes/stats", "nodes/proxy", "events", "resourcequotas", "services"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = ["events.k8s.io"]
+    resources  = ["events"]
     verbs      = ["get", "list", "watch"]
   }
   rule {

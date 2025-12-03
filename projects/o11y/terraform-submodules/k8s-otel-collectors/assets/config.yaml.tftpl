@@ -35,15 +35,51 @@ receivers:
       - ephemeral-storage
       - pods
 
+  k8sobjects: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sobjectsreceiver
+    auth_type: serviceAccount
+    objects:
+      - group: ""
+        name: events
+        mode: watch
+      - group: events.k8s.io
+        name: events
+        mode: watch
+
   kubeletstats: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
     auth_type: serviceAccount
+    k8s_api_config:
+      auth_type: serviceAccount
+    node: "$${env:K8S_NODE_NAME}"
     endpoint: "https://$${env:K8S_NODE_NAME}:10250"
     insecure_skip_verify: true
     metric_groups:
-      - container
-      - pod
       - node
+      - pod
+      - container
       - volume
+    metrics: # https://www.hyperdx.io/docs/install/kubernetes
+      k8s.pod.cpu_limit_utilization:
+        enabled: true
+      k8s.pod.cpu_request_utilization:
+        enabled: true
+      k8s.pod.memory_limit_utilization:
+        enabled: true
+      k8s.pod.memory_request_utilization:
+        enabled: true
+      k8s.pod.uptime:
+        enabled: true
+      k8s.node.uptime:
+        enabled: true
+      k8s.container.cpu_limit_utilization:
+        enabled: true
+      k8s.container.cpu_request_utilization:
+        enabled: true
+      k8s.container.memory_limit_utilization:
+        enabled: true
+      k8s.container.memory_request_utilization:
+        enabled: true
+      container.uptime:
+        enabled: true
 
   prometheus: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/prometheusreceiver/README.md
     config:
@@ -99,6 +135,10 @@ processors:
         - k8s.cronjob.name
         - k8s.job.name
       labels:
+        - from: pod
+          key_regex: (.*)
+          tag_name: $$1
+      annotations:
         - from: pod
           key_regex: (.*)
           tag_name: $$1

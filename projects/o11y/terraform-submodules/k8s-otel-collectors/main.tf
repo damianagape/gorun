@@ -39,13 +39,8 @@ resource "kubernetes_manifest" "otlp_collector" {
         traces_receivers  = ["otlp"]
       }))
 
-      env = [
-        { name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } },
-        { name = "K8S_NODE_IP", valueFrom = { fieldRef = { fieldPath = "status.hostIP" } } },
-      ]
-      envFrom = [
-        { secretRef = { name = kubernetes_secret.otlp_collector_envs.metadata[0].name } },
-      ]
+      env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.otlp_collector_envs.metadata[0].name } }]
 
       resources = {
         requests = { cpu = "1m", memory = "1Mi" }
@@ -121,13 +116,8 @@ resource "kubernetes_manifest" "file_collector" {
         traces_receivers  = []
       }))
 
-      env = [
-        { name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } },
-        { name = "K8S_NODE_IP", valueFrom = { fieldRef = { fieldPath = "status.hostIP" } } },
-      ]
-      envFrom = [
-        { secretRef = { name = kubernetes_secret.file_collector_envs.metadata[0].name } },
-      ]
+      env          = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
+      envFrom      = [{ secretRef = { name = kubernetes_secret.file_collector_envs.metadata[0].name } }]
       volumes      = [{ name = "varlogpods", hostPath = { path = "/var/log/pods" } }]
       volumeMounts = [{ name = "varlogpods", mountPath = "/var/log/pods", readOnly = true }]
 
@@ -202,17 +192,12 @@ resource "kubernetes_manifest" "kube_collector" {
         clickstack_endpoint = var.clickstack_endpoint
 
         logs_receivers    = []
-        metrics_receivers = ["k8s_cluster"]
+        metrics_receivers = ["k8s_cluster", "k8sobjects"]
         traces_receivers  = []
       }))
 
-      env = [
-        { name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } },
-        { name = "K8S_NODE_IP", valueFrom = { fieldRef = { fieldPath = "status.hostIP" } } },
-      ]
-      envFrom = [
-        { secretRef = { name = kubernetes_secret.kube_collector_envs.metadata[0].name } },
-      ]
+      env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.kube_collector_envs.metadata[0].name } }]
 
       resources = {
         requests = { cpu = "1m", memory = "1Mi" }
@@ -288,13 +273,8 @@ resource "kubernetes_manifest" "node_collector" {
         traces_receivers  = []
       }))
 
-      env = [
-        { name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } },
-        { name = "K8S_NODE_IP", valueFrom = { fieldRef = { fieldPath = "status.hostIP" } } },
-      ]
-      envFrom = [
-        { secretRef = { name = kubernetes_secret.node_collector_envs.metadata[0].name } },
-      ]
+      env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.node_collector_envs.metadata[0].name } }]
 
       resources = {
         requests = { cpu = "1m", memory = "1Mi" }
@@ -395,13 +375,8 @@ resource "kubernetes_manifest" "prom_collector" {
         traces_receivers  = []
       }))
 
-      env = [
-        { name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } },
-        { name = "K8S_NODE_IP", valueFrom = { fieldRef = { fieldPath = "status.hostIP" } } },
-      ]
-      envFrom = [
-        { secretRef = { name = kubernetes_secret.prom_collector_envs.metadata[0].name } },
-      ]
+      env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
+      envFrom = [{ secretRef = { name = kubernetes_secret.prom_collector_envs.metadata[0].name } }]
 
       targetAllocator = { # https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api/opentelemetrycollectors.md#opentelemetrycollectorspectargetallocator-1
         enabled        = true
