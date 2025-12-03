@@ -191,8 +191,8 @@ resource "kubernetes_manifest" "kube_collector" {
 
         clickstack_endpoint = var.clickstack_endpoint
 
-        logs_receivers    = []
-        metrics_receivers = ["k8s_cluster", "k8sobjects"]
+        logs_receivers    = ["k8sobjects"]
+        metrics_receivers = ["k8s_cluster"]
         traces_receivers  = []
       }))
 

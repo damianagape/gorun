@@ -38,11 +38,7 @@ receivers:
   k8sobjects: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sobjectsreceiver
     auth_type: serviceAccount
     objects:
-      - group: ""
-        name: events
-        mode: watch
-      - group: events.k8s.io
-        name: events
+      - name: events
         mode: watch
 
   kubeletstats: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
