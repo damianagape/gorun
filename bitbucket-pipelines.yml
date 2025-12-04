@@ -36,12 +36,8 @@ definitions:
     o11y-tfmod-test-0: projects/o11y/terraform-modules/test/.terraform
     o11y-tfsub-gcp-availability-monitor-0: projects/o11y/terraform-submodules/gcp-availability-monitor/.terraform
     o11y-tfsub-gcp-availability-monitor-1: projects/o11y/terraform-submodules/gcp-availability-monitor/.terraform.lock.hcl
-    o11y-tfsub-gke-lgtm-stack-0: projects/o11y/terraform-submodules/gke-lgtm-stack/.terraform
-    o11y-tfsub-gke-lgtm-stack-1: projects/o11y/terraform-submodules/gke-lgtm-stack/.terraform.lock.hcl
-    o11y-tfsub-k8s-otel-collectors-0: projects/o11y/terraform-submodules/k8s-otel-collectors/.terraform
-    o11y-tfsub-k8s-otel-collectors-1: projects/o11y/terraform-submodules/k8s-otel-collectors/.terraform.lock.hcl
-    o11y-tfsub-k8s-prom-exporters-0: projects/o11y/terraform-submodules/k8s-prom-exporters/.terraform
-    o11y-tfsub-k8s-prom-exporters-1: projects/o11y/terraform-submodules/k8s-prom-exporters/.terraform.lock.hcl
+    o11y-tfsub-gke-o11y-stack-0: projects/o11y/terraform-submodules/gke-o11y-stack/.terraform
+    o11y-tfsub-gke-o11y-stack-1: projects/o11y/terraform-submodules/gke-o11y-stack/.terraform.lock.hcl
   scripts:
     - &auth |
       set -e
@@ -918,6 +914,78 @@ definitions:
           - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/kuard"
+    - step: &test-o11y-chart-clickhouse
+        name: test o11y-chart-clickhouse
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/clickhouse/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/clickhouse"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/clickhouse"
+          - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/clickhouse"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/clickhouse"
+    - step: &publish-o11y-chart-clickhouse
+        name: publish o11y-chart-clickhouse
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/clickhouse/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/clickhouse"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/clickhouse"
+          - ./scripts/helm-chart publish "projects/o11y/helm-charts/clickhouse"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/clickhouse"
+    - step: &test-o11y-chart-otelcol
+        name: test o11y-chart-otelcol
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/otelcol/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/otelcol"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/otelcol"
+          - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/otelcol"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/otelcol"
+    - step: &publish-o11y-chart-otelcol
+        name: publish o11y-chart-otelcol
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/otelcol/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/otelcol"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/otelcol"
+          - ./scripts/helm-chart publish "projects/o11y/helm-charts/otelcol"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/otelcol"
+    - step: &test-o11y-chart-postgres
+        name: test o11y-chart-postgres
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/postgres/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/postgres"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/postgres"
+          - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/postgres"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/postgres"
+    - step: &publish-o11y-chart-postgres
+        name: publish o11y-chart-postgres
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/postgres/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/postgres"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/postgres"
+          - ./scripts/helm-chart publish "projects/o11y/helm-charts/postgres"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/postgres"
     - step: &test-o11y-tfmod-test
         name: test o11y-tfmod-test
         condition:
@@ -984,96 +1052,36 @@ definitions:
           - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gcp-availability-monitor"
           - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gcp-availability-monitor"
           - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gcp-availability-monitor"
-    - step: &test-o11y-tfsub-gke-lgtm-stack
-        name: test o11y-tfsub-gke-lgtm-stack
+    - step: &test-o11y-tfsub-gke-o11y-stack
+        name: test o11y-tfsub-gke-o11y-stack
         condition:
           changesets:
             includePaths:
-              - "projects/o11y/terraform-submodules/gke-lgtm-stack/**"
+              - "projects/o11y/terraform-submodules/gke-o11y-stack/**"
         caches:
-          - o11y-tfsub-gke-lgtm-stack-0
-          - o11y-tfsub-gke-lgtm-stack-1
+          - o11y-tfsub-gke-o11y-stack-0
+          - o11y-tfsub-gke-o11y-stack-1
         script:
           - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-lgtm-stack"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-lgtm-stack"
-          - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-lgtm-stack"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - step: &publish-o11y-tfsub-gke-lgtm-stack
-        name: publish o11y-tfsub-gke-lgtm-stack
+          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-o11y-stack"
+    - step: &publish-o11y-tfsub-gke-o11y-stack
+        name: publish o11y-tfsub-gke-o11y-stack
         condition:
           changesets:
             includePaths:
-              - "projects/o11y/terraform-submodules/gke-lgtm-stack/**"
+              - "projects/o11y/terraform-submodules/gke-o11y-stack/**"
         caches:
-          - o11y-tfsub-gke-lgtm-stack-0
-          - o11y-tfsub-gke-lgtm-stack-1
+          - o11y-tfsub-gke-o11y-stack-0
+          - o11y-tfsub-gke-o11y-stack-1
         script:
           - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-lgtm-stack"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-lgtm-stack"
-          - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-lgtm-stack"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - step: &test-o11y-tfsub-k8s-otel-collectors
-        name: test o11y-tfsub-k8s-otel-collectors
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/terraform-submodules/k8s-otel-collectors/**"
-        caches:
-          - o11y-tfsub-k8s-otel-collectors-0
-          - o11y-tfsub-k8s-otel-collectors-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-otel-collectors"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-otel-collectors"
-          - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/k8s-otel-collectors"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - step: &publish-o11y-tfsub-k8s-otel-collectors
-        name: publish o11y-tfsub-k8s-otel-collectors
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/terraform-submodules/k8s-otel-collectors/**"
-        caches:
-          - o11y-tfsub-k8s-otel-collectors-0
-          - o11y-tfsub-k8s-otel-collectors-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-otel-collectors"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-otel-collectors"
-          - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/k8s-otel-collectors"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - step: &test-o11y-tfsub-k8s-prom-exporters
-        name: test o11y-tfsub-k8s-prom-exporters
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/terraform-submodules/k8s-prom-exporters/**"
-        caches:
-          - o11y-tfsub-k8s-prom-exporters-0
-          - o11y-tfsub-k8s-prom-exporters-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-prom-exporters"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-prom-exporters"
-          - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/k8s-prom-exporters"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - step: &publish-o11y-tfsub-k8s-prom-exporters
-        name: publish o11y-tfsub-k8s-prom-exporters
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/terraform-submodules/k8s-prom-exporters/**"
-        caches:
-          - o11y-tfsub-k8s-prom-exporters-0
-          - o11y-tfsub-k8s-prom-exporters-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-prom-exporters"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-prom-exporters"
-          - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/k8s-prom-exporters"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-prom-exporters"
+          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-o11y-stack"
 
 pipelines:
   pull-requests:
@@ -1107,11 +1115,12 @@ pipelines:
           - step: *test-demo-tfsub-helm-manifest
           - step: *test-demo-tfsub-helm-template
           - step: *test-demo-tfsub-kuard
+          - step: *test-o11y-chart-clickhouse
+          - step: *test-o11y-chart-otelcol
+          - step: *test-o11y-chart-postgres
           - step: *test-o11y-tfmod-test
           - step: *test-o11y-tfsub-gcp-availability-monitor
-          - step: *test-o11y-tfsub-gke-lgtm-stack
-          - step: *test-o11y-tfsub-k8s-otel-collectors
-          - step: *test-o11y-tfsub-k8s-prom-exporters
+          - step: *test-o11y-tfsub-gke-o11y-stack
       - parallel:
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod
@@ -1145,10 +1154,11 @@ pipelines:
           - step: *publish-demo-tfsub-helm-manifest
           - step: *publish-demo-tfsub-helm-template
           - step: *publish-demo-tfsub-kuard
+          - step: *publish-o11y-chart-clickhouse
+          - step: *publish-o11y-chart-otelcol
+          - step: *publish-o11y-chart-postgres
           - step: *publish-o11y-tfsub-gcp-availability-monitor
-          - step: *publish-o11y-tfsub-gke-lgtm-stack
-          - step: *publish-o11y-tfsub-k8s-otel-collectors
-          - step: *publish-o11y-tfsub-k8s-prom-exporters
+          - step: *publish-o11y-tfsub-gke-o11y-stack
       - parallel:
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod

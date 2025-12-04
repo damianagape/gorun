@@ -45,4 +45,10 @@ module "test_o11y_stack" {
   source = "../../terraform-submodules/gke-o11y-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-o11y-stack/0.7.100.zip"
 
   google_project = data.google_project.this
+
+  blackbox_exporter_urls = [
+    "https://grafana.gogke-test-7.damianagape.pl/healthz",
+    "https://stateful-kuard.gogke-test-7.damianagape.pl/healthy",
+    "https://stateless-kuard.gogke-test-7.damianagape.pl/healthy",
+  ]
 }

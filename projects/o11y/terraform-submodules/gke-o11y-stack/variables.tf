@@ -3,3 +3,8 @@ variable "google_project" {
     project_id = string
   })
 }
+
+variable "blackbox_exporter_urls" {
+  type    = set(string)
+  default = []
+}
