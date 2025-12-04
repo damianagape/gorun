@@ -3,7 +3,17 @@ image:
   repository: postgres
   tag: 18.1
 
-configEnvs: {}
-secretConfigEnvs: {}
-configFiles: {}
-secretConfigFiles: {}
+envs: {}
+secretEnvs: {}
+
+resources:
+  requests:
+    cpu: 1m
+    memory: 1Mi
+    storage: 10Gi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+extraPodLabels: {}
+extraPodAnnotations: {}

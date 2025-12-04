@@ -10,6 +10,6 @@ app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
 
-{{- define "clickhouse.configsChecksum" -}}
-{{- list .Values.configEnvs .Values.secretConfigEnvs .Values.configFiles .Values.secretConfigFiles | toJson | sha256sum -}}
+{{- define "clickhouse.envsChecksum" -}}
+{{- list .Values.envs .Values.secretEnvs | toJson | sha256sum -}}
 {{- end -}}

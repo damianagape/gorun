@@ -13,7 +13,7 @@ collector:
   metricsReceivers: []
   tracesReceivers: []
   envs:
-    CLICKHOUSE_ENDPOINT: ""
+    CLICKHOUSE_ENDPOINT: "tcp://127.0.0.1:9000"
     CLICKHOUSE_USERNAME: ""
   secretEnvs:
     CLICKHOUSE_PASSWORD: ""

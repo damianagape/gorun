@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "{{ .Release.Name }}"
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    {{- include "clickhouse.metadataLabels" $ | nindent 4 }}
+spec:
+  serviceName: "{{ .Release.Name }}-headless"
+  selector:
+    matchLabels:
+      {{- include "clickhouse.selectorLabels" $ | nindent 6 }}
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        {{- include "clickhouse.metadataLabels" $ | nindent 8 }}
+        {{- if .Values.extraPodLabels }}
+        {{- toYaml .Values.extraPodLabels | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/envs: "{{ include "clickhouse.envsChecksum" $ }}"
+        {{- if .Values.extraPodAnnotations }}
+        {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: "{{ .Release.Name }}"
+      initContainers:
+        - name: chown-volume
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["chown"]
+          args: ["-R", "101:101", "/var/lib/clickhouse"]
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/clickhouse
+          resources:
+            requests:
+              cpu: 1m
+              memory: 1Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN
+                - FOWNER
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
+            runAsUser: 0
+            runAsGroup: 0
+      containers:
+        - name: server
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          envFrom:
+            - configMapRef:
+                name: "{{ .Release.Name }}-envs"
+            - secretRef:
+                name: "{{ .Release.Name }}-envs"
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/clickhouse
+          ports:
+            - name: server
+              containerPort: 9000
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              port: http
+              path: /healthy
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /ready
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /healthy
+          resources:
+            requests:
+              cpu: "{{ .Values.resources.requests.cpu }}"
+              memory: "{{ .Values.resources.requests.memory }}"
+            limits:
+              cpu: "{{ .Values.resources.limits.cpu }}"
+              memory: "{{ .Values.resources.limits.memory }}"
+          securityContext: # container security context
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            runAsUser: 101
+            runAsGroup: 101
+      securityContext: # pod security context
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "clickhouse.selectorLabels" $ | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        storageClassName: standard-rwo
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "{{ .Values.resources.requests.storage }}"

@@ -8,17 +8,17 @@ resource "kubernetes_namespace" "clickhouse" {
   }
 }
 
-# resource "helm_release" "clickhouse" {
-#   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
-#   chart      = "clickhouse"
-#   version    = "0.7.100"
+resource "helm_release" "clickhouse" {
+  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  chart      = "clickhouse"
+  version    = "0.7.100"
 
-#   name      = "clickhouse"
-#   namespace = kubernetes_namespace.clickhouse.metadata[0].name
+  name      = "clickhouse"
+  namespace = kubernetes_namespace.clickhouse.metadata[0].name
 
-#   values = [templatefile("${path.module}/assets/clickhouse.yaml.tftpl", {
-#   })]
-# }
+  values = [templatefile("${path.module}/assets/clickhouse.yaml.tftpl", {
+  })]
+}
 
 #######################################
 ### grafana
@@ -30,17 +30,17 @@ resource "kubernetes_namespace" "grafana" {
   }
 }
 
-# resource "helm_release" "grafana_postgres" {
-#   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
-#   chart      = "postgres"
-#   version    = "0.7.100"
+resource "helm_release" "grafana_postgres" {
+  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  chart      = "postgres"
+  version    = "0.7.100"
 
-#   name      = "postgres"
-#   namespace = kubernetes_namespace.grafana.metadata[0].name
+  name      = "postgres"
+  namespace = kubernetes_namespace.grafana.metadata[0].name
 
-#   values = [templatefile("${path.module}/assets/grafana_postgres.yaml.tftpl", {
-#   })]
-# }
+  values = [templatefile("${path.module}/assets/grafana_postgres.yaml.tftpl", {
+  })]
+}
 
 # resource "helm_release" "grafana" {
 #   repository = "${path.module}/helm/charts"
