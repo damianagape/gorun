@@ -144,8 +144,9 @@ processors:
 exporters:
   clickhouse: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/clickhouseexporter
     endpoint: "${env:CLICKHOUSE_ENDPOINT}"
-    username: "${env:CLICKHOUSE_USERNAME}"
+    username: "${env:CLICKHOUSE_USER}"
     password: "${env:CLICKHOUSE_PASSWORD}"
+    database: "${env:CLICKHOUSE_DB}"
     create_schema: true
 
 extensions:

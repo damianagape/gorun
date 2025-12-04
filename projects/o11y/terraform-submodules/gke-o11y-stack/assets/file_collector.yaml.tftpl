@@ -4,8 +4,9 @@ collector:
   metricsReceivers: []
   tracesReceivers: []
   envs:
-    CLICKHOUSE_ENDPOINT: "clickhouse"
-    CLICKHOUSE_USERNAME: "clickhouse"
+    CLICKHOUSE_ENDPOINT: "${clickhouse_endpoint}"
+    CLICKHOUSE_USER: clickhouse
+    CLICKHOUSE_DB: clickhouse
   secretEnvs:
-    CLICKHOUSE_PASSWORD: "Secret123"
+    CLICKHOUSE_PASSWORD: Secret123
   mountLogs: true

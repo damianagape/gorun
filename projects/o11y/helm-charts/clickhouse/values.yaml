@@ -3,8 +3,12 @@ image:
   repository: clickhouse
   tag: 25.11
 
-envs: {}
-secretEnvs: {}
+envs:
+  CLICKHOUSE_USER: clickhouse
+  CLICKHOUSE_DB: clickhouse
+  CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+secretEnvs:
+  CLICKHOUSE_PASSWORD: Secret123
 
 resources:
   requests:

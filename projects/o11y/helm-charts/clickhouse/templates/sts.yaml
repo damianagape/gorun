@@ -68,21 +68,24 @@ spec:
             - name: data
               mountPath: /var/lib/clickhouse
           ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
             - name: server
               containerPort: 9000
               protocol: TCP
           startupProbe:
             httpGet:
               port: http
-              path: /healthy
+              path: /ping
           readinessProbe:
             httpGet:
               port: http
-              path: /ready
+              path: /ping
           livenessProbe:
             httpGet:
               port: http
-              path: /healthy
+              path: /ping
           resources:
             requests:
               cpu: "{{ .Values.resources.requests.cpu }}"
@@ -96,7 +99,7 @@ spec:
               drop:
                 - ALL
             runAsNonRoot: true
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
             runAsUser: 101
             runAsGroup: 101
       securityContext: # pod security context

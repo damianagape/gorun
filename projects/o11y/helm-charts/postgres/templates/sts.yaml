@@ -59,6 +59,12 @@ spec:
       containers:
         - name: server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-envs"
+                  key: POSTGRES_PASSWORD
           envFrom:
             - configMapRef:
                 name: "{{ .Release.Name }}-envs"
@@ -72,17 +78,26 @@ spec:
               containerPort: 5432
               protocol: TCP
           startupProbe:
-            httpGet:
-              port: http
-              path: /healthy
+            exec:
+              command:
+                - pg_isready
+                - --host=127.0.0.1
+                - --port=5432
+                - --username=${POSTGRES_USER}
           readinessProbe:
-            httpGet:
-              port: http
-              path: /ready
+            exec:
+              command:
+                - pg_isready
+                - --host=127.0.0.1
+                - --port=5432
+                - --username=${POSTGRES_USER}
           livenessProbe:
-            httpGet:
-              port: http
-              path: /healthy
+            exec:
+              command:
+                - pg_isready
+                - --host=127.0.0.1
+                - --port=5432
+                - --username=${POSTGRES_USER}
           resources:
             requests:
               cpu: "{{ .Values.resources.requests.cpu }}"
@@ -96,7 +111,7 @@ spec:
               drop:
                 - ALL
             runAsNonRoot: true
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
             runAsUser: 999
             runAsGroup: 999
       securityContext: # pod security context

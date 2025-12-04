@@ -118,6 +118,7 @@ resource "helm_release" "otlp_collector" {
   namespace = kubernetes_namespace.otlp_collector.metadata[0].name
 
   values = [templatefile("${path.module}/assets/otlp_collector.yaml.tftpl", {
+    clickhouse_endpoint = local.clickhouse_endpoint
   })]
 }
 
@@ -140,6 +141,7 @@ resource "helm_release" "file_collector" {
   namespace = kubernetes_namespace.file_collector.metadata[0].name
 
   values = [templatefile("${path.module}/assets/file_collector.yaml.tftpl", {
+    clickhouse_endpoint = local.clickhouse_endpoint
   })]
 }
 
@@ -162,6 +164,7 @@ resource "helm_release" "kube_collector" {
   namespace = kubernetes_namespace.kube_collector.metadata[0].name
 
   values = [templatefile("${path.module}/assets/kube_collector.yaml.tftpl", {
+    clickhouse_endpoint = local.clickhouse_endpoint
   })]
 }
 
@@ -184,6 +187,7 @@ resource "helm_release" "node_collector" {
   namespace = kubernetes_namespace.node_collector.metadata[0].name
 
   values = [templatefile("${path.module}/assets/node_collector.yaml.tftpl", {
+    clickhouse_endpoint = local.clickhouse_endpoint
   })]
 }
 
@@ -206,6 +210,7 @@ resource "helm_release" "prom_collector" {
   namespace = kubernetes_namespace.prom_collector.metadata[0].name
 
   values = [templatefile("${path.module}/assets/prom_collector.yaml.tftpl", {
+    clickhouse_endpoint = local.clickhouse_endpoint
   })]
 }
 
