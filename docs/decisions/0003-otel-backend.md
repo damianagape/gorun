@@ -298,7 +298,8 @@ links:
 
 pros:
 
-- todo
+- well-known and extensible dashboard
+- blazing-fast storage
 
 cons:
 
