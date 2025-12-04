@@ -1,0 +1,41 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: o11y-otel-collector
+  labels:
+    {{- include "otel-collectors.metadataLabels" $ | nindent 4 }}
+rules: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/k8sattributesprocessor/README.md#role-based-access-control
+  - apiGroups: [""]
+    resources: ["pods", "namespaces", "nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: o11y-otel-targetallocator
+  labels:
+    {{- include "otel-collectors.metadataLabels" $ | nindent 4 }}
+rules: # https://github.com/open-telemetry/opentelemetry-operator/tree/main/cmd/otel-allocator#rbac
+  - apiGroups: [""]
+    resources:
+      ["configmaps", "pods", "namespaces", "nodes", "nodes/metrics", "endpoints", "services", "serviceaccounts"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["discovery.k8s.io"]
+    resources: ["endpointslices"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["monitoring.coreos.com"]
+    resources: ["servicemonitors", "podmonitors", "probes", "scrapeconfigs"]
+    verbs: ["*"]
+  - nonResourceURLs: ["/metrics"]
+    verbs: ["get"]
