@@ -236,6 +236,15 @@ docs:
   - [docs](https://clickhouse.com/docs/use-cases/observability/clickstack/getting-started/remote-demo-data#otel-demo)
   - [repo](https://github.com/ClickHouse/opentelemetry-demo), [forked from](https://github.com/open-telemetry/opentelemetry-demo)
 
+pros:
+
+- pretty simple setup: HyperDX, MongoDB, ClickHouse
+- easy deployment - works out-of-the-box
+
+cons:
+
+- cannot manage `Ingestion API Key` as code
+
 ```
 $ kubectl get pod --all-namespaces
 NAMESPACE                        NAME                                                       READY   STATUS                   RESTARTS      AGE
@@ -251,6 +260,49 @@ o11y-clickstack                  clickstack-clickhouse-b48668b89-8lwn7          
 o11y-clickstack                  clickstack-mongodb-7957dc8685-sjv7q                        9m           66Mi
 o11y-clickstack                  clickstack-otel-collector-6b47bdc857-fxzbj                 37m          50Mi
 ```
+
+### Custom stack: Grafana, ClickHouse
+
+links:
+
+- [grafana](https://grafana.com/oss/grafana/)
+  - [source code](https://github.com/grafana/grafana)
+  - [docker image](https://hub.docker.com/r/grafana/grafana)
+  - [helm chart](https://github.com/grafana/helm-charts/tree/main/charts/grafana)
+    - [docs](https://grafana.com/docs/grafana/latest/setup-grafana/installation/helm/)
+  - [tf provider](https://registry.terraform.io/providers/grafana/grafana/latest)
+- [postgres](https://www.postgresql.org/)
+  - [source code](https://github.com/postgres/postgres)
+  - [docker official image](https://hub.docker.com/_/postgres)
+  - [grafana database config](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#database)
+- [clickhouse](https://clickhouse.com/clickhouse)
+  - [source code](https://github.com/ClickHouse/ClickHouse)
+  - [docker image](https://hub.docker.com/r/clickhouse/clickhouse-server/), [docker official image](https://hub.docker.com/_/clickhouse)
+    - [docs](https://clickhouse.com/docs/install/docker)
+  - kubernetes deployment
+    - [chart by HyperDX (ClickStack)](https://github.com/hyperdxio/helm-charts/tree/main/charts/clickstack)
+    - [chart by SigNoz](https://github.com/SigNoz/charts/tree/main/charts/clickhouse)
+    - [chart by korax-dev](https://github.com/korax-dev/clickhouse-k8s/tree/main/charts/clickhouse)
+    - [chart by Altinity](https://github.com/Altinity/helm-charts/tree/main/charts/clickhouse)
+    - [operator by Altinity](https://github.com/Altinity/clickhouse-operator)
+  - otel exporter
+    - [source code](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/clickhouseexporter)
+  - [grafana datasource plugin](https://grafana.com/grafana/plugins/grafana-clickhouse-datasource/)
+    - [source code](https://github.com/grafana/clickhouse-datasource)
+- [clickhouse keeper](https://clickhouse.com/clickhouse/keeper)
+  - [scaling video](https://www.youtube.com/watch?v=vBjCJtw_Ei0)
+- https://clickhouse.com/docs/observability/grafana
+- https://clickhouse.com/docs/integrations/grafana
+- https://clickhouse.com/docs/integrations/grafana/config
+- https://dev.to/alex_yurchenko_c2d664c0a/building-a-local-observability-stack-a-journey-with-opentelemetry-clickhouse-and-grafana-46lp
+
+pros:
+
+- todo
+
+cons:
+
+- todo
 
 ## Decision Outcome
 

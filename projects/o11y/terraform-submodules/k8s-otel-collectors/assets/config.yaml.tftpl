@@ -38,6 +38,8 @@ receivers:
   k8sobjects: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sobjectsreceiver
     auth_type: serviceAccount
     objects:
+      - name: pods
+        mode: pull
       - name: events
         mode: watch
 
@@ -92,16 +94,10 @@ processors:
     limit_percentage: 80
     spike_limit_percentage: 20
 
-  filter: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/filterprocessor/README.md
-    error_mode: ignore
-    traces:
-      span:
-        - 'URL(attributes["http.url"])["url.path"] == "/_healthy"'
-        - 'URL(attributes["http.url"])["url.path"] == "/_healthz"'
-        - 'URL(attributes["http.url"])["url.path"] == "/-/healthy"'
-        - 'URL(attributes["http.url"])["url.path"] == "/-/healthz"'
-        - 'URL(attributes["http.url"])["url.path"] == "/healthy"'
-        - 'URL(attributes["http.url"])["url.path"] == "/healthz"'
+  resourcedetection: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/resourcedetectionprocessor
+    detectors: [env, gcp]
+    timeout: 2s
+    override: false
 
   k8sattributes: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/k8sattributesprocessor/README.md
     auth_type: serviceAccount
@@ -124,6 +120,7 @@ processors:
         - k8s.node.name
         - k8s.namespace.name
         - k8s.pod.name
+        - k8s.pod.uid
         - k8s.deployment.name
         - k8s.replicaset.name
         - k8s.statefulset.name
@@ -134,10 +131,13 @@ processors:
         - from: pod
           key_regex: (.*)
           tag_name: $$1
-      annotations:
-        - from: pod
-          key_regex: (.*)
-          tag_name: $$1
+
+  filter: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/filterprocessor/README.md
+    error_mode: ignore
+    traces:
+      span:
+        - 'URL(attributes["http.url"])["url.path"] == "/healthy"'
+        - 'URL(attributes["http.url"])["url.path"] == "/ready"'
 
   batch: # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
     timeout: 10s
@@ -161,19 +161,19 @@ service:
     %{~ if length(logs_receivers) > 0 }
     logs:
       receivers: ${jsonencode(logs_receivers)}
-      processors: [memory_limiter, filter, k8sattributes, batch]
+      processors: [memory_limiter, resourcedetection, k8sattributes, filter, batch]
       exporters: [otlp/clickstack]
     %{~ endif }
     %{~ if length(metrics_receivers) > 0 }
     metrics:
       receivers: ${jsonencode(metrics_receivers)}
-      processors: [memory_limiter, filter, k8sattributes, batch]
+      processors: [memory_limiter, resourcedetection, k8sattributes, filter, batch]
       exporters: [otlp/clickstack]
     %{~ endif }
     %{~ if length(traces_receivers) > 0 }
     traces:
       receivers: ${jsonencode(traces_receivers)}
-      processors: [memory_limiter, filter, k8sattributes, batch]
+      processors: [memory_limiter, resourcedetection, k8sattributes, filter, batch]
       exporters: [otlp/clickstack]
     %{~ endif }
 

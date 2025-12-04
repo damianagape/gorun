@@ -38,7 +38,6 @@ resource "kubernetes_manifest" "otlp_collector" {
         metrics_receivers = ["otlp"]
         traces_receivers  = ["otlp"]
       }))
-
       env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
       envFrom = [{ secretRef = { name = kubernetes_secret.otlp_collector_envs.metadata[0].name } }]
 
@@ -115,7 +114,6 @@ resource "kubernetes_manifest" "file_collector" {
         metrics_receivers = []
         traces_receivers  = []
       }))
-
       env          = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
       envFrom      = [{ secretRef = { name = kubernetes_secret.file_collector_envs.metadata[0].name } }]
       volumes      = [{ name = "varlogpods", hostPath = { path = "/var/log/pods" } }]
@@ -195,7 +193,6 @@ resource "kubernetes_manifest" "kube_collector" {
         metrics_receivers = ["k8s_cluster"]
         traces_receivers  = []
       }))
-
       env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
       envFrom = [{ secretRef = { name = kubernetes_secret.kube_collector_envs.metadata[0].name } }]
 
@@ -272,7 +269,6 @@ resource "kubernetes_manifest" "node_collector" {
         metrics_receivers = ["kubeletstats"]
         traces_receivers  = []
       }))
-
       env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
       envFrom = [{ secretRef = { name = kubernetes_secret.node_collector_envs.metadata[0].name } }]
 
@@ -374,7 +370,6 @@ resource "kubernetes_manifest" "prom_collector" {
         metrics_receivers = ["prometheus"]
         traces_receivers  = []
       }))
-
       env     = [{ name = "K8S_NODE_NAME", valueFrom = { fieldRef = { fieldPath = "spec.nodeName" } } }]
       envFrom = [{ secretRef = { name = kubernetes_secret.prom_collector_envs.metadata[0].name } }]
 
