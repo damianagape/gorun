@@ -1,0 +1,9 @@
+# https://hub.docker.com/_/clickhouse
+image:
+  repository: clickhouse
+  tag: 25.11
+
+configEnvs: {}
+secretConfigEnvs: {}
+configFiles: {}
+secretConfigFiles: {}

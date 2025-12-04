@@ -1,0 +1,9 @@
+# https://hub.docker.com/_/postgres
+image:
+  repository: postgres
+  tag: 18.1
+
+configEnvs: {}
+secretConfigEnvs: {}
+configFiles: {}
+secretConfigFiles: {}

@@ -1,0 +1,9 @@
+#
+image:
+  repository: ""
+  tag: ""
+
+configEnvs: {}
+secretConfigEnvs: {}
+configFiles: {}
+secretConfigFiles: {}
