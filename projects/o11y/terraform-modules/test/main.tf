@@ -46,6 +46,9 @@ module "test_o11y_stack" {
 
   google_project = data.google_project.this
 
+  grafana_domain = "grafana.gogke-test-7.damianagape.pl"
+  grafana_email  = "grafana@gogke-test-7.damianagape.pl"
+
   blackbox_exporter_urls = [
     "https://grafana.gogke-test-7.damianagape.pl/healthz",
     "https://stateful-kuard.gogke-test-7.damianagape.pl/healthy",
