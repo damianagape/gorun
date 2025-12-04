@@ -8,17 +8,17 @@ resource "kubernetes_namespace" "clickhouse" {
   }
 }
 
-resource "helm_release" "clickhouse" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
-  chart      = "clickhouse"
-  version    = "0.7.100"
+# resource "helm_release" "clickhouse" {
+#   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+#   chart      = "clickhouse"
+#   version    = "0.7.100"
 
-  name      = "clickhouse"
-  namespace = kubernetes_namespace.clickhouse.metadata[0].name
+#   name      = "clickhouse"
+#   namespace = kubernetes_namespace.clickhouse.metadata[0].name
 
-  values = [templatefile("${path.module}/assets/clickhouse.yaml.tftpl", {
-  })]
-}
+#   values = [templatefile("${path.module}/assets/clickhouse.yaml.tftpl", {
+#   })]
+# }
 
 #######################################
 ### grafana
@@ -30,62 +30,62 @@ resource "kubernetes_namespace" "grafana" {
   }
 }
 
-resource "helm_release" "grafana_postgres" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
-  chart      = "postgres"
-  version    = "0.7.100"
+# resource "helm_release" "grafana_postgres" {
+#   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+#   chart      = "postgres"
+#   version    = "0.7.100"
 
-  name      = "postgres"
-  namespace = kubernetes_namespace.grafana.metadata[0].name
+#   name      = "postgres"
+#   namespace = kubernetes_namespace.grafana.metadata[0].name
 
-  values = [templatefile("${path.module}/assets/grafana_postgres.yaml.tftpl", {
-  })]
-}
+#   values = [templatefile("${path.module}/assets/grafana_postgres.yaml.tftpl", {
+#   })]
+# }
 
-resource "helm_release" "grafana" {
-  repository = "${path.module}/helm/charts"
-  chart      = "grafana"
+# resource "helm_release" "grafana" {
+#   repository = "${path.module}/helm/charts"
+#   chart      = "grafana"
 
-  name      = "grafana"
-  namespace = kubernetes_namespace.grafana.metadata[0].name
+#   name      = "grafana"
+#   namespace = kubernetes_namespace.grafana.metadata[0].name
 
-  values = [
-    file("${path.module}/helm/values/grafana.yaml"),
-    templatefile("${path.module}/assets/grafana.yaml.tftpl", {
-      grafana_domain        = var.grafana_domain
-      grafana_smtp_host     = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
-      grafana_smtp_username = nonsensitive(data.kubernetes_secret.grafana_smtp.data["username"])
-      grafana_email         = var.grafana_email
-      grafana_admin_email   = "dagape.test@gmail.com"
-      grafana_postgres_host = "${helm_release.grafana_postgres.name}.${helm_release.grafana_postgres.namespace}.svc.cluster.local"
-    }),
-  ]
+#   values = [
+#     file("${path.module}/helm/values/grafana.yaml"),
+#     templatefile("${path.module}/assets/grafana.yaml.tftpl", {
+#       grafana_domain        = var.grafana_domain
+#       grafana_smtp_host     = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
+#       grafana_smtp_username = nonsensitive(data.kubernetes_secret.grafana_smtp.data["username"])
+#       grafana_email         = var.grafana_email
+#       grafana_admin_email   = "dagape.test@gmail.com"
+#       grafana_postgres_host = "${helm_release.grafana_postgres.name}.${helm_release.grafana_postgres.namespace}.svc.cluster.local"
+#     }),
+#   ]
 
-  set_sensitive = [{
-    # grafana_smtp_password
-    name  = "grafana\\.ini.smtp.password"
-    type  = "string"
-    value = data.kubernetes_secret.grafana_smtp.data["password"]
-  }]
-}
+#   set_sensitive = [{
+#     # grafana_smtp_password
+#     name  = "grafana\\.ini.smtp.password"
+#     type  = "string"
+#     value = data.kubernetes_secret.grafana_smtp.data["password"]
+#   }]
+# }
 
-data "kubernetes_service" "grafana" {
-  metadata {
-    name      = helm_release.grafana.name
-    namespace = helm_release.grafana.namespace
-  }
-}
+# data "kubernetes_service" "grafana" {
+#   metadata {
+#     name      = helm_release.grafana.name
+#     namespace = helm_release.grafana.namespace
+#   }
+# }
 
-module "grafana_gateway_http_route" {
-  source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"
+# module "grafana_gateway_http_route" {
+#   source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"
 
-  kubernetes_service = data.kubernetes_service.grafana
+#   kubernetes_service = data.kubernetes_service.grafana
 
-  domain            = var.grafana_domain
-  service_port      = 80
-  container_port    = 3000
-  health_check_path = "/healthz"
-}
+#   domain            = var.grafana_domain
+#   service_port      = 80
+#   container_port    = 3000
+#   health_check_path = "/healthz"
+# }
 
 module "grafana_availability_monitor" {
   source = "../gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"

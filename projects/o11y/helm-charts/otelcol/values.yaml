@@ -1,9 +1,31 @@
-#
-image:
-  repository: ""
-  tag: ""
+collector:
+  mode: ""
+  replicas: 1
+  resources:
+    requests:
+      cpu: 1m
+      memory: 1Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
 
-configEnvs: {}
-secretConfigEnvs: {}
-configFiles: {}
-secretConfigFiles: {}
+  logsReceivers: []
+  metricsReceivers: []
+  tracesReceivers: []
+  envs:
+    CLICKHOUSE_ENDPOINT: ""
+    CLICKHOUSE_USERNAME: ""
+  secretEnvs:
+    CLICKHOUSE_PASSWORD: ""
+  mountLogs: false
+
+targetAllocator:
+  enabled: false
+  replicas: 1
+  resources:
+    requests:
+      cpu: 1m
+      memory: 1Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi

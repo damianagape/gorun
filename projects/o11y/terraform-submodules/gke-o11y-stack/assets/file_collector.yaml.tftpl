@@ -1,0 +1,11 @@
+collector:
+  mode: daemonset
+  logsReceivers: [filelog]
+  metricsReceivers: []
+  tracesReceivers: []
+  envs:
+    CLICKHOUSE_ENDPOINT: "clickhouse"
+    CLICKHOUSE_USERNAME: "clickhouse"
+  secretEnvs:
+    CLICKHOUSE_PASSWORD: "Secret123"
+  mountLogs: true

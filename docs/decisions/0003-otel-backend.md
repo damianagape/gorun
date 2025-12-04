@@ -289,6 +289,7 @@ links:
     - [source code](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/clickhouseexporter)
   - [grafana datasource plugin](https://grafana.com/grafana/plugins/grafana-clickhouse-datasource/)
     - [source code](https://github.com/grafana/clickhouse-datasource)
+    - another plugin [by Altinity](https://grafana.com/grafana/plugins/vertamedia-clickhouse-datasource/)
 - [clickhouse keeper](https://clickhouse.com/clickhouse/keeper)
   - [scaling video](https://www.youtube.com/watch?v=vBjCJtw_Ei0)
 - https://clickhouse.com/docs/observability/grafana

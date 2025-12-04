@@ -1,0 +1,10 @@
+collector:
+  mode: deployment
+  logsReceivers: [k8sobjects]
+  metricsReceivers: [k8s_cluster]
+  tracesReceivers: []
+  envs:
+    CLICKHOUSE_ENDPOINT: "clickhouse"
+    CLICKHOUSE_USERNAME: "clickhouse"
+  secretEnvs:
+    CLICKHOUSE_PASSWORD: "Secret123"

@@ -1,15 +1,15 @@
 {{- define "otelcol.selectorLabels" -}}
 app.kubernetes.io/part-of: "{{ .Release.Namespace }}"
 app.kubernetes.io/instance: "{{ .Release.Name }}"
-app.kubernetes.io/name: "{{ .Values.image.repository }}"
+app.kubernetes.io/name: ""
 {{- end -}}
 
 {{- define "otelcol.metadataLabels" -}}
 {{ include "otelcol.selectorLabels" $ }}
-app.kubernetes.io/version: "{{ .Values.image.tag }}"
+app.kubernetes.io/version: ""
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
 
-{{- define "otelcol.configsChecksum" -}}
-{{- list .Values.configEnvs .Values.secretConfigEnvs .Values.configFiles .Values.secretConfigFiles | toJson | sha256sum -}}
+{{- define "otelcol.collector.envsChecksum" -}}
+{{- list .Values.collector.envs .Values.collector.secretEnvs | toJson | sha256sum -}}
 {{- end -}}
