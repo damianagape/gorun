@@ -62,11 +62,11 @@ spec:
               path: /api/health
           resources:
             requests:
-              cpu: 1m
-              memory: 1Mi
+              cpu: "{{ .Values.resources.requests.cpu }}"
+              memory: "{{ .Values.resources.requests.memory }}"
             limits:
-              cpu: 100m
-              memory: 128Mi
+              cpu: "{{ .Values.resources.limits.cpu }}"
+              memory: "{{ .Values.resources.limits.memory }}"
           securityContext: # container security context
             privileged: false
             capabilities:

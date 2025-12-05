@@ -93,11 +93,11 @@ spec:
               path: /healthy
           resources:
             requests:
-              cpu: 1m
-              memory: 1Mi
+              cpu: "{{ .Values.httpServer.resources.requests.cpu }}"
+              memory: "{{ .Values.httpServer.resources.requests.memory }}"
             limits:
-              cpu: 100m
-              memory: 128Mi
+              cpu: "{{ .Values.httpServer.resources.limits.cpu }}"
+              memory: "{{ .Values.httpServer.resources.limits.memory }}"
           securityContext: # container security context
             privileged: false
             capabilities:
@@ -137,4 +137,4 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 1Gi
+            storage: "{{ .Values.httpServer.resources.requests.storage }}"

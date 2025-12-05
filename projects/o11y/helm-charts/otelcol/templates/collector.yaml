@@ -64,7 +64,12 @@ spec:
   replicas: {{ .Values.collector.replicas }}
   {{- end }}
   resources:
-    {{- toYaml .Values.collector.resources | nindent 4 }}
+    requests:
+      cpu: "{{ .Values.collector.resources.requests.cpu }}"
+      memory: "{{ .Values.collector.resources.requests.memory }}"
+    limits:
+      cpu: "{{ .Values.collector.resources.limits.cpu }}"
+      memory: "{{ .Values.collector.resources.limits.memory }}"
   observability:
     metrics:
       enableMetrics: false
@@ -84,7 +89,12 @@ spec:
     serviceAccount: "{{ .Release.Name }}-targetallocator"
     replicas: {{ .Values.targetAllocator.replicas }}
     resources:
-      {{- toYaml .Values.targetAllocator.resources | nindent 6 }}
+      requests:
+        cpu: "{{ .Values.targetAllocator.resources.requests.cpu }}"
+        memory: "{{ .Values.targetAllocator.resources.requests.memory }}"
+      limits:
+        cpu: "{{ .Values.targetAllocator.resources.limits.cpu }}"
+        memory: "{{ .Values.targetAllocator.resources.limits.memory }}"
     observability:
       metrics:
         enableMetrics: false
