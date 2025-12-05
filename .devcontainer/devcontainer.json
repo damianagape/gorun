@@ -40,7 +40,7 @@
         // Golang
         "golang.go",
         // Shell script
-        "foxundermoon.shell-format",
+        "foxundermoon.shell-format@7.2.5",
         "timonwong.shellcheck"
       ],
       "settings": {
