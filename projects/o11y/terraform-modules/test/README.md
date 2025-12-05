@@ -7,7 +7,7 @@ $ kubectl \
     --namespace="vault-grafana" \
     create secret generic "smtp" \
     --from-literal="host=email-smtp.eu-central-1.amazonaws.com:465" \
-    --from-literal="username=..." \
+    --from-literal="user=..." \
     --from-literal="password=..."
 
 $ terraform apply -target=helm_release.opentelemetry_operator

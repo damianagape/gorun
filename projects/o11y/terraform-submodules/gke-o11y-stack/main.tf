@@ -39,7 +39,7 @@ resource "helm_release" "grafana_postgres" {
   chart      = "postgres"
   version    = "0.7.100"
 
-  name      = "postgres"
+  name      = "grafana-postgres"
   namespace = kubernetes_namespace.grafana.metadata[0].name
 
   values = [templatefile("${path.module}/assets/grafana_postgres.yaml.tftpl", {
@@ -50,6 +50,29 @@ resource "helm_release" "grafana_postgres" {
   }
 }
 
+module "grafana_service_account" {
+  source = "../../../core/terraform-submodules/gke-service-account" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-service-account/0.7.100.zip"
+
+  google_project           = var.google_project
+  google_container_cluster = var.google_container_cluster
+  kubernetes_namespace     = kubernetes_namespace.grafana
+  service_account_name     = "grafana"
+}
+
+# roles required by Google Cloud datasources
+resource "google_project_iam_member" "grafana_googlecloud_datasources" {
+  for_each = toset([
+    "roles/cloudtrace.user",
+    "roles/logging.viewAccessor",
+    "roles/logging.viewer",
+    "roles/monitoring.viewer",
+  ])
+
+  project = var.google_project.project_id
+  role    = each.value
+  member  = module.grafana_service_account.google_service_account.member
+}
+
 resource "helm_release" "grafana" {
   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
   chart      = "grafana"
@@ -58,32 +81,34 @@ resource "helm_release" "grafana" {
   name      = "grafana"
   namespace = kubernetes_namespace.grafana.metadata[0].name
 
-  values = [
-    file("${path.module}/helm/values/grafana.yaml"),
-    templatefile("${path.module}/assets/grafana.yaml.tftpl", {
-      grafana_domain        = var.grafana_domain
-      grafana_smtp_host     = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
-      grafana_smtp_username = nonsensitive(data.kubernetes_secret.grafana_smtp.data["username"])
-      grafana_email         = var.grafana_email
-      grafana_admin_email   = "dagape.test@gmail.com"
-      grafana_postgres_host = "${helm_release.grafana_postgres.name}.${helm_release.grafana_postgres.namespace}.svc.cluster.local"
-    }),
-  ]
+  values = [templatefile("${path.module}/assets/grafana.yaml.tftpl", {
+    grafana_domain = var.grafana_domain
+    grafana_email  = var.grafana_email
+    admin_user     = "admin"
+    admin_email    = "dagape.test@gmail.com"
 
-  set_sensitive = [{
-    # grafana_smtp_password
-    name  = "grafana\\.ini.smtp.password"
-    type  = "string"
-    value = data.kubernetes_secret.grafana_smtp.data["password"]
-  }]
+    service_account_name = module.grafana_service_account.kubernetes_service_account.metadata[0].name
+    smtp_host            = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
+    smtp_user            = nonsensitive(data.kubernetes_secret.grafana_smtp.data["user"])
+    postgres_host        = local.postgres_host
+    clickhouse_host      = local.clickhouse_host
+    google_project_id    = var.google_project.project_id
+  })]
+
+  set_sensitive = [
+    { name = "secretConfigEnvs.GF_SECURITY_ADMIN_PASSWORD", value = sensitive("Secret123") },
+    { name = "secretConfigEnvs.GF_SMTP_PASSWORD", value = data.kubernetes_secret.grafana_smtp.data["password"] },
+    { name = "secretConfigEnvs.GF_DATABASE_PASSWORD", value = sensitive("Secret123") }, # postgres password
+    { name = "secretConfigEnvs.CLICKHOUSE_PASSWORD", value = sensitive("Secret123") },
+  ]
 }
 
-# data "kubernetes_service" "grafana" {
-#   metadata {
-#     name      = helm_release.grafana.name
-#     namespace = helm_release.grafana.namespace
-#   }
-# }
+data "kubernetes_service" "grafana" {
+  metadata {
+    name      = helm_release.grafana.name
+    namespace = helm_release.grafana.namespace
+  }
+}
 
 # module "grafana_gateway_http_route" {
 #   source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"

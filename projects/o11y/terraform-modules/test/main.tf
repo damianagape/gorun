@@ -44,7 +44,8 @@ resource "helm_release" "opentelemetry_operator" {
 module "test_o11y_stack" {
   source = "../../terraform-submodules/gke-o11y-stack" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-o11y-stack/0.7.100.zip"
 
-  google_project = data.google_project.this
+  google_project           = data.google_project.this
+  google_container_cluster = data.google_container_cluster.this
 
   grafana_domain = "grafana.gogke-test-7.damianagape.pl"
   grafana_email  = "grafana@gogke-test-7.damianagape.pl"

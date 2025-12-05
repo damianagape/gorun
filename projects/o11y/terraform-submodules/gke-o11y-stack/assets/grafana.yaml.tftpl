@@ -1,50 +1,46 @@
-configEnvs:
-  GF_PLUGINS_PREINSTALL: grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource
+serviceAccountName: "${service_account_name}"
 
 configFiles:
+  # https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
   grafana.ini: |
-    [analytics]
-    check_for_updates = true
-    [auth]
-    disable_login_form = false
-    disable_signout_menu = false
-    [database]
-    host = ${grafana_postgresql_host}:5432
-    name = grafana
-    password = Secret123
-    type = postgres
-    user = grafana
-    [grafana_net]
-    url = https://grafana.net
-    [log]
-    level = error
-    mode = console
-    [paths]
-    data = /var/lib/grafana/
-    logs = /var/log/grafana
-    plugins = /var/lib/grafana/plugins
-    provisioning = /etc/grafana/provisioning
-    [security]
-    admin_email = ${grafana_admin_email}
-    admin_password = Secret123
-    admin_user = admin
-    disable_initial_admin_creation = false
     [server]
-    domain = ${grafana_domain}
-    root_url = https://${grafana_domain}
+    domain=${grafana_domain}
+    root_url=https://${grafana_domain}
+
     [smtp]
-    enabled = true
-    from_address = ${grafana_email}
-    from_name = Grafana
-    host = ${grafana_smtp_host}
-    user = ${grafana_smtp_username}
+    enabled=true
+    host=${smtp_host}
+    user=${smtp_user}
+    from_name=Grafana
+    from_address=${grafana_email}
+
+    [database]
+    type=postgres
+    host=${postgres_host}:5432
+    user=postgres
+    name=postgres
+
+    [auth]
+    disable_login_form=false
+    disable_signout_menu=false
     [users]
-    allow_org_create = true
-    allow_sign_up = true
-    auto_assign_org = true
-    auto_assign_org_id = 1
-    auto_assign_org_role = Viewer
-    verify_email_enabled = false
+    verify_email_enabled=false
+    allow_sign_up=true
+    allow_org_create=true
+    auto_assign_org=true
+    auto_assign_org_id=1
+    auto_assign_org_role=Viewer
+    [security]
+    disable_initial_admin_creation=false
+    admin_user=${admin_user}
+    admin_email=${admin_email}
+
+    [log]
+    level=error
+    mode=console
+
+    [plugins]
+    preinstall=grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource
 
   provisioning/datasources/clickhouse.yaml:
     apiVersion: 1
@@ -65,7 +61,7 @@ configFiles:
           traces:
             defaultDatabase: otel_traces
         secureJsonData:
-          password: Secret123
+          password: $${CLICKHOUSE_PASSWORD}
         isDefault: true
 
   provisioning/datasources/googlecloud.yaml:
@@ -88,7 +84,7 @@ configFiles:
         uid: googlecloud-metrics
         type: stackdriver
         jsonData:
-          defaultProject: "${project_id}"
+          defaultProject: "${google_project_id}"
           # required IAM roles: "roles/monitoring.viewer"
           authenticationType: gce
         isDefault: false
