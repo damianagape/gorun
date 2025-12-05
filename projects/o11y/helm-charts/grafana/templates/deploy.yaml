@@ -1,15 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Release.Name }}-http-server"
+  name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: http-server
     {{- include "grafana.metadataLabels" $ | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/component: http-server
       {{- include "grafana.selectorLabels" $ | nindent 6 }}
   replicas: {{ .Values.httpServer.minReplicas }}
   strategy:
@@ -19,7 +17,6 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: http-server
         {{- include "grafana.metadataLabels" $ | nindent 8 }}
         {{- if .Values.httpServer.extraPodLabels }}
         {{- toYaml .Values.httpServer.extraPodLabels | nindent 8 }}
@@ -86,7 +83,6 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    app.kubernetes.io/component: http-server
                     {{- include "grafana.selectorLabels" $ | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
       volumes:

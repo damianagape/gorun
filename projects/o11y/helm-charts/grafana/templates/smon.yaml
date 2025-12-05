@@ -1,15 +1,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: "{{ .Release.Name }}-http-server"
+  name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: http-server
     {{- include "grafana.metadataLabels" $ | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/component: http-server
       {{- include "grafana.selectorLabels" $ | nindent 6 }}
   namespaceSelector:
     matchNames:

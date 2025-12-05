@@ -1,15 +1,14 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: "{{ .Release.Name }}-http-server"
+  name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: http-server
     {{- include "grafana.metadataLabels" $ | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: "{{ .Release.Name }}-http-server"
+    name: "{{ .Release.Name }}"
   minReplicas: {{ .Values.httpServer.minReplicas }}
   maxReplicas: {{ .Values.httpServer.maxReplicas }}

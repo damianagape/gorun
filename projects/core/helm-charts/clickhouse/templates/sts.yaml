@@ -30,7 +30,7 @@ spec:
     spec:
       serviceAccountName: "{{ .Release.Name }}"
       containers:
-        - name: server
+        - name: clickhouse-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
             - configMapRef:
@@ -41,23 +41,23 @@ spec:
             - name: data
               mountPath: /var/lib/clickhouse
           ports:
-            - name: http
+            - name: clickhouse-http
               containerPort: 8123
               protocol: TCP
-            - name: server
+            - name: clickhouse-tcp
               containerPort: 9000
               protocol: TCP
           startupProbe:
             httpGet:
-              port: http
+              port: clickhouse-http
               path: /ping
           readinessProbe:
             httpGet:
-              port: http
+              port: clickhouse-http
               path: /ping
           livenessProbe:
             httpGet:
-              port: http
+              port: clickhouse-http
               path: /ping
           resources:
             requests:

@@ -1,7 +1,7 @@
 {{- define "clickhouse.selectorLabels" -}}
 app.kubernetes.io/part-of: "{{ .Release.Namespace }}"
 app.kubernetes.io/instance: "{{ .Release.Name }}"
-app.kubernetes.io/name: "{{ .Values.image.repository }}"
+app.kubernetes.io/name: "{{ join "-" (splitList "/" .Values.image.repository) }}"
 {{- end -}}
 
 {{- define "clickhouse.metadataLabels" -}}

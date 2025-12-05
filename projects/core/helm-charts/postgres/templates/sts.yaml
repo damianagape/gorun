@@ -30,7 +30,7 @@ spec:
     spec:
       serviceAccountName: "{{ .Release.Name }}"
       containers:
-        - name: server
+        - name: postgres-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
             - configMapRef:
@@ -41,7 +41,7 @@ spec:
             - name: data
               mountPath: /var/lib/postgresql
           ports:
-            - name: server
+            - name: postgres-tcp
               containerPort: 5432
               protocol: TCP
           startupProbe:

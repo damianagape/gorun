@@ -12,7 +12,7 @@ spec:
   clusterIP: None # headless service
   publishNotReadyAddresses: false
   ports:
-    - name: server
+    - name: postgres-tcp
       port: 5432
       protocol: TCP
-      targetPort: server
+      targetPort: postgres-tcp
