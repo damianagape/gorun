@@ -3,10 +3,10 @@ image:
   repository: postgres
   tag: 18.1
 
-envs:
+configEnvs:
   POSTGRES_USER: postgres
   POSTGRES_DB: postgres
-secretEnvs:
+secretConfigEnvs:
   POSTGRES_PASSWORD: Secret123
 
 resources:

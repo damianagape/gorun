@@ -3,9 +3,9 @@ collector:
   logsReceivers: [otlp]
   metricsReceivers: [otlp]
   tracesReceivers: [otlp]
-  envs:
+  configEnvs:
     CLICKHOUSE_ENDPOINT: "${clickhouse_endpoint}"
     CLICKHOUSE_USER: clickhouse
     CLICKHOUSE_DB: clickhouse
-  secretEnvs:
+  secretConfigEnvs:
     CLICKHOUSE_PASSWORD: Secret123

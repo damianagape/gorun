@@ -10,6 +10,6 @@ app.kubernetes.io/version: "0.0.0"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
 
-{{- define "otelcol.collector.envsChecksum" -}}
-{{- list .Values.collector.envs .Values.collector.secretEnvs | toJson | sha256sum -}}
+{{- define "otelcol.collector.configsChecksum" -}}
+{{- list .Values.collector.configEnvs .Values.collector.secretConfigEnvs | toJson | sha256sum -}}
 {{- end -}}

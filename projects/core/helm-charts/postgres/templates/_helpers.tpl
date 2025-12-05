@@ -11,5 +11,5 @@ helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
 
 {{- define "postgres.configsChecksum" -}}
-{{- list .Values.envs .Values.secretEnvs | toJson | sha256sum -}}
+{{- list .Values.configEnvs .Values.secretConfigEnvs | toJson | sha256sum -}}
 {{- end -}}
