@@ -23,7 +23,7 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/envs: "{{ include "postgres.envsChecksum" $ }}"
+        checksum/configs: "{{ include "postgres.configsChecksum" $ }}"
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
@@ -32,12 +32,6 @@ spec:
       containers:
         - name: server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          env:
-            - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Release.Name }}-envs"
-                  key: POSTGRES_PASSWORD
           envFrom:
             - configMapRef:
                 name: "{{ .Release.Name }}-envs"
@@ -56,21 +50,18 @@ spec:
                 - pg_isready
                 - --host=127.0.0.1
                 - --port=5432
-                - --username=${POSTGRES_USER}
           readinessProbe:
             exec:
               command:
                 - pg_isready
                 - --host=127.0.0.1
                 - --port=5432
-                - --username=${POSTGRES_USER}
           livenessProbe:
             exec:
               command:
                 - pg_isready
                 - --host=127.0.0.1
                 - --port=5432
-                - --username=${POSTGRES_USER}
           resources:
             requests:
               cpu: "{{ .Values.resources.requests.cpu }}"
@@ -90,15 +81,6 @@ spec:
       securityContext: # pod security context
         fsGroup: 999
         fsGroupChangePolicy: OnRootMismatch
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    {{- include "postgres.selectorLabels" $ | nindent 20 }}
-                topologyKey: kubernetes.io/hostname
   volumeClaimTemplates:
     - metadata:
         name: data

@@ -23,7 +23,7 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/envs: "{{ include "clickhouse.envsChecksum" $ }}"
+        checksum/configs: "{{ include "clickhouse.configsChecksum" $ }}"
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
@@ -78,15 +78,6 @@ spec:
       securityContext: # pod security context
         fsGroup: 101
         fsGroupChangePolicy: OnRootMismatch
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    {{- include "clickhouse.selectorLabels" $ | nindent 20 }}
-                topologyKey: kubernetes.io/hostname
   volumeClaimTemplates:
     - metadata:
         name: data
