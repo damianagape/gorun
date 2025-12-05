@@ -51,7 +51,6 @@ cons:
 - version compatibility burden (hope-it-will-work driven development)
 - a lot of services to manage
 - 3 different query languages: LogQL, PromQL, TraceQL
-- Grafana dashboards as code management is unusable due to import/export and datasources quirks
 - [bad performance of Loki full-text search](https://signoz.io/blog/logs-performance-benchmark/)
 
 ```
@@ -243,7 +242,7 @@ pros:
 
 cons:
 
-- cannot manage `Ingestion API Key` as code
+- cannot manage "Ingestion API Key" as code
 
 ```
 $ kubectl get pod --all-namespaces
@@ -272,7 +271,7 @@ links:
     - [docs](https://grafana.com/docs/grafana/latest/setup-grafana/installation/helm/)
   - [tf provider](https://registry.terraform.io/providers/grafana/grafana/latest)
     - [source code](https://github.com/grafana/terraform-provider-grafana)
-  - [cli tool](https://grafana.github.io/grafanactl/)
+  - [cli app](https://grafana.github.io/grafanactl/)
     - [source code](https://github.com/grafana/grafanactl)
 - [postgres](https://www.postgresql.org/)
   - [source code](https://github.com/postgres/postgres)
@@ -292,7 +291,7 @@ links:
     - [source code](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/clickhouseexporter)
   - [grafana datasource plugin](https://grafana.com/grafana/plugins/grafana-clickhouse-datasource/)
     - [source code](https://github.com/grafana/clickhouse-datasource)
-    - another plugin [by Altinity](https://grafana.com/grafana/plugins/vertamedia-clickhouse-datasource/)
+    - another [plugin by Altinity](https://grafana.com/grafana/plugins/vertamedia-clickhouse-datasource/)
 - [clickhouse keeper](https://clickhouse.com/clickhouse/keeper)
   - [scaling video](https://www.youtube.com/watch?v=vBjCJtw_Ei0)
 - https://clickhouse.com/docs/observability/grafana
@@ -302,8 +301,9 @@ links:
 
 pros:
 
-- well-known and extensible dashboard
+- well-known and extensible dashboards
 - blazing-fast storage
+- one query language
 
 cons:
 
