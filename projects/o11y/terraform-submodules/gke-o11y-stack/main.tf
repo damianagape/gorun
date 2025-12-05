@@ -9,7 +9,7 @@ resource "kubernetes_namespace" "clickhouse" {
 }
 
 resource "helm_release" "clickhouse" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../../core/helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
   chart      = "clickhouse"
   version    = "0.7.100"
 
@@ -18,6 +18,10 @@ resource "helm_release" "clickhouse" {
 
   values = [templatefile("${path.module}/assets/clickhouse.yaml.tftpl", {
   })]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 #######################################
@@ -31,7 +35,7 @@ resource "kubernetes_namespace" "grafana" {
 }
 
 resource "helm_release" "grafana_postgres" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../../core/helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
   chart      = "postgres"
   version    = "0.7.100"
 
@@ -40,6 +44,10 @@ resource "helm_release" "grafana_postgres" {
 
   values = [templatefile("${path.module}/assets/grafana_postgres.yaml.tftpl", {
   })]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # resource "helm_release" "grafana" {

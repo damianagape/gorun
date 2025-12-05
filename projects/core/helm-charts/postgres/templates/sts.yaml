@@ -4,12 +4,12 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "clickhouse.metadataLabels" $ | nindent 4 }}
+    {{- include "postgres.metadataLabels" $ | nindent 4 }}
 spec:
   serviceName: "{{ .Release.Name }}-headless"
   selector:
     matchLabels:
-      {{- include "clickhouse.selectorLabels" $ | nindent 6 }}
+      {{- include "postgres.selectorLabels" $ | nindent 6 }}
   replicas: 1
   updateStrategy:
     type: RollingUpdate
@@ -18,47 +18,26 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "clickhouse.metadataLabels" $ | nindent 8 }}
+        {{- include "postgres.metadataLabels" $ | nindent 8 }}
         {{- if .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/envs: "{{ include "clickhouse.envsChecksum" $ }}"
+        checksum/envs: "{{ include "postgres.envsChecksum" $ }}"
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
     spec:
       serviceAccountName: "{{ .Release.Name }}"
-      initContainers:
-        - name: chown-volume
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          command: ["chown"]
-          args: ["-R", "101:101", "/var/lib/clickhouse"]
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/clickhouse
-          resources:
-            requests:
-              cpu: 1m
-              memory: 1Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
-          securityContext:
-            privileged: false
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - CHOWN
-                - FOWNER
-            runAsNonRoot: false
-            readOnlyRootFilesystem: false
-            runAsUser: 0
-            runAsGroup: 0
       containers:
         - name: server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-envs"
+                  key: POSTGRES_PASSWORD
           envFrom:
             - configMapRef:
                 name: "{{ .Release.Name }}-envs"
@@ -66,26 +45,32 @@ spec:
                 name: "{{ .Release.Name }}-envs"
           volumeMounts:
             - name: data
-              mountPath: /var/lib/clickhouse
+              mountPath: /var/lib/postgresql
           ports:
-            - name: http
-              containerPort: 8123
-              protocol: TCP
             - name: server
-              containerPort: 9000
+              containerPort: 5432
               protocol: TCP
           startupProbe:
-            httpGet:
-              port: http
-              path: /ping
+            exec:
+              command:
+                - pg_isready
+                - --host=127.0.0.1
+                - --port=5432
+                - --username=${POSTGRES_USER}
           readinessProbe:
-            httpGet:
-              port: http
-              path: /ping
+            exec:
+              command:
+                - pg_isready
+                - --host=127.0.0.1
+                - --port=5432
+                - --username=${POSTGRES_USER}
           livenessProbe:
-            httpGet:
-              port: http
-              path: /ping
+            exec:
+              command:
+                - pg_isready
+                - --host=127.0.0.1
+                - --port=5432
+                - --username=${POSTGRES_USER}
           resources:
             requests:
               cpu: "{{ .Values.resources.requests.cpu }}"
@@ -100,10 +85,10 @@ spec:
                 - ALL
             runAsNonRoot: true
             readOnlyRootFilesystem: false
-            runAsUser: 101
-            runAsGroup: 101
+            runAsUser: 999
+            runAsGroup: 999
       securityContext: # pod security context
-        fsGroup: 101
+        fsGroup: 999
         fsGroupChangePolicy: OnRootMismatch
       affinity:
         podAntiAffinity:
@@ -112,7 +97,7 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    {{- include "clickhouse.selectorLabels" $ | nindent 20 }}
+                    {{- include "postgres.selectorLabels" $ | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
   volumeClaimTemplates:
     - metadata:

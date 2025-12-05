@@ -270,6 +270,54 @@ definitions:
           - ./scripts/docker-image test "projects/core/docker-images/node24-sdk"
           - ./scripts/docker-image publish "projects/core/docker-images/node24-sdk"
           - ./scripts/docker-image show "projects/core/docker-images/node24-sdk"
+    - step: &test-core-chart-clickhouse
+        name: test core-chart-clickhouse
+        condition:
+          changesets:
+            includePaths:
+              - "projects/core/helm-charts/clickhouse/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/core/helm-charts/clickhouse"
+          - ./scripts/helm-chart test "projects/core/helm-charts/clickhouse"
+          - ./scripts/helm-chart pre-publish "projects/core/helm-charts/clickhouse"
+          - ./scripts/helm-chart show "projects/core/helm-charts/clickhouse"
+    - step: &publish-core-chart-clickhouse
+        name: publish core-chart-clickhouse
+        condition:
+          changesets:
+            includePaths:
+              - "projects/core/helm-charts/clickhouse/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/core/helm-charts/clickhouse"
+          - ./scripts/helm-chart test "projects/core/helm-charts/clickhouse"
+          - ./scripts/helm-chart publish "projects/core/helm-charts/clickhouse"
+          - ./scripts/helm-chart show "projects/core/helm-charts/clickhouse"
+    - step: &test-core-chart-postgres
+        name: test core-chart-postgres
+        condition:
+          changesets:
+            includePaths:
+              - "projects/core/helm-charts/postgres/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/core/helm-charts/postgres"
+          - ./scripts/helm-chart test "projects/core/helm-charts/postgres"
+          - ./scripts/helm-chart pre-publish "projects/core/helm-charts/postgres"
+          - ./scripts/helm-chart show "projects/core/helm-charts/postgres"
+    - step: &publish-core-chart-postgres
+        name: publish core-chart-postgres
+        condition:
+          changesets:
+            includePaths:
+              - "projects/core/helm-charts/postgres/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/core/helm-charts/postgres"
+          - ./scripts/helm-chart test "projects/core/helm-charts/postgres"
+          - ./scripts/helm-chart publish "projects/core/helm-charts/postgres"
+          - ./scripts/helm-chart show "projects/core/helm-charts/postgres"
     - step: &test-core-tfmod-main
         name: test core-tfmod-main
         condition:
@@ -914,30 +962,6 @@ definitions:
           - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/kuard"
-    - step: &test-o11y-chart-clickhouse
-        name: test o11y-chart-clickhouse
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/helm-charts/clickhouse/**"
-        script:
-          - *auth
-          - ./scripts/helm-chart build "projects/o11y/helm-charts/clickhouse"
-          - ./scripts/helm-chart test "projects/o11y/helm-charts/clickhouse"
-          - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/clickhouse"
-          - ./scripts/helm-chart show "projects/o11y/helm-charts/clickhouse"
-    - step: &publish-o11y-chart-clickhouse
-        name: publish o11y-chart-clickhouse
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/helm-charts/clickhouse/**"
-        script:
-          - *auth
-          - ./scripts/helm-chart build "projects/o11y/helm-charts/clickhouse"
-          - ./scripts/helm-chart test "projects/o11y/helm-charts/clickhouse"
-          - ./scripts/helm-chart publish "projects/o11y/helm-charts/clickhouse"
-          - ./scripts/helm-chart show "projects/o11y/helm-charts/clickhouse"
     - step: &test-o11y-chart-otelcol
         name: test o11y-chart-otelcol
         condition:
@@ -962,30 +986,6 @@ definitions:
           - ./scripts/helm-chart test "projects/o11y/helm-charts/otelcol"
           - ./scripts/helm-chart publish "projects/o11y/helm-charts/otelcol"
           - ./scripts/helm-chart show "projects/o11y/helm-charts/otelcol"
-    - step: &test-o11y-chart-postgres
-        name: test o11y-chart-postgres
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/helm-charts/postgres/**"
-        script:
-          - *auth
-          - ./scripts/helm-chart build "projects/o11y/helm-charts/postgres"
-          - ./scripts/helm-chart test "projects/o11y/helm-charts/postgres"
-          - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/postgres"
-          - ./scripts/helm-chart show "projects/o11y/helm-charts/postgres"
-    - step: &publish-o11y-chart-postgres
-        name: publish o11y-chart-postgres
-        condition:
-          changesets:
-            includePaths:
-              - "projects/o11y/helm-charts/postgres/**"
-        script:
-          - *auth
-          - ./scripts/helm-chart build "projects/o11y/helm-charts/postgres"
-          - ./scripts/helm-chart test "projects/o11y/helm-charts/postgres"
-          - ./scripts/helm-chart publish "projects/o11y/helm-charts/postgres"
-          - ./scripts/helm-chart show "projects/o11y/helm-charts/postgres"
     - step: &test-o11y-tfmod-test
         name: test o11y-tfmod-test
         condition:
@@ -1094,6 +1094,8 @@ pipelines:
           - step: *test-core-image-java21-sdk
           - step: *test-core-image-node24-rte
           - step: *test-core-image-node24-sdk
+          - step: *test-core-chart-clickhouse
+          - step: *test-core-chart-postgres
           - step: *test-core-tfmod-main
           - step: *test-core-tfmod-prod
           - step: *test-core-tfmod-test
@@ -1115,9 +1117,7 @@ pipelines:
           - step: *test-demo-tfsub-helm-manifest
           - step: *test-demo-tfsub-helm-template
           - step: *test-demo-tfsub-kuard
-          - step: *test-o11y-chart-clickhouse
           - step: *test-o11y-chart-otelcol
-          - step: *test-o11y-chart-postgres
           - step: *test-o11y-tfmod-test
           - step: *test-o11y-tfsub-gcp-availability-monitor
           - step: *test-o11y-tfsub-gke-o11y-stack
@@ -1137,6 +1137,8 @@ pipelines:
           - step: *publish-core-image-java21-sdk
           - step: *publish-core-image-node24-rte
           - step: *publish-core-image-node24-sdk
+          - step: *publish-core-chart-clickhouse
+          - step: *publish-core-chart-postgres
           - step: *publish-core-tfsub-gcp-docker-images-registry
           - step: *publish-core-tfsub-gcp-helm-charts-registry
           - step: *publish-core-tfsub-gcp-project
@@ -1154,9 +1156,7 @@ pipelines:
           - step: *publish-demo-tfsub-helm-manifest
           - step: *publish-demo-tfsub-helm-template
           - step: *publish-demo-tfsub-kuard
-          - step: *publish-o11y-chart-clickhouse
           - step: *publish-o11y-chart-otelcol
-          - step: *publish-o11y-chart-postgres
           - step: *publish-o11y-tfsub-gcp-availability-monitor
           - step: *publish-o11y-tfsub-gke-o11y-stack
       - parallel:
