@@ -851,6 +851,28 @@ publish-demo-tfsub-kuard:
     - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/kuard"
     - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/kuard"
     - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/kuard"
+test-o11y-chart-grafana:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/o11y/helm-charts/grafana/**"
+  script:
+    - ./scripts/helm-chart build "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart test "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart show "projects/o11y/helm-charts/grafana"
+publish-o11y-chart-grafana:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/o11y/helm-charts/grafana/**"
+  script:
+    - ./scripts/helm-chart build "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart test "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart publish "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart show "projects/o11y/helm-charts/grafana"
 test-o11y-chart-otelcol:
   stage: test
   rules:

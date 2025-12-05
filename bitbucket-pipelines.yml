@@ -962,6 +962,30 @@ definitions:
           - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/kuard"
+    - step: &test-o11y-chart-grafana
+        name: test o11y-chart-grafana
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/grafana/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/grafana"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/grafana"
+          - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/grafana"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/grafana"
+    - step: &publish-o11y-chart-grafana
+        name: publish o11y-chart-grafana
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/helm-charts/grafana/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/o11y/helm-charts/grafana"
+          - ./scripts/helm-chart test "projects/o11y/helm-charts/grafana"
+          - ./scripts/helm-chart publish "projects/o11y/helm-charts/grafana"
+          - ./scripts/helm-chart show "projects/o11y/helm-charts/grafana"
     - step: &test-o11y-chart-otelcol
         name: test o11y-chart-otelcol
         condition:
@@ -1117,6 +1141,7 @@ pipelines:
           - step: *test-demo-tfsub-helm-manifest
           - step: *test-demo-tfsub-helm-template
           - step: *test-demo-tfsub-kuard
+          - step: *test-o11y-chart-grafana
           - step: *test-o11y-chart-otelcol
           - step: *test-o11y-tfmod-test
           - step: *test-o11y-tfsub-gcp-availability-monitor
@@ -1156,6 +1181,7 @@ pipelines:
           - step: *publish-demo-tfsub-helm-manifest
           - step: *publish-demo-tfsub-helm-template
           - step: *publish-demo-tfsub-kuard
+          - step: *publish-o11y-chart-grafana
           - step: *publish-o11y-chart-otelcol
           - step: *publish-o11y-tfsub-gcp-availability-monitor
           - step: *publish-o11y-tfsub-gke-o11y-stack

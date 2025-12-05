@@ -34,7 +34,12 @@ metadata:
     {{- include "grafana.metadataLabels" $ | nindent 4 }}
 data:
   {{- range $key, $val := .Values.configFiles }}
-  {{ $key }}: {{ $val | quote }}
+  {{ $key }}: |
+    {{- if hasSuffix ".yaml" $key }}
+    {{- toYaml $val | nindent 4 }}
+    {{- else }}
+    {{- $val | nindent 4 }}
+    {{- end }}
   {{- end }}
 
 ---
@@ -47,5 +52,9 @@ metadata:
     {{- include "grafana.metadataLabels" $ | nindent 4 }}
 data:
   {{- range $key, $val := .Values.secretConfigFiles }}
+  {{- if hasSuffix ".yaml" $key }}
+  {{ $key }}: {{ toYaml $val | b64enc | quote }}
+  {{- else }}
   {{ $key }}: {{ $val | b64enc | quote }}
+  {{- end }}
   {{- end }}
