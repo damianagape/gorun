@@ -46,7 +46,7 @@ module "stateless_kuard_helm_template" {
 
   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
   chart      = "stateless-kuard"
-  version_   = "0.7.100"
+  version_   = "0.7.101"
   name       = "stateless-kuard"
   namespace  = module.workspace.kubernetes_namespace.metadata[0].name
 
@@ -102,7 +102,7 @@ module "stateful_kuard_service_account" {
 resource "helm_release" "stateful_kuard" {
   repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
   chart      = "stateful-kuard"
-  version    = "0.7.100"
+  version    = "0.7.101"
   name       = "stateful-kuard"
   namespace  = module.workspace.kubernetes_namespace.metadata[0].name
 
