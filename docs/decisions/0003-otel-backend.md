@@ -267,6 +267,9 @@ links:
 - [grafana](https://grafana.com/oss/grafana/)
   - [source code](https://github.com/grafana/grafana)
   - [docker image](https://hub.docker.com/r/grafana/grafana)
+    - [docs](https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/)
+  - kubernetes
+    - [docs](https://grafana.com/docs/grafana/latest/setup-grafana/installation/kubernetes/)
   - [helm chart](https://github.com/grafana/helm-charts/tree/main/charts/grafana)
     - [docs](https://grafana.com/docs/grafana/latest/setup-grafana/installation/helm/)
   - [tf provider](https://registry.terraform.io/providers/grafana/grafana/latest)

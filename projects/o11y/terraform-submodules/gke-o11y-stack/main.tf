@@ -50,32 +50,33 @@ resource "helm_release" "grafana_postgres" {
   }
 }
 
-# resource "helm_release" "grafana" {
-#   repository = "${path.module}/helm/charts"
-#   chart      = "grafana"
+resource "helm_release" "grafana" {
+  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  chart      = "grafana"
+  version    = "0.7.100"
 
-#   name      = "grafana"
-#   namespace = kubernetes_namespace.grafana.metadata[0].name
+  name      = "grafana"
+  namespace = kubernetes_namespace.grafana.metadata[0].name
 
-#   values = [
-#     file("${path.module}/helm/values/grafana.yaml"),
-#     templatefile("${path.module}/assets/grafana.yaml.tftpl", {
-#       grafana_domain        = var.grafana_domain
-#       grafana_smtp_host     = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
-#       grafana_smtp_username = nonsensitive(data.kubernetes_secret.grafana_smtp.data["username"])
-#       grafana_email         = var.grafana_email
-#       grafana_admin_email   = "dagape.test@gmail.com"
-#       grafana_postgres_host = "${helm_release.grafana_postgres.name}.${helm_release.grafana_postgres.namespace}.svc.cluster.local"
-#     }),
-#   ]
+  values = [
+    file("${path.module}/helm/values/grafana.yaml"),
+    templatefile("${path.module}/assets/grafana.yaml.tftpl", {
+      grafana_domain        = var.grafana_domain
+      grafana_smtp_host     = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
+      grafana_smtp_username = nonsensitive(data.kubernetes_secret.grafana_smtp.data["username"])
+      grafana_email         = var.grafana_email
+      grafana_admin_email   = "dagape.test@gmail.com"
+      grafana_postgres_host = "${helm_release.grafana_postgres.name}.${helm_release.grafana_postgres.namespace}.svc.cluster.local"
+    }),
+  ]
 
-#   set_sensitive = [{
-#     # grafana_smtp_password
-#     name  = "grafana\\.ini.smtp.password"
-#     type  = "string"
-#     value = data.kubernetes_secret.grafana_smtp.data["password"]
-#   }]
-# }
+  set_sensitive = [{
+    # grafana_smtp_password
+    name  = "grafana\\.ini.smtp.password"
+    type  = "string"
+    value = data.kubernetes_secret.grafana_smtp.data["password"]
+  }]
+}
 
 # data "kubernetes_service" "grafana" {
 #   metadata {
