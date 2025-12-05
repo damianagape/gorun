@@ -29,6 +29,8 @@ spec:
     spec:
       {{- if .Values.serviceAccountName }}
       serviceAccountName: "{{ .Values.serviceAccountName }}"
+      {{- else }}
+      serviceAccountName: "{{ .Release.Name }}"
       {{- end }}
       containers:
         - name: grafana-server
@@ -40,7 +42,7 @@ spec:
                 name: "{{ .Release.Name }}-config-envs"
           volumeMounts:
             - name: config-files
-              mountPath: /run/secrets/grafana
+              mountPath: /etc/grafana
               readOnly: true
           ports:
             - name: grafana-http

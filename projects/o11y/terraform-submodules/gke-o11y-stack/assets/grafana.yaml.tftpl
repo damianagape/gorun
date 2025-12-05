@@ -1,0 +1,74 @@
+configEnvs:
+  GF_PLUGINS_PREINSTALL: grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource
+
+configFiles:
+  grafana.ini: |
+    [analytics]
+    check_for_updates = true
+    [auth]
+    disable_login_form = false
+    disable_signout_menu = false
+    [database]
+    host = ${grafana_postgresql_host}:5432
+    name = grafana
+    password = Secret123
+    type = postgres
+    user = grafana
+    [grafana_net]
+    url = https://grafana.net
+    [log]
+    level = error
+    mode = console
+    [paths]
+    data = /var/lib/grafana/
+    logs = /var/log/grafana
+    plugins = /var/lib/grafana/plugins
+    provisioning = /etc/grafana/provisioning
+    [security]
+    admin_email = ${grafana_admin_email}
+    admin_password = Secret123
+    admin_user = admin
+    disable_initial_admin_creation = false
+    [server]
+    domain = ${grafana_domain}
+    root_url = https://${grafana_domain}
+    [smtp]
+    enabled = true
+    from_address = ${grafana_email}
+    from_name = Grafana
+    host = ${grafana_smtp_host}
+    user = ${grafana_smtp_username}
+    [users]
+    allow_org_create = true
+    allow_sign_up = true
+    auto_assign_org = true
+    auto_assign_org_id = 1
+    auto_assign_org_role = Viewer
+    verify_email_enabled = false
+
+  provisioning/datasources/clickhouse.yaml: |
+    apiVersion: 1
+    datasources: []
+
+  provisioning/datasources/googlecloud.yaml: |
+    apiVersion: 1
+    datasources:
+    - isDefault: false
+      jsonData:
+        authenticationType: gce
+      name: GCP logs
+      type: googlecloud-logging-datasource
+      uid: gcp-logs
+    - isDefault: false
+      jsonData:
+        authenticationType: gce
+        defaultProject: ${project_id}
+      name: GCP metrics
+      type: stackdriver
+      uid: gcp-metrics
+    - isDefault: false
+      jsonData:
+        authenticationType: gce
+      name: GCP traces
+      type: googlecloud-trace-datasource
+      uid: gcp-traces

@@ -3,9 +3,9 @@ image:
   repository: grafana/grafana
   tag: 12.3.0
 
-configEnvs:
-  GF_INSTALL_PLUGINS: ""
-  GF_PLUGINS_PREINSTALL: "grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource"
+serviceAccountName: ""
+
+configEnvs: {}
 secretConfigEnvs: {}
 configFiles: {}
 secretConfigFiles: {}
