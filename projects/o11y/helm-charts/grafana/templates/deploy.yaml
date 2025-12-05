@@ -9,29 +9,29 @@ spec:
   selector:
     matchLabels:
       {{- include "grafana.selectorLabels" $ | nindent 6 }}
-  replicas: {{ .Values.httpServer.minReplicas }}
+  replicas: {{ .Values.minReplicas }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: {{ .Values.httpServer.maxUnavailable }}
+      maxUnavailable: {{ .Values.maxUnavailable }}
   template:
     metadata:
       labels:
         {{- include "grafana.metadataLabels" $ | nindent 8 }}
-        {{- if .Values.httpServer.extraPodLabels }}
-        {{- toYaml .Values.httpServer.extraPodLabels | nindent 8 }}
+        {{- if .Values.extraPodLabels }}
+        {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
         checksum/configs: "{{ include "grafana.configsChecksum" $ }}"
-        {{- if .Values.httpServer.extraPodAnnotations }}
-        {{- toYaml .Values.httpServer.extraPodAnnotations | nindent 8 }}
+        {{- if .Values.extraPodAnnotations }}
+        {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.serviceAccountName }}
       serviceAccountName: "{{ .Values.serviceAccountName }}"
       {{- end }}
       containers:
-        - name: http-server
+        - name: grafana-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
             - configMapRef:
@@ -43,21 +43,21 @@ spec:
               mountPath: /run/secrets/grafana
               readOnly: true
           ports:
-            - name: http
+            - name: grafana-http
               containerPort: 3000
               protocol: TCP
           startupProbe:
             httpGet:
-              port: http
-              path: /healthy
+              port: grafana-http
+              path: /api/health
           readinessProbe:
             httpGet:
-              port: http
-              path: /ready
+              port: grafana-http
+              path: /api/health
           livenessProbe:
             httpGet:
-              port: http
-              path: /healthy
+              port: grafana-http
+              path: /api/health
           resources:
             requests:
               cpu: 1m

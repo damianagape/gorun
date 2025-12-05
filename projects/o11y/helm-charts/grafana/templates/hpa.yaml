@@ -10,5 +10,5 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: "{{ .Release.Name }}"
-  minReplicas: {{ .Values.httpServer.minReplicas }}
-  maxReplicas: {{ .Values.httpServer.maxReplicas }}
+  minReplicas: {{ .Values.minReplicas }}
+  maxReplicas: {{ .Values.maxReplicas }}

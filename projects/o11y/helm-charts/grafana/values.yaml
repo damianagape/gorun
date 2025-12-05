@@ -3,14 +3,15 @@ image:
   repository: grafana/grafana
   tag: 12.3.0
 
-configEnvs: {}
+configEnvs:
+  GF_INSTALL_PLUGINS: ""
+  GF_PLUGINS_PREINSTALL: "grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource"
 secretConfigEnvs: {}
 configFiles: {}
 secretConfigFiles: {}
 
-httpServer:
-  minReplicas: 1
-  maxReplicas: 1
-  maxUnavailable: 1
-  extraPodLabels: {}
-  extraPodAnnotations: {}
+minReplicas: 1
+maxReplicas: 1
+maxUnavailable: 1
+extraPodLabels: {}
+extraPodAnnotations: {}

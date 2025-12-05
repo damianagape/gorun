@@ -9,4 +9,4 @@ spec:
   selector:
     matchLabels:
       {{- include "grafana.selectorLabels" $ | nindent 6 }}
-  maxUnavailable: {{ .Values.httpServer.maxUnavailable }}
+  maxUnavailable: {{ .Values.maxUnavailable }}
