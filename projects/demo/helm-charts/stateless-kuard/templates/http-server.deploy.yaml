@@ -30,8 +30,10 @@ spec:
         {{- toYaml .Values.httpServer.extraPodAnnotations | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.serviceAccountName }}
-      serviceAccountName: "{{ .Values.serviceAccountName }}"
+      {{- if .Values.httpServer.serviceAccountName }}
+      serviceAccountName: "{{ .Values.httpServer.serviceAccountName }}"
+      {{- else }}
+      serviceAccountName: "{{ .Release.Name }}-http-server"
       {{- end }}
       containers:
         - name: http-server

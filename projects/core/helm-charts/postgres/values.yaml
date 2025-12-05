@@ -9,6 +9,10 @@ configEnvs:
 secretConfigEnvs:
   POSTGRES_PASSWORD: Secret123
 
+extraPodLabels: {}
+extraPodAnnotations: {}
+extraServiceLabels: {}
+extraServiceAnnotations: {}
 resources:
   requests:
     cpu: 1m
@@ -17,6 +21,3 @@ resources:
   limits:
     cpu: 1000m
     memory: 1Gi
-
-extraPodLabels: {}
-extraPodAnnotations: {}

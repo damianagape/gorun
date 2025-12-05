@@ -1,5 +1,16 @@
 collector:
   mode: ""
+  configEnvs:
+    CLICKHOUSE_ENDPOINT: tcp://127.0.0.1:9000
+    CLICKHOUSE_USER: clickhouse
+    CLICKHOUSE_DB: clickhouse
+  secretConfigEnvs:
+    CLICKHOUSE_PASSWORD: Secret123
+  mountLogs: false
+  logsReceivers: []
+  metricsReceivers: []
+  tracesReceivers: []
+
   replicas: 1
   resources:
     requests:
@@ -8,17 +19,6 @@ collector:
     limits:
       cpu: 1000m
       memory: 1Gi
-
-  logsReceivers: []
-  metricsReceivers: []
-  tracesReceivers: []
-  configEnvs:
-    CLICKHOUSE_ENDPOINT: tcp://127.0.0.1:9000
-    CLICKHOUSE_USER: clickhouse
-    CLICKHOUSE_DB: clickhouse
-  secretConfigEnvs:
-    CLICKHOUSE_PASSWORD: Secret123
-  mountLogs: false
 
 targetAllocator:
   enabled: false

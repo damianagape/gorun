@@ -1,11 +1,11 @@
 collector:
   mode: daemonset
-  logsReceivers: []
-  metricsReceivers: [kubeletstats]
-  tracesReceivers: []
   configEnvs:
     CLICKHOUSE_ENDPOINT: "${clickhouse_endpoint}"
     CLICKHOUSE_USER: clickhouse
     CLICKHOUSE_DB: clickhouse
   secretConfigEnvs:
     CLICKHOUSE_PASSWORD: Secret123
+  logsReceivers: []
+  metricsReceivers: [kubeletstats]
+  tracesReceivers: []

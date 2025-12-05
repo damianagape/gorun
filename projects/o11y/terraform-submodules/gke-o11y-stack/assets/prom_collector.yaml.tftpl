@@ -1,14 +1,14 @@
 collector:
   mode: statefulset
-  logsReceivers: []
-  metricsReceivers: [prometheus]
-  tracesReceivers: []
   configEnvs:
     CLICKHOUSE_ENDPOINT: "${clickhouse_endpoint}"
     CLICKHOUSE_USER: clickhouse
     CLICKHOUSE_DB: clickhouse
   secretConfigEnvs:
     CLICKHOUSE_PASSWORD: Secret123
+  logsReceivers: []
+  metricsReceivers: [prometheus]
+  tracesReceivers: []
 
 targetAllocator:
   enabled: true

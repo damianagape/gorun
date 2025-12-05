@@ -1,11 +1,11 @@
 collector:
   mode: deployment
-  logsReceivers: [otlp]
-  metricsReceivers: [otlp]
-  tracesReceivers: [otlp]
   configEnvs:
     CLICKHOUSE_ENDPOINT: "${clickhouse_endpoint}"
     CLICKHOUSE_USER: clickhouse
     CLICKHOUSE_DB: clickhouse
   secretConfigEnvs:
     CLICKHOUSE_PASSWORD: Secret123
+  logsReceivers: [otlp]
+  metricsReceivers: [otlp]
+  tracesReceivers: [otlp]

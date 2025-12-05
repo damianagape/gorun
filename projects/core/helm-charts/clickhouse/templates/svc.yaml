@@ -5,6 +5,14 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     {{- include "clickhouse.metadataLabels" $ | nindent 4 }}
+    {{- if .Values.extraServiceLabels }}
+    {{- toYaml .Values.extraServiceLabels | nindent 4 }}
+    {{- end }}
+  annotations:
+    networking.gke.io/max-rate-per-endpoint: "100"
+    {{- if .Values.extraServiceAnnotations }}
+    {{- toYaml .Values.extraServiceAnnotations | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     {{- include "clickhouse.selectorLabels" $ | nindent 4 }}

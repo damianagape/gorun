@@ -6,8 +6,14 @@ metadata:
   labels:
     app.kubernetes.io/component: http-server
     {{- include "kuard.metadataLabels" $ | nindent 4 }}
+    {{- if .Values.httpServer.extraServiceLabels }}
+    {{- toYaml .Values.httpServer.extraServiceLabels | nindent 4 }}
+    {{- end }}
   annotations:
     networking.gke.io/max-rate-per-endpoint: "100"
+    {{- if .Values.httpServer.extraServiceAnnotations }}
+    {{- toYaml .Values.httpServer.extraServiceAnnotations | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     app.kubernetes.io/component: http-server
