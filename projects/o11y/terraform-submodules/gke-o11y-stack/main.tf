@@ -110,16 +110,16 @@ data "kubernetes_service" "grafana" {
   }
 }
 
-# module "grafana_gateway_http_route" {
-#   source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"
+module "grafana_gateway_http_route" {
+  source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"
 
-#   kubernetes_service = data.kubernetes_service.grafana
+  kubernetes_service = data.kubernetes_service.grafana
 
-#   domain            = var.grafana_domain
-#   service_port      = 80
-#   container_port    = 3000
-#   health_check_path = "/healthz"
-# }
+  domain            = var.grafana_domain
+  service_port      = 80
+  container_port    = 3000
+  health_check_path = "/healthz"
+}
 
 module "grafana_availability_monitor" {
   source = "../gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"

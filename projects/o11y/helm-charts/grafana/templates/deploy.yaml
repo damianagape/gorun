@@ -73,7 +73,7 @@ spec:
               drop:
                 - ALL
             runAsNonRoot: true
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
             runAsUser: 472
             runAsGroup: 472
       securityContext: # pod security context
