@@ -6,7 +6,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" $ | nindent 4 }}
+    {{- include "kuard.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.configEnvs }}
   {{ $key }}: {{ $val | quote }}
@@ -20,7 +20,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" $ | nindent 4 }}
+    {{- include "kuard.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.secretConfigEnvs }}
   {{ $key }}: {{ $val | b64enc | quote }}
@@ -34,7 +34,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" $ | nindent 4 }}
+    {{- include "kuard.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.configFiles }}
   {{ $key | replace "/" "..." }}: |
@@ -53,7 +53,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" $ | nindent 4 }}
+    {{- include "kuard.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.secretConfigFiles }}
   {{- if hasSuffix ".yaml" $key }}

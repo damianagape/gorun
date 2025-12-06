@@ -4,7 +4,7 @@ metadata:
   name: "{{ .Release.Name }}-headless"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "clickhouse.metadataLabels" $ | nindent 4 }}
+    {{- include "clickhouse.metadataLabels" . | nindent 4 }}
     {{- if .Values.extraServiceLabels }}
     {{- toYaml .Values.extraServiceLabels | nindent 4 }}
     {{- end }}
@@ -15,7 +15,7 @@ metadata:
     {{- end }}
 spec:
   selector:
-    {{- include "clickhouse.selectorLabels" $ | nindent 4 }}
+    {{- include "clickhouse.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   clusterIP: None # headless service
   publishNotReadyAddresses: false

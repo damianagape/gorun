@@ -294,6 +294,30 @@ definitions:
           - ./scripts/helm-chart test "projects/core/helm-charts/clickhouse"
           - ./scripts/helm-chart publish "projects/core/helm-charts/clickhouse"
           - ./scripts/helm-chart show "projects/core/helm-charts/clickhouse"
+    - step: &test-core-chart-configs
+        name: test core-chart-configs
+        condition:
+          changesets:
+            includePaths:
+              - "projects/core/helm-charts/configs/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/core/helm-charts/configs"
+          - ./scripts/helm-chart test "projects/core/helm-charts/configs"
+          - ./scripts/helm-chart pre-publish "projects/core/helm-charts/configs"
+          - ./scripts/helm-chart show "projects/core/helm-charts/configs"
+    - step: &publish-core-chart-configs
+        name: publish core-chart-configs
+        condition:
+          changesets:
+            includePaths:
+              - "projects/core/helm-charts/configs/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/core/helm-charts/configs"
+          - ./scripts/helm-chart test "projects/core/helm-charts/configs"
+          - ./scripts/helm-chart publish "projects/core/helm-charts/configs"
+          - ./scripts/helm-chart show "projects/core/helm-charts/configs"
     - step: &test-core-chart-postgres
         name: test core-chart-postgres
         condition:
@@ -1119,6 +1143,7 @@ pipelines:
           - step: *test-core-image-node24-rte
           - step: *test-core-image-node24-sdk
           - step: *test-core-chart-clickhouse
+          - step: *test-core-chart-configs
           - step: *test-core-chart-postgres
           - step: *test-core-tfmod-main
           - step: *test-core-tfmod-prod
@@ -1163,6 +1188,7 @@ pipelines:
           - step: *publish-core-image-node24-rte
           - step: *publish-core-image-node24-sdk
           - step: *publish-core-chart-clickhouse
+          - step: *publish-core-chart-configs
           - step: *publish-core-chart-postgres
           - step: *publish-core-tfsub-gcp-docker-images-registry
           - step: *publish-core-tfsub-gcp-helm-charts-registry

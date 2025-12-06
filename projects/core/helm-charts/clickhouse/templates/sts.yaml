@@ -4,12 +4,12 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "clickhouse.metadataLabels" $ | nindent 4 }}
+    {{- include "clickhouse.metadataLabels" . | nindent 4 }}
 spec:
   serviceName: "{{ .Release.Name }}-headless"
   selector:
     matchLabels:
-      {{- include "clickhouse.selectorLabels" $ | nindent 6 }}
+      {{- include "clickhouse.selectorLabels" . | nindent 6 }}
   replicas: 1
   updateStrategy:
     type: RollingUpdate
@@ -18,12 +18,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "clickhouse.metadataLabels" $ | nindent 8 }}
+        {{- include "clickhouse.metadataLabels" . | nindent 8 }}
         {{- if .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configs: "{{ include "clickhouse.configsChecksum" $ }}"
+        checksum/configs: "{{ include "clickhouse.configsChecksum" . }}"
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}

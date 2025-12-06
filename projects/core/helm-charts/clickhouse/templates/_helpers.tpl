@@ -6,7 +6,7 @@ app.kubernetes.io/component: clickhouse-server
 {{- end -}}
 
 {{- define "clickhouse.metadataLabels" -}}
-{{ include "clickhouse.selectorLabels" $ }}
+{{ include "clickhouse.selectorLabels" . }}
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}

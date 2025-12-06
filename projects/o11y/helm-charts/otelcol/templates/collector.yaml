@@ -6,7 +6,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: collector
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.collector.configEnvs }}
   {{ $key }}: {{ $val | quote }}
@@ -20,7 +20,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: collector
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.collector.secretConfigEnvs }}
   {{ $key }}: {{ $val | b64enc | quote }}
@@ -34,10 +34,10 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: collector
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 spec:
   config:
-    {{- include "otelcol.collector.config" $ | nindent 4 }}
+    {{- include "otelcol.collector.config" . | nindent 4 }}
   env:
     - name: K8S_NODE_NAME
       valueFrom:
@@ -75,7 +75,7 @@ spec:
       enableMetrics: false
   podAnnotations:
     prometheus.io/scrape: "false"
-    checksum/configs: "{{ include "otelcol.collector.configsChecksum" $ }}"
+    checksum/configs: "{{ include "otelcol.collector.configsChecksum" . }}"
 
   {{- if .Values.targetAllocator.enabled }}
   targetAllocator:
@@ -107,7 +107,7 @@ metadata:
   name: "{{ .Release.Namespace }}-{{ .Release.Name }}-collector"
   labels:
     app.kubernetes.io/component: collector
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

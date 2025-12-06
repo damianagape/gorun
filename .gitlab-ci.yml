@@ -187,6 +187,28 @@ publish-core-chart-clickhouse:
     - ./scripts/helm-chart test "projects/core/helm-charts/clickhouse"
     - ./scripts/helm-chart publish "projects/core/helm-charts/clickhouse"
     - ./scripts/helm-chart show "projects/core/helm-charts/clickhouse"
+test-core-chart-configs:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/core/helm-charts/configs/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart test "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart pre-publish "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart show "projects/core/helm-charts/configs"
+publish-core-chart-configs:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/core/helm-charts/configs/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart test "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart publish "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart show "projects/core/helm-charts/configs"
 test-core-chart-postgres:
   stage: test
   rules:

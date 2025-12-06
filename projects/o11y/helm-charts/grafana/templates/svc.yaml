@@ -4,7 +4,7 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "grafana.metadataLabels" $ | nindent 4 }}
+    {{- include "grafana.metadataLabels" . | nindent 4 }}
     {{- if .Values.extraServiceLabels }}
     {{- toYaml .Values.extraServiceLabels | nindent 4 }}
     {{- end }}
@@ -15,7 +15,7 @@ metadata:
     {{- end }}
 spec:
   selector:
-    {{- include "grafana.selectorLabels" $ | nindent 4 }}
+    {{- include "grafana.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
     - name: grafana-http

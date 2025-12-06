@@ -5,7 +5,7 @@ app.kubernetes.io/name: "opentelemetry-collector"
 {{- end -}}
 
 {{- define "otelcol.metadataLabels" -}}
-{{ include "otelcol.selectorLabels" $ }}
+{{ include "otelcol.selectorLabels" . }}
 app.kubernetes.io/version: "0.0.0"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}

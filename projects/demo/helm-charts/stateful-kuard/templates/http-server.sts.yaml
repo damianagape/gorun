@@ -5,13 +5,13 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: http-server
-    {{- include "kuard.metadataLabels" $ | nindent 4 }}
+    {{- include "kuard.metadataLabels" . | nindent 4 }}
 spec:
   serviceName: "{{ .Release.Name }}-http-server-headless"
   selector:
     matchLabels:
       app.kubernetes.io/component: http-server
-      {{- include "kuard.selectorLabels" $ | nindent 6 }}
+      {{- include "kuard.selectorLabels" . | nindent 6 }}
   replicas: {{ .Values.httpServer.replicas }}
   updateStrategy:
     type: RollingUpdate
@@ -21,12 +21,12 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: http-server
-        {{- include "kuard.metadataLabels" $ | nindent 8 }}
+        {{- include "kuard.metadataLabels" . | nindent 8 }}
         {{- if .Values.httpServer.extraPodLabels }}
         {{- toYaml .Values.httpServer.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configs: "{{ include "kuard.configsChecksum" $ }}"
+        checksum/configs: "{{ include "kuard.configsChecksum" . }}"
         {{- if .Values.httpServer.extraPodAnnotations }}
         {{- toYaml .Values.httpServer.extraPodAnnotations | nindent 8 }}
         {{- end }}
@@ -120,7 +120,7 @@ spec:
                 labelSelector:
                   matchLabels:
                     app.kubernetes.io/component: http-server
-                    {{- include "kuard.selectorLabels" $ | nindent 20 }}
+                    {{- include "kuard.selectorLabels" . | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
       volumes:
         - name: config-files

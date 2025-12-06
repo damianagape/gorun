@@ -4,11 +4,11 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "grafana.metadataLabels" $ | nindent 4 }}
+    {{- include "grafana.metadataLabels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "grafana.selectorLabels" $ | nindent 6 }}
+      {{- include "grafana.selectorLabels" . | nindent 6 }}
   replicas: {{ .Values.minReplicas }}
   strategy:
     type: RollingUpdate
@@ -17,12 +17,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "grafana.metadataLabels" $ | nindent 8 }}
+        {{- include "grafana.metadataLabels" . | nindent 8 }}
         {{- if .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configs: "{{ include "grafana.configsChecksum" $ }}"
+        checksum/configs: "{{ include "grafana.configsChecksum" . }}"
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
@@ -85,7 +85,7 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    {{- include "grafana.selectorLabels" $ | nindent 20 }}
+                    {{- include "grafana.selectorLabels" . | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
       volumes:
         - name: config-files

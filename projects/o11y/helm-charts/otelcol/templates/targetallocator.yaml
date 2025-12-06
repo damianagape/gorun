@@ -7,7 +7,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: targetallocator
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 automountServiceAccountToken: true
 
 ---
@@ -17,7 +17,7 @@ metadata:
   name: "{{ .Release.Namespace }}-{{ .Release.Name }}-targetallocator"
   labels:
     app.kubernetes.io/component: targetallocator
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -35,7 +35,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     app.kubernetes.io/component: targetallocator
-    {{- include "otelcol.metadataLabels" $ | nindent 4 }}
+    {{- include "otelcol.metadataLabels" . | nindent 4 }}
 spec:
   namespaceSelector:
     any: true

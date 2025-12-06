@@ -5,7 +5,7 @@ metadata:
   name: "{{ .Release.Name }}-config-envs"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "postgres.metadataLabels" $ | nindent 4 }}
+    {{- include "postgres.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.configEnvs }}
   {{ $key }}: {{ $val | quote }}
@@ -18,7 +18,7 @@ metadata:
   name: "{{ .Release.Name }}-config-envs"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "postgres.metadataLabels" $ | nindent 4 }}
+    {{- include "postgres.metadataLabels" . | nindent 4 }}
 data:
   {{- range $key, $val := .Values.secretConfigEnvs }}
   {{ $key }}: {{ $val | b64enc | quote }}

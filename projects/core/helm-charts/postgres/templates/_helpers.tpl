@@ -6,7 +6,7 @@ app.kubernetes.io/component: postgres-server
 {{- end -}}
 
 {{- define "postgres.metadataLabels" -}}
-{{ include "postgres.selectorLabels" $ }}
+{{ include "postgres.selectorLabels" . }}
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}

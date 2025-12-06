@@ -6,7 +6,7 @@ app.kubernetes.io/component: grafana-server
 {{- end -}}
 
 {{- define "grafana.metadataLabels" -}}
-{{ include "grafana.selectorLabels" $ }}
+{{ include "grafana.selectorLabels" . }}
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}

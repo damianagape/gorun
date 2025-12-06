@@ -5,7 +5,7 @@ app.kubernetes.io/name: "{{ join "." (reverse (slice (reverse (splitList "/" .Va
 {{- end -}}
 
 {{- define "kuard.metadataLabels" -}}
-{{ include "kuard.selectorLabels" $ }}
+{{ include "kuard.selectorLabels" . }}
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}

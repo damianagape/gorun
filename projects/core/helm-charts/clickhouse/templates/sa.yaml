@@ -4,5 +4,5 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "clickhouse.metadataLabels" $ | nindent 4 }}
+    {{- include "clickhouse.metadataLabels" . | nindent 4 }}
 automountServiceAccountToken: true

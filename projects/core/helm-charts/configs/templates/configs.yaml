@@ -5,10 +5,9 @@ metadata:
   name: "{{ .Release.Name }}-config-envs"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" . | nindent 4 }}
+    {{- include "configs.metadataLabels" . | nindent 4 }}
 data:
-  {{- range $key, $val := .Values.configEnvs }}
+  {{- range $key, $val := .Values.envs }}
   {{ $key }}: {{ $val | quote }}
   {{- end }}
 
@@ -19,10 +18,9 @@ metadata:
   name: "{{ .Release.Name }}-config-envs"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" . | nindent 4 }}
+    {{- include "configs.metadataLabels" . | nindent 4 }}
 data:
-  {{- range $key, $val := .Values.secretConfigEnvs }}
+  {{- range $key, $val := .Values.secretEnvs }}
   {{ $key }}: {{ $val | b64enc | quote }}
   {{- end }}
 
@@ -33,11 +31,10 @@ metadata:
   name: "{{ .Release.Name }}-config-files"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" . | nindent 4 }}
+    {{- include "configs.metadataLabels" . | nindent 4 }}
 data:
-  {{- range $key, $val := .Values.configFiles }}
-  {{ $key | replace "/" "..." }}: |
+  {{- range $key, $val := .Values.files }}
+  {{ include "configs.key" $key }}: |
     {{- if hasSuffix ".yaml" $key }}
     {{- toYaml $val | nindent 4 }}
     {{- else }}
@@ -52,13 +49,12 @@ metadata:
   name: "{{ .Release.Name }}-config-files"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    app.kubernetes.io/component: configs
-    {{- include "kuard.metadataLabels" . | nindent 4 }}
+    {{- include "configs.metadataLabels" . | nindent 4 }}
 data:
-  {{- range $key, $val := .Values.secretConfigFiles }}
+  {{- range $key, $val := .Values.secretFiles }}
   {{- if hasSuffix ".yaml" $key }}
-  {{ $key | replace "/" "..." }}: {{ toYaml $val | b64enc | quote }}
+  {{ include "configs.key" $key }}: {{ toYaml $val | b64enc | quote }}
   {{- else }}
-  {{ $key | replace "/" "..." }}: {{ $val | b64enc | quote }}
+  {{ include "configs.key" $key }}: {{ $val | b64enc | quote }}
   {{- end }}
   {{- end }}

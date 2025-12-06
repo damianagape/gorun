@@ -4,12 +4,12 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "postgres.metadataLabels" $ | nindent 4 }}
+    {{- include "postgres.metadataLabels" . | nindent 4 }}
 spec:
   serviceName: "{{ .Release.Name }}-headless"
   selector:
     matchLabels:
-      {{- include "postgres.selectorLabels" $ | nindent 6 }}
+      {{- include "postgres.selectorLabels" . | nindent 6 }}
   replicas: 1
   updateStrategy:
     type: RollingUpdate
@@ -18,12 +18,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "postgres.metadataLabels" $ | nindent 8 }}
+        {{- include "postgres.metadataLabels" . | nindent 8 }}
         {{- if .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configs: "{{ include "postgres.configsChecksum" $ }}"
+        checksum/configs: "{{ include "postgres.configsChecksum" . }}"
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}

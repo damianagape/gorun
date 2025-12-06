@@ -4,9 +4,9 @@ metadata:
   name: "{{ .Release.Name }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- include "grafana.metadataLabels" $ | nindent 4 }}
+    {{- include "grafana.metadataLabels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "grafana.selectorLabels" $ | nindent 6 }}
+      {{- include "grafana.selectorLabels" . | nindent 6 }}
   maxUnavailable: {{ .Values.maxUnavailable }}
