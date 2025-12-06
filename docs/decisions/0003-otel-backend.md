@@ -313,6 +313,20 @@ cons:
 
 - todo
 
+```
+$ kubectl get pod --all-namespaces
+NAMESPACE                        NAME                                                       READY   STATUS    RESTARTS        AGE
+o11y-clickhouse                  clickhouse-0                                               1/1     Running   0               2m22s
+o11y-grafana                     grafana-5d9c87c848-wkbnf                                   1/1     Running   0               105s
+o11y-grafana                     grafana-postgres-0                                         1/1     Running   0               2m22s
+
+$ kubectl top pod --all-namespaces
+NAMESPACE                        NAME                                                       CPU(cores)   MEMORY(bytes)
+o11y-clickhouse                  clickhouse-0                                               132m         295Mi
+o11y-grafana                     grafana-5d9c87c848-wkbnf                                   19m          134Mi
+o11y-grafana                     grafana-postgres-0                                         17m          59Mi
+```
+
 ## Decision Outcome
 
 todo
