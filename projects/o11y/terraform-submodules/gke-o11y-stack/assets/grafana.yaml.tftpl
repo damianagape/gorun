@@ -40,7 +40,7 @@ configFiles:
     mode=console
 
     [plugins]
-    preinstall=grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource
+    preinstall_sync=grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource
 
   provisioning/datasources/clickhouse.yaml:
     apiVersion: 1
@@ -57,9 +57,11 @@ configFiles:
           username: clickhouse
           defaultDatabase: clickhouse
           logs:
+            defaultDatabase: clickhouse
             defaultTable: otel_logs
           traces:
-            defaultDatabase: otel_traces
+            defaultDatabase: clickhouse
+            defaultTable: otel_traces
         secureJsonData:
           password: $${CLICKHOUSE_PASSWORD}
         isDefault: true

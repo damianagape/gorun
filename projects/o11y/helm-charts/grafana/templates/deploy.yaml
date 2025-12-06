@@ -93,5 +93,15 @@ spec:
             sources:
               - configMap:
                   name: "{{ .Release.Name }}-config-files"
+                  items:
+                    {{- range $key, $_ := .Values.configFiles }}
+                    - key: "{{ $key | replace "/" "..." }}"
+                      path: "{{ $key }}"
+                    {{- end }}
               - secret:
                   name: "{{ .Release.Name }}-config-files"
+                  items:
+                    {{- range $key, $_ := .Values.secretConfigFiles }}
+                    - key: "{{ $key | replace "/" "..." }}"
+                      path: "{{ $key }}"
+                    {{- end }}

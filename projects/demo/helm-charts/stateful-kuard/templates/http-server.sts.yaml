@@ -106,7 +106,7 @@ spec:
               drop:
                 - ALL
             runAsNonRoot: true
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
             runAsUser: 1000
             runAsGroup: 3000
       securityContext: # pod security context
@@ -128,8 +128,18 @@ spec:
             sources:
               - configMap:
                   name: "{{ .Release.Name }}-config-files"
+                  items:
+                    {{- range $key, $_ := .Values.configFiles }}
+                    - key: "{{ $key | replace "/" "..." }}"
+                      path: "{{ $key }}"
+                    {{- end }}
               - secret:
                   name: "{{ .Release.Name }}-config-files"
+                  items:
+                    {{- range $key, $_ := .Values.secretConfigFiles }}
+                    - key: "{{ $key | replace "/" "..." }}"
+                      path: "{{ $key }}"
+                    {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: data
