@@ -5,6 +5,7 @@ metadata:
   name: "{{ .Release.Name }}-config-envs"
   namespace: "{{ .Release.Namespace }}"
   labels:
+    app.kubernetes.io/component: configs
     {{- include "kuard.metadataLabels" $ | nindent 4 }}
 data:
   {{- range $key, $val := .Values.configEnvs }}
@@ -18,6 +19,7 @@ metadata:
   name: "{{ .Release.Name }}-config-envs"
   namespace: "{{ .Release.Namespace }}"
   labels:
+    app.kubernetes.io/component: configs
     {{- include "kuard.metadataLabels" $ | nindent 4 }}
 data:
   {{- range $key, $val := .Values.secretConfigEnvs }}
@@ -31,6 +33,7 @@ metadata:
   name: "{{ .Release.Name }}-config-files"
   namespace: "{{ .Release.Namespace }}"
   labels:
+    app.kubernetes.io/component: configs
     {{- include "kuard.metadataLabels" $ | nindent 4 }}
 data:
   {{- range $key, $val := .Values.configFiles }}
@@ -49,6 +52,7 @@ metadata:
   name: "{{ .Release.Name }}-config-files"
   namespace: "{{ .Release.Namespace }}"
   labels:
+    app.kubernetes.io/component: configs
     {{- include "kuard.metadataLabels" $ | nindent 4 }}
 data:
   {{- range $key, $val := .Values.secretConfigFiles }}
