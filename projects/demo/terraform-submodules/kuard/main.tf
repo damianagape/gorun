@@ -44,9 +44,10 @@ module "stateless_kuard_service_account" {
 module "stateless_kuard_helm_template" {
   source = "../helm-template" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/demo/helm-template/0.7.100.zip"
 
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  repository = "../../helm-charts"
   chart      = "stateless-kuard"
-  version_   = "0.7.100"
+  version_   = "0.7.101"
   name       = "stateless-kuard"
   namespace  = module.workspace.kubernetes_namespace.metadata[0].name
 
@@ -77,18 +78,6 @@ module "stateless_kuard_gateway_http_route" {
   domain = "stateless-kuard.${var.platform_domain}"
 }
 
-module "stateless_kuard_availability_monitor" {
-  source = "../../../o11y/terraform-submodules/gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
-
-  google_project = var.google_project
-
-  request_host     = "stateless-kuard.${var.platform_domain}"
-  request_path     = "/healthy"
-  response_content = "ok"
-
-  notification_emails = ["dagape.test@gmail.com"]
-}
-
 module "stateless_kuard_gateway_domain_redirect" {
   source = "../../../core/terraform-submodules/k8s-gateway-domain-redirect" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-domain-redirect/0.7.100.zip"
 
@@ -112,9 +101,13 @@ module "stateful_kuard_service_account" {
 }
 
 resource "helm_release" "stateful_kuard" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  # PROD -dependency_update
+  dependency_update = true
+
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  repository = "../../helm-charts"
   chart      = "stateful-kuard"
-  version    = "0.7.100"
+  version    = "0.7.101"
   name       = "stateful-kuard"
   namespace  = module.workspace.kubernetes_namespace.metadata[0].name
 

@@ -64,6 +64,11 @@ commandTests:
     args:
       - compose
       - version
+  - # https://grafana.github.io/grafanactl/
+    name: grafanactl
+    command: grafanactl
+    args:
+      - --version
   - # https://helm.sh/
     name: helm
     command: helm
@@ -294,6 +299,9 @@ fileExistenceTests:
     shouldExist: true
   - name: goreleaser shell completion
     path: /etc/bash_completion.d/goreleaser
+    shouldExist: true
+  - name: grafanactl shell completion
+    path: /etc/bash_completion.d/grafanactl
     shouldExist: true
   - name: helm shell completion
     path: /etc/bash_completion.d/helm

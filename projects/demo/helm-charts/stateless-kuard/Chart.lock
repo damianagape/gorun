@@ -1,0 +1,6 @@
+dependencies:
+- name: configs
+  repository: file://../../../core/helm-charts/configs
+  version: 0.7.100
+digest: sha256:a9565d81f75621b060e78576e322a57692379b1bd997d6bac096d971c90cc476
+generated: "2025-12-06T10:28:01.854850299Z"
