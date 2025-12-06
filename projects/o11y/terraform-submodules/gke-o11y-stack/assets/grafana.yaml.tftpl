@@ -2,7 +2,7 @@ serviceAccountName: "${service_account_name}"
 
 configFiles:
   # https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
-  grafana.ini: |
+  /etc/grafana/grafana.ini: |
     [server]
     domain=${grafana_domain}
     root_url=https://${grafana_domain}
@@ -42,7 +42,7 @@ configFiles:
     [plugins]
     preinstall_sync=grafana-clickhouse-datasource,googlecloud-logging-datasource,googlecloud-trace-datasource
 
-  provisioning/datasources/clickhouse.yaml:
+  /etc/grafana/provisioning/datasources/clickhouse.yaml:
     apiVersion: 1
     datasources:
       - # ClickHouse
@@ -66,7 +66,7 @@ configFiles:
           password: $${CLICKHOUSE_PASSWORD}
         isDefault: true
 
-  provisioning/datasources/googlecloud.yaml:
+  /etc/grafana/provisioning/datasources/googlecloud.yaml:
     apiVersion: 1
     datasources:
       - # Google Cloud Logging

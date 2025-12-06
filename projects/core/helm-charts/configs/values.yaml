@@ -1,5 +1,4 @@
-envs: {}
-secretEnvs: {}
-files: {}
-secretFiles: {}
-mountPath: /run/secrets/config-files
+configEnvs: {}
+secretConfigEnvs: {}
+configFiles: {}
+secretConfigFiles: {}

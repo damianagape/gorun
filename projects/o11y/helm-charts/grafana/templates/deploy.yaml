@@ -22,7 +22,7 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configs: "{{ include "grafana.configsChecksum" . }}"
+        {{- include "configs.annotations" . | nindent 8 }}
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
@@ -36,14 +36,9 @@ spec:
         - name: grafana-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
-            - configMapRef:
-                name: "{{ .Release.Name }}-config-envs"
-            - secretRef:
-                name: "{{ .Release.Name }}-config-envs"
+            {{- include "configs.envFrom" . | nindent 12 }}
           volumeMounts:
-            - name: config-files
-              mountPath: /etc/grafana
-              readOnly: true
+            {{- include "configs.volumeMounts" . | nindent 12 }}
           ports:
             - name: grafana-http
               containerPort: 3000
@@ -88,20 +83,7 @@ spec:
                     {{- include "grafana.selectorLabels" . | nindent 20 }}
                 topologyKey: kubernetes.io/hostname
       volumes:
-        - name: config-files
-          projected:
-            sources:
-              - configMap:
-                  name: "{{ .Release.Name }}-config-files"
-                  items:
-                    {{- range $key, $_ := .Values.configFiles }}
-                    - key: "{{ $key | replace "/" "..." }}"
-                      path: "{{ $key }}"
-                    {{- end }}
-              - secret:
-                  name: "{{ .Release.Name }}-config-files"
-                  items:
-                    {{- range $key, $_ := .Values.secretConfigFiles }}
-                    - key: "{{ $key | replace "/" "..." }}"
-                      path: "{{ $key }}"
-                    {{- end }}
+        {{- include "configs.volumes" . | nindent 8 }}
+
+---
+{{- include "configs.manifests" . | nindent 0 }}

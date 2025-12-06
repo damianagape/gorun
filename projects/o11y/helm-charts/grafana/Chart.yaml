@@ -1,3 +1,8 @@
 apiVersion: v2
 name: grafana
 version: 0.7.100
+dependencies:
+  - # PROD repository: oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core
+    repository: file://../../../core/helm-charts/configs
+    name: configs
+    version: 0.7.100

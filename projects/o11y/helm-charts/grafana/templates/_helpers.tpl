@@ -10,7 +10,3 @@ app.kubernetes.io/component: grafana-server
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
-
-{{- define "grafana.configsChecksum" -}}
-{{- list .Values.configEnvs .Values.secretConfigEnvs .Values.configFiles .Values.secretConfigFiles | toJson | sha256sum -}}
-{{- end -}}

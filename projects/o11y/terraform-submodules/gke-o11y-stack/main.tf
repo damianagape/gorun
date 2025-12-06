@@ -9,7 +9,8 @@ resource "kubernetes_namespace" "clickhouse" {
 }
 
 resource "helm_release" "clickhouse" {
-  repository = "../../../core/helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
+  repository = "../../../core/helm-charts"
   chart      = "clickhouse"
   version    = "0.7.100"
 
@@ -35,7 +36,8 @@ resource "kubernetes_namespace" "grafana" {
 }
 
 resource "helm_release" "grafana_postgres" {
-  repository = "../../../core/helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
+  repository = "../../../core/helm-charts"
   chart      = "postgres"
   version    = "0.7.100"
 
@@ -74,7 +76,11 @@ resource "google_project_iam_member" "grafana_googlecloud_datasources" {
 }
 
 resource "helm_release" "grafana" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  # PROD -dependency_update
+  dependency_update = true
+
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../helm-charts"
   chart      = "grafana"
   version    = "0.7.100"
 
@@ -144,7 +150,8 @@ resource "kubernetes_namespace" "otlp_collector" {
 }
 
 resource "helm_release" "otlp_collector" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../helm-charts"
   chart      = "otelcol"
   version    = "0.7.100"
 
@@ -167,7 +174,8 @@ resource "kubernetes_namespace" "file_collector" {
 }
 
 resource "helm_release" "file_collector" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../helm-charts"
   chart      = "otelcol"
   version    = "0.7.100"
 
@@ -190,7 +198,8 @@ resource "kubernetes_namespace" "kube_collector" {
 }
 
 resource "helm_release" "kube_collector" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../helm-charts"
   chart      = "otelcol"
   version    = "0.7.100"
 
@@ -213,7 +222,8 @@ resource "kubernetes_namespace" "node_collector" {
 }
 
 resource "helm_release" "node_collector" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../helm-charts"
   chart      = "otelcol"
   version    = "0.7.100"
 
@@ -236,7 +246,8 @@ resource "kubernetes_namespace" "prom_collector" {
 }
 
 resource "helm_release" "prom_collector" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
+  repository = "../../helm-charts"
   chart      = "otelcol"
   version    = "0.7.100"
 
