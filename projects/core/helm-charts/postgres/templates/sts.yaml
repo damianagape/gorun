@@ -23,7 +23,7 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/configs: "{{ include "postgres.configsChecksum" . }}"
+        {{- include "configs.annotations" . | nindent 8 }}
         {{- if .Values.extraPodAnnotations }}
         {{- toYaml .Values.extraPodAnnotations | nindent 8 }}
         {{- end }}
@@ -33,11 +33,9 @@ spec:
         - name: postgres-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
-            - configMapRef:
-                name: "{{ .Release.Name }}-config-envs"
-            - secretRef:
-                name: "{{ .Release.Name }}-config-envs"
+            {{- include "configs.envFrom" . | nindent 12 }}
           volumeMounts:
+            {{- include "configs.volumeMounts" . | nindent 12 }}
             - name: data
               mountPath: /var/lib/postgresql
           ports:
@@ -81,6 +79,8 @@ spec:
       securityContext: # pod security context
         fsGroup: 999
         fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        {{- include "configs.volumes" . | nindent 8 }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -91,3 +91,6 @@ spec:
         resources:
           requests:
             storage: "{{ .Values.resources.requests.storage }}"
+
+---
+{{- include "configs.manifests" . | nindent 0 }}

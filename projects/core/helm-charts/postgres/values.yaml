@@ -8,6 +8,8 @@ configEnvs:
   POSTGRES_DB: postgres
 secretConfigEnvs:
   POSTGRES_PASSWORD: Secret123
+configFiles: {}
+secretConfigFiles: {}
 
 extraPodLabels: {}
 extraPodAnnotations: {}

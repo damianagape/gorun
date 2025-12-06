@@ -44,7 +44,8 @@ module "stateless_kuard_service_account" {
 module "stateless_kuard_helm_template" {
   source = "../helm-template" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/demo/helm-template/0.7.100.zip"
 
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  repository = "../../helm-charts"
   chart      = "stateless-kuard"
   version_   = "0.7.101"
   name       = "stateless-kuard"
@@ -100,7 +101,11 @@ module "stateful_kuard_service_account" {
 }
 
 resource "helm_release" "stateful_kuard" {
-  repository = "../../helm-charts" # "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  # PROD -dependency_update
+  dependency_update = true
+
+  # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
+  repository = "../../helm-charts"
   chart      = "stateful-kuard"
   version    = "0.7.101"
   name       = "stateful-kuard"

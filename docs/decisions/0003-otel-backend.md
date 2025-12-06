@@ -276,7 +276,7 @@ links:
     - [source code](https://github.com/grafana/terraform-provider-grafana)
   - [cli app](https://grafana.github.io/grafanactl/)
     - [source code](https://github.com/grafana/grafanactl)
-  - [config provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/)
+  - [config provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/), [alerts provisioning](https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/)
 - [postgres](https://www.postgresql.org/)
   - [source code](https://github.com/postgres/postgres)
   - [docker official image](https://hub.docker.com/_/postgres)

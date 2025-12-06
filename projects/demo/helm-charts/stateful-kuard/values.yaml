@@ -19,7 +19,7 @@ httpServer:
     requests:
       cpu: 1m
       memory: 1Mi
-      storage: 10Gi
+      storage: 1Gi
     limits:
-      cpu: 1000m
-      memory: 1Gi
+      cpu: 100m
+      memory: 128Mi

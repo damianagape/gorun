@@ -9,6 +9,8 @@ configEnvs:
   CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
 secretConfigEnvs:
   CLICKHOUSE_PASSWORD: Secret123
+configFiles: {}
+secretConfigFiles: {}
 
 extraPodLabels: {}
 extraPodAnnotations: {}

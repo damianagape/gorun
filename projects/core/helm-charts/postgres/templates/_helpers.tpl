@@ -10,7 +10,3 @@ app.kubernetes.io/component: postgres-server
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
-
-{{- define "postgres.configsChecksum" -}}
-{{- list .Values.configEnvs .Values.secretConfigEnvs | toJson | sha256sum -}}
-{{- end -}}

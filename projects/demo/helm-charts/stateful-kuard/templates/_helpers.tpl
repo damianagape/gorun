@@ -9,7 +9,3 @@ app.kubernetes.io/name: "{{ join "." (reverse (slice (reverse (splitList "/" .Va
 app.kubernetes.io/version: "{{ .Values.image.tag }}"
 helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- end -}}
-
-{{- define "kuard.configsChecksum" -}}
-{{- list .Values.configEnvs .Values.secretConfigEnvs .Values.configFiles .Values.secretConfigFiles | toJson | sha256sum -}}
-{{- end -}}
