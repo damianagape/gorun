@@ -36,7 +36,7 @@ spec:
             {{- include "configs.envFrom" . | nindent 12 }}
           volumeMounts:
             {{- include "configs.volumeMounts" . | nindent 12 }}
-            - name: data
+            - name: clickhouse-data
               mountPath: /var/lib/clickhouse
           ports:
             - name: clickhouse-http
@@ -80,7 +80,7 @@ spec:
         {{- include "configs.volumes" . | nindent 8 }}
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: clickhouse-data
       spec:
         storageClassName: standard-rwo
         accessModes:

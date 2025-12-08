@@ -59,7 +59,8 @@ resource "helm_release" "grafana_postgres" {
 }
 
 module "grafana_service_account" {
-  source = "../../../core/terraform-submodules/gke-service-account" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-service-account/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-service-account/0.7.100.zip"
+  source = "../../../core/terraform-submodules/gke-service-account"
 
   google_project           = var.google_project
   google_container_cluster = var.google_container_cluster
@@ -123,7 +124,8 @@ data "kubernetes_service" "grafana" {
 }
 
 module "grafana_gateway_http_route" {
-  source = "../../../core/terraform-submodules/k8s-gateway-http-route" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-gateway-http-route/0.7.100.zip"
+  source = "../../../core/terraform-submodules/k8s-gateway-http-route"
 
   kubernetes_service = data.kubernetes_service.grafana
 
@@ -134,7 +136,8 @@ module "grafana_gateway_http_route" {
 }
 
 module "grafana_availability_monitor" {
-  source = "../gcp-availability-monitor" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gcp-availability-monitor/0.7.100.zip"
+  source = "../gcp-availability-monitor"
 
   google_project = var.google_project
 

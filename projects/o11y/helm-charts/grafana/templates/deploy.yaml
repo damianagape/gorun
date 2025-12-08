@@ -73,6 +73,7 @@ spec:
             runAsGroup: 472
       securityContext: # pod security context
         fsGroup: 472
+        fsGroupChangePolicy: OnRootMismatch
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

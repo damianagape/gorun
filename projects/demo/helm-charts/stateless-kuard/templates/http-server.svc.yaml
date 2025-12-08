@@ -20,7 +20,7 @@ spec:
     {{- include "kuard.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
-    - name: http
+    - name: kuard-http
       port: 80
       protocol: TCP
-      targetPort: http
+      targetPort: kuard-http

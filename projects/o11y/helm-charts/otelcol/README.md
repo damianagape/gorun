@@ -1,5 +1,7 @@
 This chart deploys OpenTelemetry collector.
 
+ClickHouse schemas:
+
 ```
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW TABLES;
 

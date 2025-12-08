@@ -64,29 +64,29 @@ spec:
             runAsUser: 0
             runAsGroup: 0
       containers:
-        - name: http-server
+        - name: kuard-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
             {{- include "configs.envFrom" . | nindent 12 }}
           volumeMounts:
             {{- include "configs.volumeMounts" . | nindent 12 }}
-            - name: data
+            - name: kuard-data
               mountPath: /var/lib/kuard
           ports:
-            - name: http
+            - name: kuard-http
               containerPort: 8080
               protocol: TCP
           startupProbe:
             httpGet:
-              port: http
+              port: kuard-http
               path: /healthy
           readinessProbe:
             httpGet:
-              port: http
+              port: kuard-http
               path: /ready
           livenessProbe:
             httpGet:
-              port: http
+              port: kuard-http
               path: /healthy
           resources:
             requests:
@@ -121,7 +121,7 @@ spec:
         {{- include "configs.volumes" . | nindent 8 }}
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: kuard-data
       spec:
         storageClassName: standard-rwo
         accessModes:

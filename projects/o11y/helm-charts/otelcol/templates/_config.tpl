@@ -54,7 +54,7 @@ receivers:
       - pod
       - container
       - volume
-    metrics:
+    metrics: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/kubeletstatsreceiver/metadata.yaml
       k8s.node.uptime:
         enabled: true
       k8s.pod.uptime:
@@ -76,6 +76,12 @@ receivers:
       k8s.container.memory_request_utilization:
         enabled: true
       k8s.container.memory_limit_utilization:
+        enabled: true
+      k8s.volume.capacity:
+        enabled: true
+      k8s.pod.volume.usage:
+        enabled: true
+      k8s.volume.available:
         enabled: true
 
   prometheus: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/prometheusreceiver/README.md
@@ -137,6 +143,7 @@ processors:
       span:
         - 'URL(attributes["http.url"])["url.path"] == "/healthy"'
         - 'URL(attributes["http.url"])["url.path"] == "/ready"'
+        - 'URL(attributes["http.url"])["url.path"] == "/metrics"'
 
   batch: # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
     timeout: 10s

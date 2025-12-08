@@ -36,27 +36,27 @@ spec:
       serviceAccountName: "{{ .Release.Name }}-http-server"
       {{- end }}
       containers:
-        - name: http-server
+        - name: kuard-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           envFrom:
             {{- include "configs.envFrom" . | nindent 12 }}
           volumeMounts:
             {{- include "configs.volumeMounts" . | nindent 12 }}
           ports:
-            - name: http
+            - name: kuard-http
               containerPort: 8080
               protocol: TCP
           startupProbe:
             httpGet:
-              port: http
+              port: kuard-http
               path: /healthy
           readinessProbe:
             httpGet:
-              port: http
+              port: kuard-http
               path: /ready
           livenessProbe:
             httpGet:
-              port: http
+              port: kuard-http
               path: /healthy
           resources:
             requests:
@@ -76,6 +76,7 @@ spec:
             runAsGroup: 3000
       securityContext: # pod security context
         fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

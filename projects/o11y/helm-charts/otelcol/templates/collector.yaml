@@ -36,6 +36,7 @@ metadata:
     app.kubernetes.io/component: collector
     {{- include "otelcol.metadataLabels" . | nindent 4 }}
 spec:
+  mode: "{{ .Values.collector.mode }}"
   config:
     {{- include "otelcol.collector.config" . | nindent 4 }}
   env:
@@ -59,7 +60,6 @@ spec:
       readOnly: true
   {{- end }}
 
-  mode: "{{ .Values.collector.mode }}"
   {{- if ne .Values.collector.mode "daemonset" }}
   replicas: {{ .Values.collector.replicas }}
   {{- end }}

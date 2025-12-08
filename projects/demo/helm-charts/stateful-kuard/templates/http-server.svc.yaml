@@ -22,7 +22,7 @@ spec:
   clusterIP: None # headless service
   publishNotReadyAddresses: false
   ports:
-    - name: http
+    - name: kuard-http
       port: 80
       protocol: TCP
-      targetPort: http
+      targetPort: kuard-http
