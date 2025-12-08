@@ -100,3 +100,29 @@ configFiles:
           # required IAM roles: "roles/cloudtrace.user"
           authenticationType: gce
         isDefault: false
+
+  /etc/grafana/provisioning/dashboards/examples.yaml:
+    apiVersion: 1
+    providers:
+      - name: examples
+        type: file
+        options:
+          path: /etc/grafana/dashboards/examples
+
+  /etc/grafana/dashboards/examples/hello-world.json: |
+    {
+      "uid": "hello-world",
+      "id": null,
+      "title": "Hello world",
+      "panels": [
+        {
+          "id": 1,
+          "type": "text",
+          "title": "Hello world",
+          "options": {
+            "mode": "markdown",
+            "content": "# Hello world!\n\nThis is an example of 'dashboard as code'."
+          }
+        }
+      ]
+    }
