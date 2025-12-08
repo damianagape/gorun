@@ -36,8 +36,8 @@ definitions:
     o11y-tfmod-test-0: projects/o11y/terraform-modules/test/.terraform
     o11y-tfsub-gcp-availability-monitor-0: projects/o11y/terraform-submodules/gcp-availability-monitor/.terraform
     o11y-tfsub-gcp-availability-monitor-1: projects/o11y/terraform-submodules/gcp-availability-monitor/.terraform.lock.hcl
-    o11y-tfsub-gke-o11y-stack-0: projects/o11y/terraform-submodules/gke-o11y-stack/.terraform
-    o11y-tfsub-gke-o11y-stack-1: projects/o11y/terraform-submodules/gke-o11y-stack/.terraform.lock.hcl
+    o11y-tfsub-gke-observability-stack-0: projects/o11y/terraform-submodules/gke-observability-stack/.terraform
+    o11y-tfsub-gke-observability-stack-1: projects/o11y/terraform-submodules/gke-observability-stack/.terraform.lock.hcl
   scripts:
     - &auth |
       set -e
@@ -1100,36 +1100,36 @@ definitions:
           - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gcp-availability-monitor"
           - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gcp-availability-monitor"
           - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gcp-availability-monitor"
-    - step: &test-o11y-tfsub-gke-o11y-stack
-        name: test o11y-tfsub-gke-o11y-stack
+    - step: &test-o11y-tfsub-gke-observability-stack
+        name: test o11y-tfsub-gke-observability-stack
         condition:
           changesets:
             includePaths:
-              - "projects/o11y/terraform-submodules/gke-o11y-stack/**"
+              - "projects/o11y/terraform-submodules/gke-observability-stack/**"
         caches:
-          - o11y-tfsub-gke-o11y-stack-0
-          - o11y-tfsub-gke-o11y-stack-1
+          - o11y-tfsub-gke-observability-stack-0
+          - o11y-tfsub-gke-observability-stack-1
         script:
           - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-o11y-stack"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-o11y-stack"
-          - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-o11y-stack"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - step: &publish-o11y-tfsub-gke-o11y-stack
-        name: publish o11y-tfsub-gke-o11y-stack
+          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-observability-stack"
+          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-observability-stack"
+          - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-observability-stack"
+          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-observability-stack"
+    - step: &publish-o11y-tfsub-gke-observability-stack
+        name: publish o11y-tfsub-gke-observability-stack
         condition:
           changesets:
             includePaths:
-              - "projects/o11y/terraform-submodules/gke-o11y-stack/**"
+              - "projects/o11y/terraform-submodules/gke-observability-stack/**"
         caches:
-          - o11y-tfsub-gke-o11y-stack-0
-          - o11y-tfsub-gke-o11y-stack-1
+          - o11y-tfsub-gke-observability-stack-0
+          - o11y-tfsub-gke-observability-stack-1
         script:
           - *auth
-          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-o11y-stack"
-          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-o11y-stack"
-          - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-o11y-stack"
-          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-o11y-stack"
+          - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-observability-stack"
+          - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-observability-stack"
+          - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-observability-stack"
+          - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-observability-stack"
 
 pipelines:
   pull-requests:
@@ -1170,7 +1170,7 @@ pipelines:
           - step: *test-o11y-chart-otelcol
           - step: *test-o11y-tfmod-test
           - step: *test-o11y-tfsub-gcp-availability-monitor
-          - step: *test-o11y-tfsub-gke-o11y-stack
+          - step: *test-o11y-tfsub-gke-observability-stack
       - parallel:
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod
@@ -1210,7 +1210,7 @@ pipelines:
           - step: *publish-o11y-chart-grafana
           - step: *publish-o11y-chart-otelcol
           - step: *publish-o11y-tfsub-gcp-availability-monitor
-          - step: *publish-o11y-tfsub-gke-o11y-stack
+          - step: *publish-o11y-tfsub-gke-observability-stack
       - parallel:
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod

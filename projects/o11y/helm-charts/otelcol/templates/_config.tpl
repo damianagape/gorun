@@ -146,6 +146,7 @@ processors:
         - 'URL(attributes["http.url"])["url.path"] == "/metrics"'
 
   batch: # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
+    send_batch_size: 100000
     timeout: 10s
 
 exporters:

@@ -43,8 +43,8 @@ resource "helm_release" "opentelemetry_operator" {
 #######################################
 
 module "test_o11y_stack" {
-  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-o11y-stack/0.7.100.zip"
-  source = "../../terraform-submodules/gke-o11y-stack"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/o11y/gke-observability-stack/0.7.100.zip"
+  source = "../../terraform-submodules/gke-observability-stack"
 
   google_project           = data.google_project.this
   google_container_cluster = data.google_container_cluster.this

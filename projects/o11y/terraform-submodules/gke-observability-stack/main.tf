@@ -1,5 +1,5 @@
 #######################################
-### clickhouse
+### ClickHouse
 #######################################
 
 resource "kubernetes_namespace" "clickhouse" {
@@ -29,7 +29,7 @@ resource "helm_release" "clickhouse" {
 }
 
 #######################################
-### grafana
+### Grafana
 #######################################
 
 resource "kubernetes_namespace" "grafana" {

@@ -986,33 +986,33 @@ publish-o11y-tfsub-gcp-availability-monitor:
     - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gcp-availability-monitor"
     - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gcp-availability-monitor"
     - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gcp-availability-monitor"
-test-o11y-tfsub-gke-o11y-stack:
+test-o11y-tfsub-gke-observability-stack:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       changes:
-        - "projects/o11y/terraform-submodules/gke-o11y-stack/**"
+        - "projects/o11y/terraform-submodules/gke-observability-stack/**"
   cache:
     paths:
-      - projects/o11y/terraform-submodules/gke-o11y-stack/.terraform
-      - projects/o11y/terraform-submodules/gke-o11y-stack/.terraform.lock.hcl
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform.lock.hcl
   script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-o11y-stack"
-publish-o11y-tfsub-gke-o11y-stack:
+    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-observability-stack"
+publish-o11y-tfsub-gke-observability-stack:
   stage: publish
   rules:
     - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
       changes:
-        - "projects/o11y/terraform-submodules/gke-o11y-stack/**"
+        - "projects/o11y/terraform-submodules/gke-observability-stack/**"
   cache:
     paths:
-      - projects/o11y/terraform-submodules/gke-o11y-stack/.terraform
-      - projects/o11y/terraform-submodules/gke-o11y-stack/.terraform.lock.hcl
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform.lock.hcl
   script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-o11y-stack"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-o11y-stack"
+    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-observability-stack"

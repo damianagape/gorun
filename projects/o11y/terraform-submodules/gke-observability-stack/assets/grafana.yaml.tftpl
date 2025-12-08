@@ -56,12 +56,17 @@ configFiles:
           port: 9000
           username: clickhouse
           defaultDatabase: clickhouse
+          defaultTable: otel_logs
           logs:
             defaultDatabase: clickhouse
             defaultTable: otel_logs
+            otelEnabled: true
+            otelVersion: latest
           traces:
             defaultDatabase: clickhouse
             defaultTable: otel_traces
+            otelEnabled: true
+            otelVersion: latest
         secureJsonData:
           password: $${CLICKHOUSE_PASSWORD}
         isDefault: true
