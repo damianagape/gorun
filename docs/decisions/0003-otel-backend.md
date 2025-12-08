@@ -307,11 +307,11 @@ pros:
 
 - well-known and extensible dashboards
 - blazing-fast storage
-- one query language
+- one query language (SQL)
 
 cons:
 
-- todo
+- there is no official Helm chart for ClickHouse, Grafana's Helm charts are [too complex](https://github.com/grafana/helm-charts/blob/main/charts/grafana/templates/_pod.tpl). I wrote own charts
 
 ```
 $ kubectl get pod --all-namespaces
@@ -329,4 +329,4 @@ o11y-grafana                     grafana-postgres-0                             
 
 ## Decision Outcome
 
-todo
+Grafana dashboards and ClickHouse as datasource seems to be perfect combination for OpenTelemetry backend. The stack is light, simple and open-source.
