@@ -3,7 +3,8 @@
 #######################################
 
 module "test_platform" {
-  source = "../../terraform-submodules/gke-platform" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-platform/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-platform/0.7.100.zip"
+  source = "../../terraform-submodules/gke-platform"
 
   google_client_config = data.google_client_config.oauth2
   google_project       = data.google_project.this
@@ -32,7 +33,8 @@ module "test_platform" {
 #######################################
 
 module "test_vault" {
-  source = "../../terraform-submodules/k8s-vault" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-vault/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-vault/0.7.100.zip"
+  source = "../../terraform-submodules/k8s-vault"
   depends_on = [
     module.test_platform,
   ]
@@ -51,7 +53,8 @@ module "test_vault" {
 #######################################
 
 module "test_workspace" {
-  source = "../../terraform-submodules/k8s-workspace" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-workspace/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-workspace/0.7.100.zip"
+  source = "../../terraform-submodules/k8s-workspace" #
   depends_on = [
     module.test_platform,
   ]
