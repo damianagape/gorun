@@ -155,6 +155,21 @@ commandTests:
     args:
       - -help
 
+  # Python tools
+
+  - # https://www.python.org/
+    name: python
+    command: python3
+    args:
+      - --version
+    expectedOutput:
+      - Python 3\.
+  - # https://pypi.org/
+    name: pip
+    command: pip3
+    args:
+      - --version
+
   # Node.js tools
 
   - # https://nodejs.org/en
@@ -171,6 +186,10 @@ commandTests:
       - --version
   - name: npx
     command: npx
+    args:
+      - --version
+  - name: typescript
+    command: tsc
     args:
       - --version
 
@@ -315,6 +334,9 @@ fileExistenceTests:
   - name: npm shell completion
     path: /etc/bash_completion.d/npm
     shouldExist: true
+  - name: pip shell completion
+    path: /etc/bash_completion.d/pip
+    shouldExist: true
   - name: velero shell completion
     path: /etc/bash_completion.d/velero
     shouldExist: true
@@ -343,5 +365,7 @@ metadataTest:
   envVars:
     - key: GOPATH
       value: /root/go
+    - key: NODE_ENV
+      value: development
     - key: USE_GKE_GCLOUD_AUTH_PLUGIN
       value: "True"

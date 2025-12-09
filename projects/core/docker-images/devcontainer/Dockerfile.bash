@@ -72,6 +72,9 @@ apt install --yes \
   jq \
   kubectl \
   nodejs \
+  python3 \
+  python3-full \
+  python3-pip \
   shellcheck
 
 apt install --yes --no-install-recommends \
@@ -83,9 +86,13 @@ go install golang.org/x/tools/cmd/gonew@latest
 go install golang.org/x/tools/gopls@latest
 go install golang.org/x/vuln/cmd/govulncheck@latest
 
+pip install \
+  argcomplete
+
 npm install --global \
   @google/gemini-cli \
-  firebase-tools
+  firebase-tools \
+  typescript
 
 # cilium: https://github.com/cilium/cilium-cli/releases
 cilium_version="0.18.8"
@@ -175,6 +182,7 @@ helm completion bash >/etc/bash_completion.d/helm
 hubble completion bash >/etc/bash_completion.d/hubble
 kubectl completion bash >/etc/bash_completion.d/kubectl
 npm completion >/etc/bash_completion.d/npm
+pip completion --bash >/etc/bash_completion.d/pip
 velero completion bash >/etc/bash_completion.d/velero
 yq shell-completion bash >/etc/bash_completion.d/yq
 
@@ -182,4 +190,6 @@ yq shell-completion bash >/etc/bash_completion.d/yq
 apt clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 go clean -cache && rm -rf /root/.cache/go-build/*
 go clean -modcache && rm -rf /root/go/pkg/mod/*
+npm cache clean --force && rm -rf /root/.npm/*
+pip cache purge && rm -rf /root/.cache/pip/*
 rm -rf /tmp/*

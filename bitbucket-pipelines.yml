@@ -1,4 +1,4 @@
-image: damianagape/gorun-devcontainer:0.7.101
+image: damianagape/gorun-devcontainer:0.7.102
 definitions:
   caches:
     core-tfmod-main-0: projects/core/terraform-modules/main/.terraform
