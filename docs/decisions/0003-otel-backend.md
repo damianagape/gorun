@@ -301,17 +301,17 @@ links:
 - https://clickhouse.com/docs/observability/grafana
 - https://clickhouse.com/docs/integrations/grafana
 - https://clickhouse.com/docs/integrations/grafana/config
-- https://dev.to/alex_yurchenko_c2d664c0a/building-a-local-observability-stack-a-journey-with-opentelemetry-clickhouse-and-grafana-46lp
 
 pros:
 
 - well-known and extensible dashboards
 - blazing-fast storage
 - one query language (SQL)
+- architecture can't be simpler: OpenTelemetry collectors writes signals to ClickHouse database; Grafana dashboards reads data from ClickHouse database; the end
 
 cons:
 
-- there is no official Helm chart for ClickHouse, Grafana's Helm charts are [too complex](https://github.com/grafana/helm-charts/blob/main/charts/grafana/templates/_pod.tpl). I wrote own charts
+- there is no official Helm chart for ClickHouse, Grafana's Helm charts are... [just look at that](https://github.com/grafana/helm-charts/blob/main/charts/grafana/templates/_pod.tpl). I wrote own charts
 
 ```
 $ kubectl get pod --all-namespaces
@@ -329,4 +329,4 @@ o11y-grafana                     grafana-postgres-0                             
 
 ## Decision Outcome
 
-Grafana dashboards and ClickHouse as datasource seems to be perfect combination for OpenTelemetry backend. The stack is light, simple and open-source.
+Grafana and ClickHouse seems to be perfect combination for OpenTelemetry backend. The stack is light, simple and open-source.

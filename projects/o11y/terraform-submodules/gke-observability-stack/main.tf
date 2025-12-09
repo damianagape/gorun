@@ -97,22 +97,17 @@ resource "helm_release" "grafana" {
   values = [templatefile("${path.module}/assets/grafana.yaml.tftpl", {
     grafana_domain = var.grafana_domain
     grafana_email  = var.grafana_email
-    admin_user     = "admin"
-    admin_email    = "dagape.test@gmail.com"
 
+    google_project_id    = var.google_project.project_id
     service_account_name = module.grafana_service_account.kubernetes_service_account.metadata[0].name
-    smtp_host            = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
-    smtp_user            = nonsensitive(data.kubernetes_secret.grafana_smtp.data["user"])
     postgres_host        = local.postgres_host
     clickhouse_host      = local.clickhouse_host
-    google_project_id    = var.google_project.project_id
+    smtp_host            = nonsensitive(data.kubernetes_secret.grafana_smtp.data["host"])
+    smtp_user            = nonsensitive(data.kubernetes_secret.grafana_smtp.data["user"])
   })]
 
   set_sensitive = [
-    { name = "secretConfigEnvs.GF_SECURITY_ADMIN_PASSWORD", value = sensitive("Secret123") },
     { name = "secretConfigEnvs.GF_SMTP_PASSWORD", value = data.kubernetes_secret.grafana_smtp.data["password"] },
-    { name = "secretConfigEnvs.GF_DATABASE_PASSWORD", value = sensitive("Secret123") }, # postgres password
-    { name = "secretConfigEnvs.CLICKHOUSE_PASSWORD", value = sensitive("Secret123") },
   ]
 }
 
