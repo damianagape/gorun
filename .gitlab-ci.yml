@@ -165,6 +165,72 @@ publish-core-image-node24-sdk:
     - ./scripts/docker-image test "projects/core/docker-images/node24-sdk"
     - ./scripts/docker-image publish "projects/core/docker-images/node24-sdk"
     - ./scripts/docker-image show "projects/core/docker-images/node24-sdk"
+test-core-chart-clickhouse:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/core/helm-charts/clickhouse/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/clickhouse"
+    - ./scripts/helm-chart test "projects/core/helm-charts/clickhouse"
+    - ./scripts/helm-chart pre-publish "projects/core/helm-charts/clickhouse"
+    - ./scripts/helm-chart show "projects/core/helm-charts/clickhouse"
+publish-core-chart-clickhouse:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/core/helm-charts/clickhouse/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/clickhouse"
+    - ./scripts/helm-chart test "projects/core/helm-charts/clickhouse"
+    - ./scripts/helm-chart publish "projects/core/helm-charts/clickhouse"
+    - ./scripts/helm-chart show "projects/core/helm-charts/clickhouse"
+test-core-chart-configs:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/core/helm-charts/configs/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart test "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart pre-publish "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart show "projects/core/helm-charts/configs"
+publish-core-chart-configs:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/core/helm-charts/configs/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart test "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart publish "projects/core/helm-charts/configs"
+    - ./scripts/helm-chart show "projects/core/helm-charts/configs"
+test-core-chart-postgres:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/core/helm-charts/postgres/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/postgres"
+    - ./scripts/helm-chart test "projects/core/helm-charts/postgres"
+    - ./scripts/helm-chart pre-publish "projects/core/helm-charts/postgres"
+    - ./scripts/helm-chart show "projects/core/helm-charts/postgres"
+publish-core-chart-postgres:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/core/helm-charts/postgres/**"
+  script:
+    - ./scripts/helm-chart build "projects/core/helm-charts/postgres"
+    - ./scripts/helm-chart test "projects/core/helm-charts/postgres"
+    - ./scripts/helm-chart publish "projects/core/helm-charts/postgres"
+    - ./scripts/helm-chart show "projects/core/helm-charts/postgres"
 test-core-tfmod-main:
   stage: test
   rules:
@@ -807,6 +873,50 @@ publish-demo-tfsub-kuard:
     - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/kuard"
     - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/kuard"
     - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/kuard"
+test-o11y-chart-grafana:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/o11y/helm-charts/grafana/**"
+  script:
+    - ./scripts/helm-chart build "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart test "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart show "projects/o11y/helm-charts/grafana"
+publish-o11y-chart-grafana:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/o11y/helm-charts/grafana/**"
+  script:
+    - ./scripts/helm-chart build "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart test "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart publish "projects/o11y/helm-charts/grafana"
+    - ./scripts/helm-chart show "projects/o11y/helm-charts/grafana"
+test-o11y-chart-otelcol:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/o11y/helm-charts/otelcol/**"
+  script:
+    - ./scripts/helm-chart build "projects/o11y/helm-charts/otelcol"
+    - ./scripts/helm-chart test "projects/o11y/helm-charts/otelcol"
+    - ./scripts/helm-chart pre-publish "projects/o11y/helm-charts/otelcol"
+    - ./scripts/helm-chart show "projects/o11y/helm-charts/otelcol"
+publish-o11y-chart-otelcol:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/o11y/helm-charts/otelcol/**"
+  script:
+    - ./scripts/helm-chart build "projects/o11y/helm-charts/otelcol"
+    - ./scripts/helm-chart test "projects/o11y/helm-charts/otelcol"
+    - ./scripts/helm-chart publish "projects/o11y/helm-charts/otelcol"
+    - ./scripts/helm-chart show "projects/o11y/helm-charts/otelcol"
 test-o11y-tfmod-test:
   stage: test
   rules:
@@ -876,93 +986,33 @@ publish-o11y-tfsub-gcp-availability-monitor:
     - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gcp-availability-monitor"
     - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gcp-availability-monitor"
     - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gcp-availability-monitor"
-test-o11y-tfsub-gke-lgtm-stack:
+test-o11y-tfsub-gke-observability-stack:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
       changes:
-        - "projects/o11y/terraform-submodules/gke-lgtm-stack/**"
+        - "projects/o11y/terraform-submodules/gke-observability-stack/**"
   cache:
     paths:
-      - projects/o11y/terraform-submodules/gke-lgtm-stack/.terraform
-      - projects/o11y/terraform-submodules/gke-lgtm-stack/.terraform.lock.hcl
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform.lock.hcl
   script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-lgtm-stack"
-publish-o11y-tfsub-gke-lgtm-stack:
+    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-observability-stack"
+publish-o11y-tfsub-gke-observability-stack:
   stage: publish
   rules:
     - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
       changes:
-        - "projects/o11y/terraform-submodules/gke-lgtm-stack/**"
+        - "projects/o11y/terraform-submodules/gke-observability-stack/**"
   cache:
     paths:
-      - projects/o11y/terraform-submodules/gke-lgtm-stack/.terraform
-      - projects/o11y/terraform-submodules/gke-lgtm-stack/.terraform.lock.hcl
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform
+      - projects/o11y/terraform-submodules/gke-observability-stack/.terraform.lock.hcl
   script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-lgtm-stack"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-lgtm-stack"
-test-o11y-tfsub-k8s-otel-collectors:
-  stage: test
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
-      changes:
-        - "projects/o11y/terraform-submodules/k8s-otel-collectors/**"
-  cache:
-    paths:
-      - projects/o11y/terraform-submodules/k8s-otel-collectors/.terraform
-      - projects/o11y/terraform-submodules/k8s-otel-collectors/.terraform.lock.hcl
-  script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-otel-collectors"
-publish-o11y-tfsub-k8s-otel-collectors:
-  stage: publish
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
-      changes:
-        - "projects/o11y/terraform-submodules/k8s-otel-collectors/**"
-  cache:
-    paths:
-      - projects/o11y/terraform-submodules/k8s-otel-collectors/.terraform
-      - projects/o11y/terraform-submodules/k8s-otel-collectors/.terraform.lock.hcl
-  script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/k8s-otel-collectors"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-otel-collectors"
-test-o11y-tfsub-k8s-prom-exporters:
-  stage: test
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
-      changes:
-        - "projects/o11y/terraform-submodules/k8s-prom-exporters/**"
-  cache:
-    paths:
-      - projects/o11y/terraform-submodules/k8s-prom-exporters/.terraform
-      - projects/o11y/terraform-submodules/k8s-prom-exporters/.terraform.lock.hcl
-  script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - ./scripts/terraform-submodule pre-publish "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-prom-exporters"
-publish-o11y-tfsub-k8s-prom-exporters:
-  stage: publish
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
-      changes:
-        - "projects/o11y/terraform-submodules/k8s-prom-exporters/**"
-  cache:
-    paths:
-      - projects/o11y/terraform-submodules/k8s-prom-exporters/.terraform
-      - projects/o11y/terraform-submodules/k8s-prom-exporters/.terraform.lock.hcl
-  script:
-    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/k8s-prom-exporters"
-    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/k8s-prom-exporters"
+    - ./scripts/terraform-submodule build "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule test "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule publish "projects/o11y/terraform-submodules/gke-observability-stack"
+    - ./scripts/terraform-submodule show "projects/o11y/terraform-submodules/gke-observability-stack"

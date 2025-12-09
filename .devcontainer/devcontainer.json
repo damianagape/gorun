@@ -1,7 +1,7 @@
 {
   "name": "devcontainer-damianagape-gorun",
 
-  "image": "europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/core/devcontainer:0.7.100",
+  "image": "europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/core/devcontainer:0.7.101",
   "runArgs": [
     "--name=devcontainer-damianagape-gorun",
     "--env-file=${localEnv:HOME}${localEnv:USERPROFILE}/workspace/devcontainer-damianagape.env"
@@ -40,7 +40,7 @@
         // Golang
         "golang.go",
         // Shell script
-        "foxundermoon.shell-format",
+        "foxundermoon.shell-format@7.2.5",
         "timonwong.shellcheck"
       ],
       "settings": {

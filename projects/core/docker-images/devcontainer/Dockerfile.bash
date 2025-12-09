@@ -111,6 +111,13 @@ wget https://github.com/golangci/golangci-lint/releases/download/v${golangci_lin
 tar -zxvf golangci-lint.tar.gz
 mv golangci-lint-${golangci_lint_version}-${TARGETOS}-${TARGETARCH}/golangci-lint /usr/local/bin/golangci-lint
 
+# grafanactl: https://github.com/grafana/grafanactl/releases
+grafanactl_version="0.1.8"
+wget https://github.com/grafana/grafanactl/releases/download/v${grafanactl_version}/grafanactl_${TARGETOS}_$([ "$TARGETARCH" = "amd64" ] && echo "x86_64" || echo "$TARGETARCH").tar.gz \
+  --output-document=/tmp/grafanactl.tar.gz
+tar -zxvf grafanactl.tar.gz
+mv grafanactl /usr/local/bin/grafanactl
+
 # hclq: https://github.com/mattolenik/hclq/releases
 hclq_version="0.5.3"
 wget https://github.com/mattolenik/hclq/releases/download/${hclq_version}/hclq-${TARGETOS}-$([ "$TARGETARCH" = "arm64" ] && echo "arm" || echo "$TARGETARCH") \
@@ -163,6 +170,7 @@ cmctl completion bash >/etc/bash_completion.d/cmctl
 gh completion -s bash >/etc/bash_completion.d/gh
 golangci-lint completion bash >/etc/bash_completion.d/golangci-lint
 goreleaser completion bash >/etc/bash_completion.d/goreleaser
+grafanactl completion bash >/etc/bash_completion.d/grafanactl
 helm completion bash >/etc/bash_completion.d/helm
 hubble completion bash >/etc/bash_completion.d/hubble
 kubectl completion bash >/etc/bash_completion.d/kubectl

@@ -13,7 +13,7 @@ module "test_platform" {
 
   node_pools = {
     "spot-pool-1" = {
-      node_machine_type   = "n2d-standard-2"
+      node_machine_type   = "e2-standard-2"
       node_spot_instances = true
       node_min_instances  = 1
       node_max_instances  = 1
@@ -43,21 +43,6 @@ module "test_vault" {
   ]
   iam_writers = [
     "user:dagape.test@gmail.com",
-  ]
-}
-
-module "grafana_vault" {
-  source = "../../terraform-submodules/k8s-vault" # "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-vault/0.7.100.zip"
-  depends_on = [
-    module.test_platform,
-  ]
-
-  vault_name = "grafana"
-
-  iam_readers = [
-    "user:dagape.test@gmail.com",
-  ]
-  iam_writers = [
   ]
 }
 
