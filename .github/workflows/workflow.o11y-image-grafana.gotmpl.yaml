@@ -15,7 +15,7 @@ jobs:
   o11y-image-grafana:
     name: o11y-image-grafana
     runs-on: ubuntu-24.04
-    container: ghcr.io/damianagape/gorun-devcontainer:0.7.102
+    container: ghcr.io/damianagape/gorun-devcontainer:0.7.103
     permissions:
       contents: write
       id-token: write
