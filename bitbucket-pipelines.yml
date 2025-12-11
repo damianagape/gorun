@@ -986,6 +986,38 @@ definitions:
           - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/kuard"
           - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/kuard"
+    - step: &test-o11y-image-grafana
+        name: test o11y-image-grafana
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/docker-images/grafana/**"
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - *auth
+          - ./scripts/docker-image build "projects/o11y/docker-images/grafana"
+          - ./scripts/docker-image test "projects/o11y/docker-images/grafana"
+          - ./scripts/docker-image pre-publish "projects/o11y/docker-images/grafana"
+          - ./scripts/docker-image show "projects/o11y/docker-images/grafana"
+    - step: &publish-o11y-image-grafana
+        name: publish o11y-image-grafana
+        condition:
+          changesets:
+            includePaths:
+              - "projects/o11y/docker-images/grafana/**"
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - *auth
+          - ./scripts/docker-image build "projects/o11y/docker-images/grafana"
+          - ./scripts/docker-image test "projects/o11y/docker-images/grafana"
+          - ./scripts/docker-image publish "projects/o11y/docker-images/grafana"
+          - ./scripts/docker-image show "projects/o11y/docker-images/grafana"
     - step: &test-o11y-chart-grafana
         name: test o11y-chart-grafana
         condition:
@@ -1166,6 +1198,7 @@ pipelines:
           - step: *test-demo-tfsub-helm-manifest
           - step: *test-demo-tfsub-helm-template
           - step: *test-demo-tfsub-kuard
+          - step: *test-o11y-image-grafana
           - step: *test-o11y-chart-grafana
           - step: *test-o11y-chart-otelcol
           - step: *test-o11y-tfmod-test
@@ -1207,6 +1240,7 @@ pipelines:
           - step: *publish-demo-tfsub-helm-manifest
           - step: *publish-demo-tfsub-helm-template
           - step: *publish-demo-tfsub-kuard
+          - step: *publish-o11y-image-grafana
           - step: *publish-o11y-chart-grafana
           - step: *publish-o11y-chart-otelcol
           - step: *publish-o11y-tfsub-gcp-availability-monitor
