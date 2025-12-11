@@ -1,7 +1,7 @@
 {{- define "grafana.selectorLabels" -}}
 app.kubernetes.io/part-of: "{{ .Release.Namespace }}"
 app.kubernetes.io/instance: "{{ .Release.Name }}"
-app.kubernetes.io/name: "{{ .Values.image.repository | replace "/" "." }}"
+app.kubernetes.io/name: "{{ join "." (reverse (slice (reverse (splitList "/" .Values.image.repository)) 0 3)) }}"
 app.kubernetes.io/component: grafana-server
 {{- end -}}
 
