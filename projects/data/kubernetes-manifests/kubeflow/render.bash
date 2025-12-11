@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-for lib in "$(dirname "$0")"/lib/*.bash; do source "${lib}"; done
-
-function main {
-}
-
-main "$@"

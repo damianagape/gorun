@@ -49,6 +49,6 @@ $ kubectl config set-context "gke_gogcp-test-7_europe-central2-a_gogke-test-7"
 $ kubectl config set-context --current --namespace="gomod-test-7"
 ```
 
-## Kubeflow TODO
+## Kubeflow platforms
 
-TODO
+- [kubeflow.gogke-test-7.damianagape.pl](https://kubeflow.gogke-test-7.damianagape.pl)
