@@ -1,4 +1,92 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+sortOptions:
+  order: legacy
+  legacySortOptions:
+    orderFirst:
+      - Namespace
+      - ResourceQuota
+      - StorageClass
+      - CustomResourceDefinition
+      - MutatingWebhookConfiguration
+      - ServiceAccount
+      - PodSecurityPolicy
+      - NetworkPolicy
+      - Role
+      - ClusterRole
+      - RoleBinding
+      - ClusterRoleBinding
+      - ConfigMap
+      - Secret
+      - Endpoints
+      - Service
+      - LimitRange
+      - PriorityClass
+      - PersistentVolume
+      - PersistentVolumeClaim
+      - Deployment
+      - StatefulSet
+      - CronJob
+      - PodDisruptionBudget
+    orderLast:
+      - ValidatingWebhookConfiguration
+
 resources:
-  - ./vendor/github.com/kubeflow/manifests/1.10.2/example
+  # Cert-Manager
+  # Istio
+  # oauth2-proxy
+  # Dex
+  # KNative
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/common/knative/knative-serving/overlays/gateways
+  # Uncomment the following line if `knative-eventing` is required
+  # - ./vendor/github.com/kubeflow/manifests/1.10.2/common/knative/knative-eventing/base
+  # Kubeflow namespace
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/common/kubeflow-namespace/base
+  # NetworkPolicies
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/common/networkpolicies/base
+  # Kubeflow Roles
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/common/kubeflow-roles/base
+  # Kubeflow Istio Resources
+  # Kubeflow Pipelines
+  # Katib
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/katib/upstream/installs/katib-with-kubeflow
+  # Central Dashboard
+  # Admission Webhook
+  # Jupyter Web App
+  # Notebook Controller
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/jupyter/notebook-controller/upstream/overlays/kubeflow
+  # Profiles + KFAM with PSS (Pod Security Standards)
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/profiles/pss
+  # PVC Viewer
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/pvcviewer-controller/upstream/base
+  # Volumes Web App
+  # Tensorboards Controller
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/tensorboard/tensorboard-controller/upstream/overlays/kubeflow
+  # Tensorboard Web App
+  # Training Operator
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/training-operator/upstream/overlays/kubeflow
+  # User namespace
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/common/user-namespace/base
+  # KServe
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/kserve/kserve
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/kserve/models-web-app/overlays/kubeflow
+  # Spark Operator
+  - ./vendor/github.com/kubeflow/manifests/1.10.2/applications/spark/spark-operator/overlays/kubeflow
+
+# Ray is an experimental integration
+# Here is the documentation for Ray: https://docs.ray.io/en/latest/
+# Here is the internal documentation for Ray: - ./vendor/github.com/kubeflow/manifests/1.10.2/experimental/ray/README.md
+# - ./vendor/github.com/kubeflow/manifests/1.10.2/experimental/ray/kuberay-operator/overlays/kubeflow
+
+components:
+# Pod Security Standards
+# https://kubernetes.io/docs/concepts/security/pod-security-standards/
+# Uncomment to enable baseline level standards
+# - ./vendor/github.com/kubeflow/manifests/1.10.2/experimental/security/PSS/static/baseline
+# Uncomment to enable restricted level standards
+# - ./vendor/github.com/kubeflow/manifests/1.10.2/experimental/security/PSS/static/restricted
+# Uncomment to enable baseline level standards for dynamic namespaces
+# - ./vendor/github.com/kubeflow/manifests/1.10.2/experimental/security/PSS/dynamic/baseline
+# Uncomment to enable restricted level standards for dynamic namespaces
+# - ./vendor/github.com/kubeflow/manifests/1.10.2/experimental/security/PSS/dynamic/restricted
