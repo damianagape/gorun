@@ -86,6 +86,11 @@ commandTests:
       - version
       - --client
       - --output=yaml
+  - # https://skaffold.dev/
+    name: skaffold
+    command: skaffold
+    args:
+      - version
   - # https://www.terraform.io/
     name: terraform
     command: terraform
@@ -336,6 +341,9 @@ fileExistenceTests:
     shouldExist: true
   - name: pip shell completion
     path: /etc/bash_completion.d/pip
+    shouldExist: true
+  - name: skaffold shell completion
+    path: /etc/bash_completion.d/skaffold
     shouldExist: true
   - name: velero shell completion
     path: /etc/bash_completion.d/velero

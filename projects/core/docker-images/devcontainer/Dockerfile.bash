@@ -149,6 +149,11 @@ shfmt_version="3.12.0"
 wget https://github.com/mvdan/sh/releases/download/v${shfmt_version}/shfmt_v${shfmt_version}_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/shfmt
 
+# skaffold: https://github.com/GoogleContainerTools/skaffold/releases
+skaffold_version="2.17.0"
+wget https://github.com/GoogleContainerTools/skaffold/releases/download/v${skaffold_version}/skaffold-${TARGETOS}-${TARGETARCH} \
+  --output-document=/usr/local/bin/skaffold
+
 # terraform: https://developer.hashicorp.com/terraform/downloads
 terraform_version="1.14.0"
 wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_${TARGETOS}_${TARGETARCH}.zip \
@@ -183,6 +188,7 @@ hubble completion bash >/etc/bash_completion.d/hubble
 kubectl completion bash >/etc/bash_completion.d/kubectl
 npm completion >/etc/bash_completion.d/npm
 pip completion --bash >/etc/bash_completion.d/pip
+skaffold completion bash >/etc/bash_completion.d/skaffold
 velero completion bash >/etc/bash_completion.d/velero
 yq shell-completion bash >/etc/bash_completion.d/yq
 
