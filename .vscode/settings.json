@@ -41,6 +41,7 @@
     "**/*.gotmpl.*": true, // files rendered with Go
     "**/*.tftpl.*": true, // files rendered by Terraform
     "**/Chart.lock": true,
+    "**/vendor/**/*": true,
     "bitbucket-pipelines.yml": true,
     "projects/*/*/*/helm/charts/**/*": true
   }
