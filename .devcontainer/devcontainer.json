@@ -4,12 +4,15 @@
   "image": "europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/core/devcontainer:0.7.103",
   "runArgs": [
     "--name=devcontainer-damianagape-gorun",
+    "--add-host=kubernetes.docker.internal:host-gateway",
     "--env-file=${localEnv:HOME}${localEnv:USERPROFILE}/workspace/devcontainer-damianagape.env"
     //
   ],
   "containerEnv": {
     "DOCKER_BUILDKIT": "1",
-    "HELM_EXPERIMENTAL_OCI": "1"
+    "EDITOR": "code --wait",
+    "HELM_EXPERIMENTAL_OCI": "1",
+    "TZ": "UTC"
   },
   "mounts": [
     "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
@@ -18,12 +21,16 @@
     "type=volume,source=devcontainer-damianagape-gcloud,target=/root/.config/gcloud",
     "type=volume,source=devcontainer-damianagape-gemini,target=/root/.gemini",
     "type=volume,source=devcontainer-damianagape-github,target=/root/.config/gh",
+    "type=volume,source=devcontainer-damianagape-grafanactl,target=/root/.config/grafanactl",
     "type=volume,source=devcontainer-damianagape-helm,target=/root/.config/helm",
     "type=volume,source=devcontainer-damianagape-kube,target=/root/.kube",
     "type=volume,source=devcontainer-damianagape-terraform,target=/root/.terraform.d",
     "type=volume,source=devcontainer-damianagape-velero,target=/root/.config/velero"
     //
   ],
+  "portsAttributes": {
+    "56268": { "label": "skaffold debug", "onAutoForward": "silent" }
+  },
 
   "customizations": {
     "vscode": {
