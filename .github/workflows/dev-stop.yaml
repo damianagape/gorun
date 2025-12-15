@@ -7,8 +7,6 @@ jobs:
     name: dev-stop
     runs-on: ubuntu-24.04
     container: ghcr.io/damianagape/gorun-devcontainer:0.7.103
-    env:
-      TZ: UTC
     steps:
       - name: git clone (PR)
         if: github.event_name == 'pull_request'

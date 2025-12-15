@@ -34,7 +34,6 @@ jobs:
       DOCKER_BUILDKIT: 1
       HELM_EXPERIMENTAL_OCI: 1
       TF_IN_AUTOMATION: 1
-      TZ: UTC
     steps:
       - name: git clone (PR)
         if: github.event_name == 'pull_request'

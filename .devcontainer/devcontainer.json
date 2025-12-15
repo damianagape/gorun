@@ -10,8 +10,7 @@
   "containerEnv": {
     "DOCKER_BUILDKIT": "1",
     "EDITOR": "code --wait",
-    "HELM_EXPERIMENTAL_OCI": "1",
-    "TZ": "UTC"
+    "HELM_EXPERIMENTAL_OCI": "1"
   },
   "mounts": [
     "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
@@ -27,9 +26,6 @@
     "type=volume,source=devcontainer-damianagape-velero,target=/root/.config/velero"
     //
   ],
-  "portsAttributes": {
-    "56268": { "label": "skaffold debug", "onAutoForward": "silent" }
-  },
 
   "customizations": {
     "vscode": {
