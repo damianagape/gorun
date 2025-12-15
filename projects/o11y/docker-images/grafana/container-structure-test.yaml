@@ -15,3 +15,5 @@ metadataTest:
       value: /etc/grafana/grafana.ini
     - key: GF_PATHS_PROVISIONING
       value: /etc/grafana/provisioning
+    - key: TZ
+      value: UTC

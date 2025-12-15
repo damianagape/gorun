@@ -39,3 +39,5 @@ metadataTest:
   envVars:
     - key: NODE_ENV
       value: production
+    - key: TZ
+      value: UTC
