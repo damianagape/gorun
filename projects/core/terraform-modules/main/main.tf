@@ -67,6 +67,7 @@ module "public_docker_images_registry" {
 
   iam_readers = ["allUsers"]
   iam_writers = [
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-7.iam.gserviceaccount.com",
   ]
 }
@@ -82,6 +83,7 @@ module "private_docker_images_registry" {
     "serviceAccount:gogke-test-7-gke-node@gogcp-test-7.iam.gserviceaccount.com",
   ]
   iam_writers = [
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-7.iam.gserviceaccount.com",
   ]
 }
@@ -110,6 +112,9 @@ module "private_helm_charts_registry" {
   google_project = module.main_project.google_project
   registry_name  = "private-helm-charts"
 
+  iam_readers = [
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
+  ]
   iam_writers = [
     "serviceAccount:gha-damianagape-gorun@gogcp-main-7.iam.gserviceaccount.com",
   ]

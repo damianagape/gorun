@@ -24,6 +24,7 @@ module "test_platform" {
   }
 
   iam_cluster_viewers = [
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
     "user:dagape.test@gmail.com",
   ]
 }
@@ -42,6 +43,7 @@ module "test_vault" {
   vault_name = "gomod-test-7"
 
   iam_readers = [
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
   ]
   iam_writers = [
     "user:dagape.test@gmail.com",
@@ -64,6 +66,7 @@ module "test_workspace" {
   iam_testers = [
   ]
   iam_developers = [
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
     "user:dagape.test@gmail.com",
   ]
 }
