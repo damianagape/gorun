@@ -1,7 +1,7 @@
 {
   "name": "devcontainer-damianagape-gorun",
 
-  "image": "europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/core/devcontainer:0.7.103",
+  "image": "europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/core/devcontainer:0.7.104",
   "runArgs": [
     "--name=devcontainer-damianagape-gorun",
     "--env-file=${localEnv:HOME}${localEnv:USERPROFILE}/workspace/devcontainer-damianagape.env"
