@@ -1,4 +1,4 @@
-image: damianagape/gorun-devcontainer:0.7.103
+image: damianagape/gorun-devcontainer:0.7.104
 definitions:
   caches:
     apps-tfmod-test-0: projects/apps/terraform-modules/test/.terraform
