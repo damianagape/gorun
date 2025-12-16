@@ -375,5 +375,7 @@ metadataTest:
       value: /root/go
     - key: NODE_ENV
       value: development
+    - key: TZ
+      value: UTC
     - key: USE_GKE_GCLOUD_AUTH_PLUGIN
       value: "True"

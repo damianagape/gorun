@@ -24,3 +24,5 @@ metadataTest:
   envVars:
     - key: GOPATH
       value: /go
+    - key: TZ
+      value: UTC
