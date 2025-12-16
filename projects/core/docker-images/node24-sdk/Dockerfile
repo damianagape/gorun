@@ -5,6 +5,7 @@ ENTRYPOINT []
 CMD ["bash"]
 
 ENV NODE_ENV="development"
+ENV TZ="UTC"
 
 COPY ./Dockerfile.bash /Dockerfile.bash
 RUN /Dockerfile.bash && rm /Dockerfile.bash

@@ -18,6 +18,7 @@
     "type=volume,source=devcontainer-damianagape-gcloud,target=/root/.config/gcloud",
     "type=volume,source=devcontainer-damianagape-gemini,target=/root/.gemini",
     "type=volume,source=devcontainer-damianagape-github,target=/root/.config/gh",
+    "type=volume,source=devcontainer-damianagape-grafanactl,target=/root/.config/grafanactl",
     "type=volume,source=devcontainer-damianagape-helm,target=/root/.config/helm",
     "type=volume,source=devcontainer-damianagape-kube,target=/root/.kube",
     "type=volume,source=devcontainer-damianagape-terraform,target=/root/.terraform.d",

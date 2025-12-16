@@ -1,7 +1,7 @@
 # https://hub.docker.com/r/grafana/grafana
 image:
   repository: europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/o11y/grafana
-  tag: 0.7.100
+  tag: 0.7.101
 
 configEnvs: {}
 secretConfigEnvs: {}

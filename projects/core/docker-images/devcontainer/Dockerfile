@@ -15,6 +15,7 @@ ENV TARGETVARIANT="${TARGETVARIANT}"
 ENV GOPATH="/root/go"
 ENV NODE_ENV="development"
 ENV PATH="${PATH}:${GOPATH}/bin:/usr/local/go/bin"
+ENV TZ="UTC"
 ENV USE_GKE_GCLOUD_AUTH_PLUGIN="True"
 
 COPY ./etc/.bashrc /root/.bashrc
