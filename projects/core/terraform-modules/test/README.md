@@ -1,4 +1,4 @@
-This module manages non-production resources.
+This module manages non-production platform.
 
 ```
 $ terraform apply -target=module.test_platform.helm_release.velero

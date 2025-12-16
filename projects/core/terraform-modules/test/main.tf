@@ -1,7 +1,3 @@
-#######################################
-### Platforms
-#######################################
-
 module "test_platform" {
   # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-platform/0.7.100.zip"
   source = "../../terraform-submodules/gke-platform"
@@ -24,48 +20,6 @@ module "test_platform" {
   }
 
   iam_cluster_viewers = [
-    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
-    "user:dagape.test@gmail.com",
-  ]
-}
-
-#######################################
-### Vaults
-#######################################
-
-module "test_vault" {
-  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-vault/0.7.100.zip"
-  source = "../../terraform-submodules/k8s-vault"
-  depends_on = [
-    module.test_platform,
-  ]
-
-  vault_name = "gomod-test-7"
-
-  iam_readers = [
-    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
-  ]
-  iam_writers = [
-    "user:dagape.test@gmail.com",
-  ]
-}
-
-#######################################
-### Workspaces
-#######################################
-
-module "test_workspace" {
-  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/k8s-workspace/0.7.100.zip"
-  source = "../../terraform-submodules/k8s-workspace" #
-  depends_on = [
-    module.test_platform,
-  ]
-
-  workspace_name = "gomod-test-7"
-
-  iam_testers = [
-  ]
-  iam_developers = [
     "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
     "user:dagape.test@gmail.com",
   ]

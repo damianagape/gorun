@@ -1,6 +1,7 @@
 image: damianagape/gorun-devcontainer:0.7.103
 definitions:
   caches:
+    apps-tfmod-test-0: projects/apps/terraform-modules/test/.terraform
     core-tfmod-main-0: projects/core/terraform-modules/main/.terraform
     core-tfmod-prod-0: projects/core/terraform-modules/prod/.terraform
     core-tfmod-test-0: projects/core/terraform-modules/test/.terraform
@@ -46,6 +47,42 @@ definitions:
       gcloud auth configure-docker "europe-central2-docker.pkg.dev"
       gcloud auth print-access-token | helm registry login --username="oauth2accesstoken" --password-stdin "europe-central2-docker.pkg.dev"
   steps:
+    - step: &test-apps-tfmod-test
+        name: test apps-tfmod-test
+        condition:
+          changesets:
+            includePaths:
+              - "projects/apps/terraform-modules/test/**"
+        caches:
+          - apps-tfmod-test-0
+        script:
+          - *auth
+          - ./scripts/terraform-module test "projects/apps/terraform-modules/test"
+    - step: &plan-apps-tfmod-test
+        name: plan apps-tfmod-test
+        condition:
+          changesets:
+            includePaths:
+              - "projects/apps/terraform-modules/test/**"
+        caches:
+          - apps-tfmod-test-0
+        script:
+          - *auth
+          - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
+          - terraform -chdir="projects/apps/terraform-modules/test" plan -input="false"
+    - step: &apply-apps-tfmod-test
+        name: apply apps-tfmod-test
+        condition:
+          changesets:
+            includePaths:
+              - "projects/apps/terraform-modules/test/**"
+        caches:
+          - apps-tfmod-test-0
+        script:
+          - *auth
+          - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
+          - terraform -chdir="projects/apps/terraform-modules/test" apply -input="false" -auto-approve
+        trigger: manual
     - step: &test-core-image-devcontainer
         name: test core-image-devcontainer
         condition:
@@ -1167,6 +1204,7 @@ pipelines:
   pull-requests:
     main:
       - parallel:
+          - step: *test-apps-tfmod-test
           - step: *test-core-image-devcontainer
           - step: *test-core-image-go1-rte
           - step: *test-core-image-go1-sdk
@@ -1205,6 +1243,7 @@ pipelines:
           - step: *test-o11y-tfsub-gcp-availability-monitor
           - step: *test-o11y-tfsub-gke-observability-stack
       - parallel:
+          - step: *plan-apps-tfmod-test
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod
           - step: *plan-core-tfmod-test
@@ -1246,12 +1285,14 @@ pipelines:
           - step: *publish-o11y-tfsub-gcp-availability-monitor
           - step: *publish-o11y-tfsub-gke-observability-stack
       - parallel:
+          - step: *plan-apps-tfmod-test
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod
           - step: *plan-core-tfmod-test
           - step: *plan-demo-tfmod-kuard
           - step: *plan-o11y-tfmod-test
       - parallel:
+          - step: *apply-apps-tfmod-test
           - step: *apply-core-tfmod-main
           - step: *apply-core-tfmod-prod
           - step: *apply-core-tfmod-test

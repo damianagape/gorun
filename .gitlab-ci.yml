@@ -11,6 +11,45 @@ stages:
   - publish
   - plan
   - apply
+test-apps-tfmod-test:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+  cache:
+    paths:
+      - projects/apps/terraform-modules/test/.terraform
+  script:
+    - ./scripts/terraform-module test "projects/apps/terraform-modules/test"
+plan-apps-tfmod-test:
+  stage: plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+  cache:
+    paths:
+      - projects/apps/terraform-modules/test/.terraform
+  script:
+    - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
+    - terraform -chdir="projects/apps/terraform-modules/test" plan -input="false"
+apply-apps-tfmod-test:
+  stage: apply
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+  cache:
+    paths:
+      - projects/apps/terraform-modules/test/.terraform
+  script:
+    - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
+    - terraform -chdir="projects/apps/terraform-modules/test" apply -input="false" -auto-approve
+  when: manual
 test-core-image-devcontainer:
   stage: test
   rules:
