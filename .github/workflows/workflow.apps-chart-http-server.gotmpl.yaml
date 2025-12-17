@@ -1,18 +1,18 @@
-name: apps-tfmod-test
+name: apps-chart-http-server
 on:
   pull_request:
     paths:
-      - "projects/apps/terraform-modules/test/**"
-      - "!projects/apps/terraform-modules/test/README.md"
+      - "projects/apps/helm-charts/http-server/**"
+      - "!projects/apps/helm-charts/http-server/README.md"
   push:
     branches:
       - main
     paths:
-      - "projects/apps/terraform-modules/test/**"
-      - "!projects/apps/terraform-modules/test/README.md"
+      - "projects/apps/helm-charts/http-server/**"
+      - "!projects/apps/helm-charts/http-server/README.md"
 jobs:
-  apps-tfmod-test:
-    name: apps-tfmod-test
+  apps-chart-http-server:
+    name: apps-chart-http-server
     runs-on: ubuntu-24.04
     container: ghcr.io/damianagape/gorun-devcontainer:0.7.104
     permissions:
@@ -42,20 +42,18 @@ jobs:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
           create_credentials_file: true
           cleanup_credentials: true
-      - name: cache
-        uses: actions/cache@v4
-        with:
-          key: apps-tfmod-test
-          path: |
-            projects/apps/terraform-modules/test/.terraform
+      - name: helm auth (Google Artifact Registry)
+        run: gcloud auth print-access-token | helm registry login --username="oauth2accesstoken" --password-stdin "europe-central2-docker.pkg.dev"
 
+      - name: build
+        run: ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
       - name: test
-        run: ./scripts/terraform-module test "projects/apps/terraform-modules/test"
-      - name: init
-        run: terraform -chdir="projects/apps/terraform-modules/test" init -input=false
-      - name: plan
+        run: ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+      - name: pre-publish
         if: github.event_name == 'pull_request' && github.base_ref == 'main'
-        run: terraform -chdir="projects/apps/terraform-modules/test" plan -input=false
-      - name: apply
+        run: ./scripts/helm-chart pre-publish "projects/apps/helm-charts/http-server"
+      - name: publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: terraform -chdir="projects/apps/terraform-modules/test" apply -input=false -auto-approve
+        run: ./scripts/helm-chart publish "projects/apps/helm-charts/http-server"
+      - name: show
+        run: ./scripts/helm-chart show "projects/apps/helm-charts/http-server"

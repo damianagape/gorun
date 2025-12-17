@@ -47,6 +47,30 @@ definitions:
       gcloud auth configure-docker "europe-central2-docker.pkg.dev"
       gcloud auth print-access-token | helm registry login --username="oauth2accesstoken" --password-stdin "europe-central2-docker.pkg.dev"
   steps:
+    - step: &test-apps-chart-http-server
+        name: test apps-chart-http-server
+        condition:
+          changesets:
+            includePaths:
+              - "projects/apps/helm-charts/http-server/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
+          - ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+          - ./scripts/helm-chart pre-publish "projects/apps/helm-charts/http-server"
+          - ./scripts/helm-chart show "projects/apps/helm-charts/http-server"
+    - step: &publish-apps-chart-http-server
+        name: publish apps-chart-http-server
+        condition:
+          changesets:
+            includePaths:
+              - "projects/apps/helm-charts/http-server/**"
+        script:
+          - *auth
+          - ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
+          - ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+          - ./scripts/helm-chart publish "projects/apps/helm-charts/http-server"
+          - ./scripts/helm-chart show "projects/apps/helm-charts/http-server"
     - step: &test-apps-tfmod-test
         name: test apps-tfmod-test
         condition:
@@ -1204,6 +1228,7 @@ pipelines:
   pull-requests:
     main:
       - parallel:
+          - step: *test-apps-chart-http-server
           - step: *test-apps-tfmod-test
           - step: *test-core-image-devcontainer
           - step: *test-core-image-go1-rte
@@ -1252,6 +1277,7 @@ pipelines:
   branches:
     main:
       - parallel:
+          - step: *publish-apps-chart-http-server
           - step: *publish-core-image-devcontainer
           - step: *publish-core-image-go1-rte
           - step: *publish-core-image-go1-sdk

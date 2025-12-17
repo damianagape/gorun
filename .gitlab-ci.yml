@@ -11,6 +11,28 @@ stages:
   - publish
   - plan
   - apply
+test-apps-chart-http-server:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/apps/helm-charts/http-server/**"
+  script:
+    - ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart pre-publish "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart show "projects/apps/helm-charts/http-server"
+publish-apps-chart-http-server:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/apps/helm-charts/http-server/**"
+  script:
+    - ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart publish "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart show "projects/apps/helm-charts/http-server"
 test-apps-tfmod-test:
   stage: test
   rules:
