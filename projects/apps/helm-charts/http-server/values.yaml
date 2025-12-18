@@ -22,7 +22,3 @@ resources:
   limits:
     cpu: 100m
     memory: 128Mi
-securityContext:
-  runAsUser: 1111
-  runAsGroup: 1111
-  fsGroup: 1111

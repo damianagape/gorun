@@ -69,10 +69,10 @@ spec:
                 - ALL
             runAsNonRoot: true
             readOnlyRootFilesystem: false
-            runAsUser: {{ .Values.securityContext.runAsUser }}
-            runAsGroup: {{ .Values.securityContext.runAsGroup }}
+            runAsUser: 1111
+            runAsGroup: 1111
       securityContext: # pod security context
-        fsGroup: {{ .Values.securityContext.fsGroup }}
+        fsGroup: 1111
         fsGroupChangePolicy: OnRootMismatch
       affinity:
         podAntiAffinity:
