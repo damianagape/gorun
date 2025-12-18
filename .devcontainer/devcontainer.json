@@ -1,18 +1,23 @@
 {
-  "name": "devcontainer-damianagape-gorun",
+  "name": "devcontainer-damianagape-${localWorkspaceFolderBasename}",
+  "initializeCommand": ".devcontainer/docker-desktop-kubeconfig",
 
   "image": "europe-central2-docker.pkg.dev/gogcp-main-7/private-docker-images/gorun/core/devcontainer:0.7.104",
   "runArgs": [
-    "--name=devcontainer-damianagape-gorun",
-    "--env-file=${localEnv:HOME}${localEnv:USERPROFILE}/workspace/devcontainer-damianagape.env"
+    "--name=devcontainer-damianagape-${localWorkspaceFolderBasename}",
+    "--add-host=kubernetes.docker.internal:host-gateway",
+    "--env-file=${localEnv:HOME}/workspace/devcontainer-damianagape.env"
     //
   ],
   "containerEnv": {
     "DOCKER_BUILDKIT": "1",
-    "HELM_EXPERIMENTAL_OCI": "1"
+    "EDITOR": "code --wait",
+    "HELM_EXPERIMENTAL_OCI": "1",
+    "KUBECONFIG": "/root/.kube/config:/root/docker-desktop-kubeconfig.yaml"
   },
   "mounts": [
     "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+    "type=bind,source=${localEnv:HOME}/workspace/docker-desktop-kubeconfig.yaml,target=/root/docker-desktop-kubeconfig.yaml",
     "type=volume,source=devcontainer-damianagape-docker,target=/root/.docker",
     "type=volume,source=devcontainer-damianagape-firebase,target=/root/.config/configstore",
     "type=volume,source=devcontainer-damianagape-gcloud,target=/root/.config/gcloud",

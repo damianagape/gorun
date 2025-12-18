@@ -11,6 +11,67 @@ stages:
   - publish
   - plan
   - apply
+test-apps-chart-http-server:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/apps/helm-charts/http-server/**"
+  script:
+    - ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart pre-publish "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart show "projects/apps/helm-charts/http-server"
+publish-apps-chart-http-server:
+  stage: publish
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/apps/helm-charts/http-server/**"
+  script:
+    - ./scripts/helm-chart build "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart test "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart publish "projects/apps/helm-charts/http-server"
+    - ./scripts/helm-chart show "projects/apps/helm-charts/http-server"
+test-apps-tfmod-test:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+  cache:
+    paths:
+      - projects/apps/terraform-modules/test/.terraform
+  script:
+    - ./scripts/terraform-module test "projects/apps/terraform-modules/test"
+plan-apps-tfmod-test:
+  stage: plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+  cache:
+    paths:
+      - projects/apps/terraform-modules/test/.terraform
+  script:
+    - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
+    - terraform -chdir="projects/apps/terraform-modules/test" plan -input="false"
+apply-apps-tfmod-test:
+  stage: apply
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/apps/terraform-modules/test/**"
+  cache:
+    paths:
+      - projects/apps/terraform-modules/test/.terraform
+  script:
+    - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
+    - terraform -chdir="projects/apps/terraform-modules/test" apply -input="false" -auto-approve
+  when: manual
 test-core-image-devcontainer:
   stage: test
   rules:

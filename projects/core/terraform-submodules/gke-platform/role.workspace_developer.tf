@@ -40,7 +40,7 @@ resource "kubernetes_cluster_role" "namespace_workspace_developer" {
   rule {
     api_groups = [""]
     resources  = ["serviceaccounts"]
-    verbs      = ["get", "list", "watch"]
+    verbs      = ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection"]
   }
   rule {
     api_groups = [""]
