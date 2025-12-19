@@ -5,11 +5,14 @@ dependencies:
 - name: cilium
   repository: https://helm.cilium.io
   version: 1.18.4
+- name: opentelemetry-operator
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.99.2
 - name: prometheus-operator-crds
   repository: https://prometheus-community.github.io/helm-charts
   version: 25.0.0
 - name: velero
   repository: https://vmware-tanzu.github.io/helm-charts
   version: 11.2.0
-digest: sha256:98657b64aef6825ceecbaa85e53419b78b9386f5d6ebc7fa26bb0b09c7062f04
-generated: "2025-11-22T11:08:13.736416387Z"
+digest: sha256:2934c5f25aa2cdcd70bac304e485fa0fcfa6b5e439cdef45aaf5b73e9b2f0aeb
+generated: "2025-12-19T13:46:47.575874552Z"
