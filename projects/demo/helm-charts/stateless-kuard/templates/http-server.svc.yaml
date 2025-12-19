@@ -10,7 +10,6 @@ metadata:
     {{- toYaml .Values.httpServer.extraServiceLabels | nindent 4 }}
     {{- end }}
   annotations:
-    networking.gke.io/max-rate-per-endpoint: "100"
     {{- if .Values.httpServer.extraServiceAnnotations }}
     {{- toYaml .Values.httpServer.extraServiceAnnotations | nindent 4 }}
     {{- end }}
@@ -21,6 +20,6 @@ spec:
   type: ClusterIP
   ports:
     - name: kuard-http
-      port: 80
+      port: 8080
       protocol: TCP
       targetPort: kuard-http

@@ -40,7 +40,7 @@ module "goapp_test_gateway_http_route" {
   kubernetes_service = data.kubernetes_service.goapp_test
 
   domain            = "goapp.gogke-test-7.damianagape.pl"
-  service_port      = 80
+  service_port      = 8080
   container_port    = 8080
   health_check_path = "/healthy"
 }

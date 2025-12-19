@@ -28,10 +28,6 @@ definitions:
     core-tfsub-k8s-workspace-0: projects/core/terraform-submodules/k8s-workspace/.terraform
     core-tfsub-k8s-workspace-1: projects/core/terraform-submodules/k8s-workspace/.terraform.lock.hcl
     demo-tfmod-kuard-0: projects/demo/terraform-modules/kuard/.terraform
-    demo-tfsub-helm-manifest-0: projects/demo/terraform-submodules/helm-manifest/.terraform
-    demo-tfsub-helm-manifest-1: projects/demo/terraform-submodules/helm-manifest/.terraform.lock.hcl
-    demo-tfsub-helm-template-0: projects/demo/terraform-submodules/helm-template/.terraform
-    demo-tfsub-helm-template-1: projects/demo/terraform-submodules/helm-template/.terraform.lock.hcl
     demo-tfsub-kuard-0: projects/demo/terraform-submodules/kuard/.terraform
     demo-tfsub-kuard-1: projects/demo/terraform-submodules/kuard/.terraform.lock.hcl
     o11y-tfmod-test-0: projects/o11y/terraform-modules/test/.terraform
@@ -957,66 +953,6 @@ definitions:
           - terraform -chdir="projects/demo/terraform-modules/kuard" init -input="false"
           - terraform -chdir="projects/demo/terraform-modules/kuard" apply -input="false" -auto-approve
         trigger: manual
-    - step: &test-demo-tfsub-helm-manifest
-        name: test demo-tfsub-helm-manifest
-        condition:
-          changesets:
-            includePaths:
-              - "projects/demo/terraform-submodules/helm-manifest/**"
-        caches:
-          - demo-tfsub-helm-manifest-0
-          - demo-tfsub-helm-manifest-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/demo/terraform-submodules/helm-manifest"
-          - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/helm-manifest"
-          - ./scripts/terraform-submodule pre-publish "projects/demo/terraform-submodules/helm-manifest"
-          - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/helm-manifest"
-    - step: &publish-demo-tfsub-helm-manifest
-        name: publish demo-tfsub-helm-manifest
-        condition:
-          changesets:
-            includePaths:
-              - "projects/demo/terraform-submodules/helm-manifest/**"
-        caches:
-          - demo-tfsub-helm-manifest-0
-          - demo-tfsub-helm-manifest-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/demo/terraform-submodules/helm-manifest"
-          - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/helm-manifest"
-          - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/helm-manifest"
-          - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/helm-manifest"
-    - step: &test-demo-tfsub-helm-template
-        name: test demo-tfsub-helm-template
-        condition:
-          changesets:
-            includePaths:
-              - "projects/demo/terraform-submodules/helm-template/**"
-        caches:
-          - demo-tfsub-helm-template-0
-          - demo-tfsub-helm-template-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/demo/terraform-submodules/helm-template"
-          - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/helm-template"
-          - ./scripts/terraform-submodule pre-publish "projects/demo/terraform-submodules/helm-template"
-          - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/helm-template"
-    - step: &publish-demo-tfsub-helm-template
-        name: publish demo-tfsub-helm-template
-        condition:
-          changesets:
-            includePaths:
-              - "projects/demo/terraform-submodules/helm-template/**"
-        caches:
-          - demo-tfsub-helm-template-0
-          - demo-tfsub-helm-template-1
-        script:
-          - *auth
-          - ./scripts/terraform-submodule build "projects/demo/terraform-submodules/helm-template"
-          - ./scripts/terraform-submodule test "projects/demo/terraform-submodules/helm-template"
-          - ./scripts/terraform-submodule publish "projects/demo/terraform-submodules/helm-template"
-          - ./scripts/terraform-submodule show "projects/demo/terraform-submodules/helm-template"
     - step: &test-demo-tfsub-kuard
         name: test demo-tfsub-kuard
         condition:
@@ -1258,8 +1194,6 @@ pipelines:
           - step: *test-demo-chart-stateful-kuard
           - step: *test-demo-chart-stateless-kuard
           - step: *test-demo-tfmod-kuard
-          - step: *test-demo-tfsub-helm-manifest
-          - step: *test-demo-tfsub-helm-template
           - step: *test-demo-tfsub-kuard
           - step: *test-o11y-image-grafana
           - step: *test-o11y-chart-grafana
@@ -1302,8 +1236,6 @@ pipelines:
           - step: *publish-demo-image-kuard
           - step: *publish-demo-chart-stateful-kuard
           - step: *publish-demo-chart-stateless-kuard
-          - step: *publish-demo-tfsub-helm-manifest
-          - step: *publish-demo-tfsub-helm-template
           - step: *publish-demo-tfsub-kuard
           - step: *publish-o11y-image-grafana
           - step: *publish-o11y-chart-grafana
