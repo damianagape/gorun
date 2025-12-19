@@ -32,7 +32,7 @@ resource "helm_release" "stateless_kuard" {
   # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
   repository = "../../helm-charts"
   chart      = "stateless-kuard"
-  version    = "0.7.101"
+  version    = "0.7.102"
   name       = "stateless-kuard"
   namespace  = module.workspace.kubernetes_namespace.metadata[0].name
 
@@ -95,7 +95,7 @@ resource "helm_release" "stateful_kuard" {
   # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/demo"
   repository = "../../helm-charts"
   chart      = "stateful-kuard"
-  version    = "0.7.101"
+  version    = "0.7.102"
   name       = "stateful-kuard"
   namespace  = module.workspace.kubernetes_namespace.metadata[0].name
 
