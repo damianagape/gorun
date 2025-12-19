@@ -7,7 +7,7 @@ clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW TABLE
 
 SHOW TABLES
 
-Query id: b8751076-b258-4e47-9347-a7f20823cc9e
+Query id: 54bdd480-410b-41ee-a843-04e242343c40
 
    ┌─name───────────────────────────────┐
 1. │ otel_logs                          │
@@ -21,16 +21,16 @@ Query id: b8751076-b258-4e47-9347-a7f20823cc9e
 9. │ otel_traces_trace_id_ts_mv         │
    └────────────────────────────────────┘
 
-9 rows in set. Elapsed: 0.011 sec.
+9 rows in set. Elapsed: 0.155 sec.
 
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_logs;
 
 SHOW CREATE TABLE otel_logs
 
-Query id: c8ee71f7-2f8c-4d5b-9892-93c528f6dde1
+Query id: a3cf79d8-5ee0-4bed-aaf6-fff2af7a9527
 
    ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_logs                                                                ↴│
+1. │ CREATE TABLE opentelemetry.otel_logs                                                             ↴│
    │↳(                                                                                                ↴│
    │↳    `Timestamp` DateTime64(9) CODEC(Delta(8), ZSTD(1)),                                          ↴│
    │↳    `TimestampTime` DateTime DEFAULT toDateTime(Timestamp),                                      ↴│
@@ -64,62 +64,16 @@ Query id: c8ee71f7-2f8c-4d5b-9892-93c528f6dde1
    │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
    └───────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-1 row in set. Elapsed: 0.003 sec.
-
-clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_traces;
-
-SHOW CREATE TABLE otel_traces
-
-Query id: 912b4fa6-755a-4507-80dc-c167d5a2a646
-
-   ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_traces                                                              ↴│
-   │↳(                                                                                                ↴│
-   │↳    `Timestamp` DateTime64(9) CODEC(Delta(8), ZSTD(1)),                                          ↴│
-   │↳    `TraceId` String CODEC(ZSTD(1)),                                                             ↴│
-   │↳    `SpanId` String CODEC(ZSTD(1)),                                                              ↴│
-   │↳    `ParentSpanId` String CODEC(ZSTD(1)),                                                        ↴│
-   │↳    `TraceState` String CODEC(ZSTD(1)),                                                          ↴│
-   │↳    `SpanName` LowCardinality(String) CODEC(ZSTD(1)),                                            ↴│
-   │↳    `SpanKind` LowCardinality(String) CODEC(ZSTD(1)),                                            ↴│
-   │↳    `ServiceName` LowCardinality(String) CODEC(ZSTD(1)),                                         ↴│
-   │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
-   │↳    `ScopeName` String CODEC(ZSTD(1)),                                                           ↴│
-   │↳    `ScopeVersion` String CODEC(ZSTD(1)),                                                        ↴│
-   │↳    `SpanAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                         ↴│
-   │↳    `Duration` UInt64 CODEC(ZSTD(1)),                                                            ↴│
-   │↳    `StatusCode` LowCardinality(String) CODEC(ZSTD(1)),                                          ↴│
-   │↳    `StatusMessage` String CODEC(ZSTD(1)),                                                       ↴│
-   │↳    `Events.Timestamp` Array(DateTime64(9)) CODEC(ZSTD(1)),                                      ↴│
-   │↳    `Events.Name` Array(LowCardinality(String)) CODEC(ZSTD(1)),                                  ↴│
-   │↳    `Events.Attributes` Array(Map(LowCardinality(String), String)) CODEC(ZSTD(1)),               ↴│
-   │↳    `Links.TraceId` Array(String) CODEC(ZSTD(1)),                                                ↴│
-   │↳    `Links.SpanId` Array(String) CODEC(ZSTD(1)),                                                 ↴│
-   │↳    `Links.TraceState` Array(String) CODEC(ZSTD(1)),                                             ↴│
-   │↳    `Links.Attributes` Array(Map(LowCardinality(String), String)) CODEC(ZSTD(1)),                ↴│
-   │↳    INDEX idx_trace_id TraceId TYPE bloom_filter(0.001) GRANULARITY 1,                           ↴│
-   │↳    INDEX idx_res_attr_key mapKeys(ResourceAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,    ↴│
-   │↳    INDEX idx_res_attr_value mapValues(ResourceAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,↴│
-   │↳    INDEX idx_span_attr_key mapKeys(SpanAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,       ↴│
-   │↳    INDEX idx_span_attr_value mapValues(SpanAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,   ↴│
-   │↳    INDEX idx_duration Duration TYPE minmax GRANULARITY 1                                        ↴│
-   │↳)                                                                                                ↴│
-   │↳ENGINE = MergeTree                                                                               ↴│
-   │↳PARTITION BY toDate(Timestamp)                                                                   ↴│
-   │↳ORDER BY (ServiceName, SpanName, toDateTime(Timestamp))                                          ↴│
-   │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
-   └───────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-1 row in set. Elapsed: 0.003 sec.
+1 row in set. Elapsed: 0.067 sec.
 
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_metrics_exponential_histogram;
 
 SHOW CREATE TABLE otel_metrics_exponential_histogram
 
-Query id: 4e660560-e330-435f-8ac7-7a25be133aac
+Query id: 84b8e0f0-5456-4bf6-860a-1422c91b0072
 
    ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_metrics_exponential_histogram                                       ↴│
+1. │ CREATE TABLE opentelemetry.otel_metrics_exponential_histogram                                    ↴│
    │↳(                                                                                                ↴│
    │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
    │↳    `ResourceSchemaUrl` String CODEC(ZSTD(1)),                                                   ↴│
@@ -165,16 +119,16 @@ Query id: 4e660560-e330-435f-8ac7-7a25be133aac
    │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
    └───────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-1 row in set. Elapsed: 0.003 sec.
+1 row in set. Elapsed: 0.035 sec.
 
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_metrics_gauge;
 
 SHOW CREATE TABLE otel_metrics_gauge
 
-Query id: 4e056289-902e-4326-b1fe-c4903c0c72e0
+Query id: 08522563-4aca-4f83-ba41-519d441551ae
 
    ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_metrics_gauge                                                       ↴│
+1. │ CREATE TABLE opentelemetry.otel_metrics_gauge                                                    ↴│
    │↳(                                                                                                ↴│
    │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
    │↳    `ResourceSchemaUrl` String CODEC(ZSTD(1)),                                                   ↴│
@@ -210,16 +164,16 @@ Query id: 4e056289-902e-4326-b1fe-c4903c0c72e0
    │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
    └───────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-1 row in set. Elapsed: 0.004 sec.
+1 row in set. Elapsed: 0.122 sec.
 
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_metrics_histogram;
 
 SHOW CREATE TABLE otel_metrics_histogram
 
-Query id: 8ba68cac-988e-4525-a1c5-9324da663287
+Query id: e286819d-4d24-4232-b8b9-c0724987c89e
 
    ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_metrics_histogram                                                   ↴│
+1. │ CREATE TABLE opentelemetry.otel_metrics_histogram                                                ↴│
    │↳(                                                                                                ↴│
    │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
    │↳    `ResourceSchemaUrl` String CODEC(ZSTD(1)),                                                   ↴│
@@ -261,16 +215,16 @@ Query id: 8ba68cac-988e-4525-a1c5-9324da663287
    │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
    └───────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-1 row in set. Elapsed: 0.026 sec.
+1 row in set. Elapsed: 0.019 sec.
 
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_metrics_sum;
 
 SHOW CREATE TABLE otel_metrics_sum
 
-Query id: b502c97a-951f-4f73-bae8-32e789a75e23
+Query id: d1de7cb9-a53d-497c-8e3c-e3a3e176904e
 
    ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_metrics_sum                                                         ↴│
+1. │ CREATE TABLE opentelemetry.otel_metrics_sum                                                      ↴│
    │↳(                                                                                                ↴│
    │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
    │↳    `ResourceSchemaUrl` String CODEC(ZSTD(1)),                                                   ↴│
@@ -308,16 +262,16 @@ Query id: b502c97a-951f-4f73-bae8-32e789a75e23
    │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
    └───────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-1 row in set. Elapsed: 0.003 sec.
+1 row in set. Elapsed: 0.023 sec.
 
 clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_metrics_summary;
 
 SHOW CREATE TABLE otel_metrics_summary
 
-Query id: 88c06253-871f-479a-86a5-1c4c8989cef9
+Query id: e4a6e051-6016-4e1a-86f8-c4da07090399
 
    ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
-1. │ CREATE TABLE clickhouse.otel_metrics_summary                                                     ↴│
+1. │ CREATE TABLE opentelemetry.otel_metrics_summary                                                  ↴│
    │↳(                                                                                                ↴│
    │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
    │↳    `ResourceSchemaUrl` String CODEC(ZSTD(1)),                                                   ↴│
@@ -351,5 +305,97 @@ Query id: 88c06253-871f-479a-86a5-1c4c8989cef9
    │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
    └───────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-1 row in set. Elapsed: 0.009 sec.
+1 row in set. Elapsed: 0.205 sec.
+
+clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_traces;
+
+SHOW CREATE TABLE otel_traces
+
+Query id: 0d50831a-55bb-404c-940c-d95dcfa990bd
+
+   ┌─statement─────────────────────────────────────────────────────────────────────────────────────────┐
+1. │ CREATE TABLE opentelemetry.otel_traces                                                           ↴│
+   │↳(                                                                                                ↴│
+   │↳    `Timestamp` DateTime64(9) CODEC(Delta(8), ZSTD(1)),                                          ↴│
+   │↳    `TraceId` String CODEC(ZSTD(1)),                                                             ↴│
+   │↳    `SpanId` String CODEC(ZSTD(1)),                                                              ↴│
+   │↳    `ParentSpanId` String CODEC(ZSTD(1)),                                                        ↴│
+   │↳    `TraceState` String CODEC(ZSTD(1)),                                                          ↴│
+   │↳    `SpanName` LowCardinality(String) CODEC(ZSTD(1)),                                            ↴│
+   │↳    `SpanKind` LowCardinality(String) CODEC(ZSTD(1)),                                            ↴│
+   │↳    `ServiceName` LowCardinality(String) CODEC(ZSTD(1)),                                         ↴│
+   │↳    `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                     ↴│
+   │↳    `ScopeName` String CODEC(ZSTD(1)),                                                           ↴│
+   │↳    `ScopeVersion` String CODEC(ZSTD(1)),                                                        ↴│
+   │↳    `SpanAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),                         ↴│
+   │↳    `Duration` UInt64 CODEC(ZSTD(1)),                                                            ↴│
+   │↳    `StatusCode` LowCardinality(String) CODEC(ZSTD(1)),                                          ↴│
+   │↳    `StatusMessage` String CODEC(ZSTD(1)),                                                       ↴│
+   │↳    `Events.Timestamp` Array(DateTime64(9)) CODEC(ZSTD(1)),                                      ↴│
+   │↳    `Events.Name` Array(LowCardinality(String)) CODEC(ZSTD(1)),                                  ↴│
+   │↳    `Events.Attributes` Array(Map(LowCardinality(String), String)) CODEC(ZSTD(1)),               ↴│
+   │↳    `Links.TraceId` Array(String) CODEC(ZSTD(1)),                                                ↴│
+   │↳    `Links.SpanId` Array(String) CODEC(ZSTD(1)),                                                 ↴│
+   │↳    `Links.TraceState` Array(String) CODEC(ZSTD(1)),                                             ↴│
+   │↳    `Links.Attributes` Array(Map(LowCardinality(String), String)) CODEC(ZSTD(1)),                ↴│
+   │↳    INDEX idx_trace_id TraceId TYPE bloom_filter(0.001) GRANULARITY 1,                           ↴│
+   │↳    INDEX idx_res_attr_key mapKeys(ResourceAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,    ↴│
+   │↳    INDEX idx_res_attr_value mapValues(ResourceAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,↴│
+   │↳    INDEX idx_span_attr_key mapKeys(SpanAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,       ↴│
+   │↳    INDEX idx_span_attr_value mapValues(SpanAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,   ↴│
+   │↳    INDEX idx_duration Duration TYPE minmax GRANULARITY 1                                        ↴│
+   │↳)                                                                                                ↴│
+   │↳ENGINE = MergeTree                                                                               ↴│
+   │↳PARTITION BY toDate(Timestamp)                                                                   ↴│
+   │↳ORDER BY (ServiceName, SpanName, toDateTime(Timestamp))                                          ↴│
+   │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1                                        │
+   └───────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+1 row in set. Elapsed: 0.021 sec.
+
+clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_traces_trace_id_ts;
+
+SHOW CREATE TABLE otel_traces_trace_id_ts
+
+Query id: fdc93372-6f01-40b6-9a48-5ea1b08ed389
+
+   ┌─statement────────────────────────────────────────────────────────────┐
+1. │ CREATE TABLE opentelemetry.otel_traces_trace_id_ts                  ↴│
+   │↳(                                                                   ↴│
+   │↳    `TraceId` String CODEC(ZSTD(1)),                                ↴│
+   │↳    `Start` DateTime CODEC(Delta(4), ZSTD(1)),                      ↴│
+   │↳    `End` DateTime CODEC(Delta(4), ZSTD(1)),                        ↴│
+   │↳    INDEX idx_trace_id TraceId TYPE bloom_filter(0.01) GRANULARITY 1↴│
+   │↳)                                                                   ↴│
+   │↳ENGINE = MergeTree                                                  ↴│
+   │↳PARTITION BY toDate(Start)                                          ↴│
+   │↳ORDER BY (TraceId, Start)                                           ↴│
+   │↳SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1           │
+   └──────────────────────────────────────────────────────────────────────┘
+
+1 row in set. Elapsed: 0.024 sec.
+
+clickhouse-0.clickhouse-headless.o11y-clickhouse.svc.cluster.local :) SHOW CREATE TABLE otel_traces_trace_id_ts_mv;
+
+SHOW CREATE TABLE otel_traces_trace_id_ts_mv
+
+Query id: 3b127937-297a-408f-b64c-48eec5c244d0
+
+   ┌─statement──────────────────────────────────────────────────────────────────────────────────────────────────┐
+1. │ CREATE MATERIALIZED VIEW opentelemetry.otel_traces_trace_id_ts_mv TO opentelemetry.otel_traces_trace_id_ts↴│
+   │↳(                                                                                                         ↴│
+   │↳    `TraceId` String,                                                                                     ↴│
+   │↳    `Start` DateTime64(9),                                                                                ↴│
+   │↳    `End` DateTime64(9)                                                                                   ↴│
+   │↳)                                                                                                         ↴│
+   │↳AS SELECT                                                                                                 ↴│
+   │↳    TraceId,                                                                                              ↴│
+   │↳    min(Timestamp) AS Start,                                                                              ↴│
+   │↳    max(Timestamp) AS End                                                                                 ↴│
+   │↳FROM opentelemetry.otel_traces                                                                            ↴│
+   │↳WHERE TraceId != ''                                                                                       ↴│
+   │↳GROUP BY TraceId                                                                                           │
+   └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+1 row in set. Elapsed: 0.031 sec.
 ```
