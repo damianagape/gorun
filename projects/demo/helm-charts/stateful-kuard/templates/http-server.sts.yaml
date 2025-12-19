@@ -42,7 +42,7 @@ spec:
           command: ["chown"]
           args: ["-R", "1000:3000", "/var/lib/kuard"]
           volumeMounts:
-            - name: data
+            - name: kuard-data
               mountPath: /var/lib/kuard
           resources:
             requests:

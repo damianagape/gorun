@@ -365,6 +365,34 @@ resource "helm_release" "prometheus_operator_crds" {
 }
 
 #######################################
+### OpenTelemetry Operator
+#######################################
+
+resource "kubernetes_namespace" "opentelemetry_operator" {
+  depends_on = [
+    google_container_cluster.this,
+    google_container_node_pool.this,
+  ]
+
+  metadata {
+    name = "opentelemetry-operator"
+  }
+}
+
+resource "helm_release" "opentelemetry_operator" {
+  repository = "${path.module}/helm/charts"
+  chart      = "opentelemetry-operator"
+  name       = "opentelemetry-operator"
+  namespace  = kubernetes_namespace.opentelemetry_operator.metadata[0].name
+
+  values = [
+    file("${path.module}/helm/values/opentelemetry-operator.yaml"),
+    templatefile("${path.module}/assets/opentelemetry_operator.yaml.tftpl", {
+    }),
+  ]
+}
+
+#######################################
 ### Velero
 #######################################
 

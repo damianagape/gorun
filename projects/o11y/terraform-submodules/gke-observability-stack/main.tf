@@ -15,7 +15,7 @@ resource "helm_release" "clickhouse" {
   # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
   repository = "../../../core/helm-charts"
   chart      = "clickhouse"
-  version    = "0.7.100"
+  version    = "0.7.101"
 
   name      = "clickhouse"
   namespace = kubernetes_namespace.clickhouse.metadata[0].name
@@ -45,7 +45,7 @@ resource "helm_release" "grafana_postgres" {
   # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/core"
   repository = "../../../core/helm-charts"
   chart      = "postgres"
-  version    = "0.7.100"
+  version    = "0.7.101"
 
   name      = "grafana-postgres"
   namespace = kubernetes_namespace.grafana.metadata[0].name
@@ -89,7 +89,7 @@ resource "helm_release" "grafana" {
   # PROD repository = "oci://europe-central2-docker.pkg.dev/gogcp-main-7/private-helm-charts/gorun/o11y"
   repository = "../../helm-charts"
   chart      = "grafana"
-  version    = "0.7.102"
+  version    = "0.7.103"
 
   name      = "grafana"
   namespace = kubernetes_namespace.grafana.metadata[0].name
