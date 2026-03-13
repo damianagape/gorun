@@ -1,5 +1,5 @@
 provider "google" {
-  project = "gogcp-test-7"
+  project = "gogcp-test-8"
 }
 
 data "google_client_config" "oauth2" {
@@ -8,7 +8,7 @@ data "google_client_config" "oauth2" {
 data "google_project" "this" {
 }
 
-# module.test_platform.google_container_cluster == gke_gogcp-test-7_europe-central2-a_gogke-test-7
+# module.test_platform.google_container_cluster == gke_gogcp-test-8_europe-central2-a_gogke-test-8
 
 provider "kubernetes" {
   host                   = "https://${module.test_platform.google_container_cluster.endpoint}"

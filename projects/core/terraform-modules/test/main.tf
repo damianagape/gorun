@@ -1,12 +1,12 @@
 module "test_platform" {
-  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-7-private-terraform-modules/gorun/core/gke-platform/0.7.100.zip"
+  # PROD source = "gcs::https://www.googleapis.com/storage/v1/gogcp-main-8-private-terraform-modules/gorun/core/gke-platform/0.8.100.zip"
   source = "../../terraform-submodules/gke-platform"
 
   google_client_config = data.google_client_config.oauth2
   google_project       = data.google_project.this
 
-  platform_name   = "gogke-test-7"
-  platform_domain = "gogke-test-7.damianagape.pl"
+  platform_name   = "gogke-test-8"
+  platform_domain = "gogke-test-8.damianagape.pl"
 
   node_pools = {
     "spot-pool-1" = {
@@ -20,7 +20,7 @@ module "test_platform" {
   }
 
   iam_cluster_viewers = [
-    "serviceAccount:gha-damianagape-gomod@gogcp-main-7.iam.gserviceaccount.com",
+    "serviceAccount:gha-damianagape-gomod@gogcp-main-8.iam.gserviceaccount.com",
     "user:dagape.test@gmail.com",
   ]
 }
