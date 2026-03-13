@@ -107,19 +107,19 @@ wget https://github.com/cert-manager/cmctl/releases/download/v${cmctl_version}/c
   --output-document=/usr/local/bin/cmctl
 
 # container-structure-test: https://github.com/GoogleContainerTools/container-structure-test/releases
-cst_version="1.22.0"
+cst_version="1.22.1"
 wget https://github.com/GoogleContainerTools/container-structure-test/releases/download/v${cst_version}/container-structure-test-${TARGETOS}-${TARGETARCH} \
   --output-document=/usr/local/bin/container-structure-test
 
 # golangci-lint: https://github.com/golangci/golangci-lint/releases
-golangci_lint_version="2.6.2"
+golangci_lint_version="2.11.3"
 wget https://github.com/golangci/golangci-lint/releases/download/v${golangci_lint_version}/golangci-lint-${golangci_lint_version}-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/golangci-lint.tar.gz
 tar -zxvf golangci-lint.tar.gz
 mv golangci-lint-${golangci_lint_version}-${TARGETOS}-${TARGETARCH}/golangci-lint /usr/local/bin/golangci-lint
 
 # grafanactl: https://github.com/grafana/grafanactl/releases
-grafanactl_version="0.1.8"
+grafanactl_version="0.1.9"
 wget https://github.com/grafana/grafanactl/releases/download/v${grafanactl_version}/grafanactl_${TARGETOS}_$([ "$TARGETARCH" = "amd64" ] && echo "x86_64" || echo "$TARGETARCH").tar.gz \
   --output-document=/tmp/grafanactl.tar.gz
 tar -zxvf grafanactl.tar.gz
@@ -131,7 +131,7 @@ wget https://github.com/mattolenik/hclq/releases/download/${hclq_version}/hclq-$
   --output-document=/usr/local/bin/hclq
 
 # helm: https://github.com/helm/helm/releases
-helm_version="4.0.0"
+helm_version="4.1.3"
 wget https://get.helm.sh/helm-v${helm_version}-${TARGETOS}-${TARGETARCH}.tar.gz \
   --output-document=/tmp/helm.tar.gz
 tar -zxvf helm.tar.gz
@@ -145,17 +145,17 @@ tar -zxvf hubble.tar.gz
 mv hubble /usr/local/bin/hubble
 
 # shfmt: https://github.com/mvdan/sh/releases
-shfmt_version="3.12.0"
+shfmt_version="3.13.0"
 wget https://github.com/mvdan/sh/releases/download/v${shfmt_version}/shfmt_v${shfmt_version}_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/shfmt
 
 # skaffold: https://github.com/GoogleContainerTools/skaffold/releases
-skaffold_version="2.17.0"
+skaffold_version="2.18.0"
 wget https://github.com/GoogleContainerTools/skaffold/releases/download/v${skaffold_version}/skaffold-${TARGETOS}-${TARGETARCH} \
   --output-document=/usr/local/bin/skaffold
 
 # terraform: https://developer.hashicorp.com/terraform/downloads
-terraform_version="1.14.0"
+terraform_version="1.14.7"
 wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_${TARGETOS}_${TARGETARCH}.zip \
   --output-document=/tmp/terraform.zip
 unzip terraform.zip
@@ -169,7 +169,7 @@ tar -zxvf velero.tar.gz
 mv velero-v${velero_version}-${TARGETOS}-${TARGETARCH}/velero /usr/local/bin/velero
 
 # yq: https://github.com/mikefarah/yq/releases
-yq_version="4.49.1"
+yq_version="4.52.4"
 wget https://github.com/mikefarah/yq/releases/download/v${yq_version}/yq_${TARGETOS}_${TARGETARCH} \
   --output-document=/usr/local/bin/yq
 
