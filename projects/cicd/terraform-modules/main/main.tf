@@ -91,32 +91,25 @@ resource "google_storage_bucket_iam_member" "cloud_build_logs_admin" {
 ### GitHub triggers
 #######################################
 
-locals {
-  todo = "push github.com/damianagape/gorun projects/cicd/terraform-modules/main"
-}
-
-resource "google_cloudbuild_trigger" "todo" {
+resource "google_cloudbuild_trigger" "push" {
   depends_on = [
     google_storage_bucket_iam_member.cloud_build_logs_admin,
   ]
+  for_each = { for _, v in local.projects : v.project_path => v }
 
   project     = data.google_project.this.project_id
   location    = local.gcp_region
-  name        = trim(substr(replace(local.todo, "/[\\W]/", "-"), 0, 63), "-")
-  description = local.todo
+  name        = "${data.github_repository.this.name}-${each.value.project_slug}-push"
+  description = "github.com/${data.github_repository.this.full_name}/tree/main/${each.value.project_path}"
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.this.id
-    # pull_request {
-    #   branch          = "^main$"
-    #   comment_control = "COMMENTS_ENABLED"
-    # }
     push {
       branch = "^feature/cloud-build$" # TODO "^main$"
     }
   }
-  included_files = ["projects/cicd/terraform-modules/main/**"]
-  ignored_files  = ["projects/cicd/terraform-modules/main/README.md"]
+  included_files = ["${each.value.project_path}/**"]
+  ignored_files  = ["${each.value.project_path}/README.md"]
 
   service_account = google_service_account.cloud_build.id
   build {
@@ -126,7 +119,56 @@ resource "google_cloudbuild_trigger" "todo" {
           script = "pwd"
         },
         {
-          args = ["ls", "-l"]
+          args = ["echo", "${each.value.project_path}"]
+        },
+      ]
+      content {
+        name = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+
+        entrypoint = try(step.value.entrypoint, null)
+        args       = try(step.value.args, null)
+        script     = try(step.value.script, null)
+      }
+    }
+
+    options {
+      logging = "GCS_ONLY"
+    }
+    logs_bucket = google_storage_bucket.cloud_build_logs.url
+  }
+  include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
+}
+
+resource "google_cloudbuild_trigger" "pr" {
+  depends_on = [
+    google_storage_bucket_iam_member.cloud_build_logs_admin,
+  ]
+  for_each = { for _, v in local.projects : v.project_path => v }
+
+  project     = data.google_project.this.project_id
+  location    = local.gcp_region
+  name        = "${data.github_repository.this.name}-${each.value.project_slug}-pr"
+  description = "github.com/${data.github_repository.this.full_name}/tree/main/${each.value.project_path}"
+
+  repository_event_config {
+    repository = google_cloudbuildv2_repository.this.id
+    pull_request {
+      branch          = "^main$"
+      comment_control = "COMMENTS_ENABLED"
+    }
+  }
+  included_files = ["${each.value.project_path}/**"]
+  ignored_files  = ["${each.value.project_path}/README.md"]
+
+  service_account = google_service_account.cloud_build.id
+  build {
+    dynamic "step" {
+      for_each = [
+        {
+          script = "pwd"
+        },
+        {
+          args = ["echo", "${each.value.project_path}"]
         },
       ]
       content {
