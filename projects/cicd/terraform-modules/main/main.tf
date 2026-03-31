@@ -126,7 +126,7 @@ resource "google_cloudbuild_trigger" "todo" {
           script = "pwd"
         },
         {
-          args = ["ls -la"]
+          args = ["ls", "-la"]
         },
       ]
       content {
