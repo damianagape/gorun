@@ -65,7 +65,7 @@ resource "google_cloudbuildv2_connection" "github" {
 
   project  = data.google_project.this.project_id
   location = local.gcp_region
-  name     = "github"
+  name     = "github.com"
 
   github_config {
     app_installation_id = local.github_app_installation_id
@@ -104,7 +104,7 @@ resource "google_cloudbuild_trigger" "gorun_push_branch" {
   project     = data.google_project.this.project_id
   location    = local.gcp_region
   name        = "${data.github_repository.gorun.name}-${each.value.project_slug}"
-  description = "github.com/${data.github_repository.gorun.full_name}/${each.value.project_path}"
+  description = "${google_cloudbuildv2_connection.github.name}/${data.github_repository.gorun.full_name}/${each.value.project_path}"
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.gorun.id
@@ -127,7 +127,7 @@ resource "google_cloudbuild_trigger" "gorun_push_branch" {
         },
       ]
       content {
-        name   = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+        name   = local.devcontainer
         script = step.value.script
       }
     }
@@ -172,7 +172,7 @@ resource "google_cloudbuild_trigger" "gorun_pull_request" {
         },
       ]
       content {
-        name   = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+        name   = local.devcontainer
         script = step.value.script
       }
     }
