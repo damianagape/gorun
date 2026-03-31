@@ -42,10 +42,10 @@ resource "google_secret_manager_secret" "github_token" {
   }
 }
 
-resource "google_secret_manager_secret_version" "github_token" {
-  secret      = google_secret_manager_secret.github_token.id
-  secret_data = var.github_token
-}
+# resource "google_secret_manager_secret_version" "github_token" {
+#   secret      = google_secret_manager_secret.github_token.id
+#   secret_data = var.github_token
+# }
 
 resource "google_secret_manager_secret_iam_member" "github_token" {
   project   = data.google_project.this.project_id
@@ -57,6 +57,10 @@ resource "google_secret_manager_secret_iam_member" "github_token" {
 #######################################
 ### GitHub connection
 #######################################
+
+data "google_secret_manager_secret_version" "github_token" {
+  secret = google_secret_manager_secret.github_token.id
+}
 
 resource "google_cloudbuildv2_connection" "github" {
   depends_on = [
@@ -70,7 +74,7 @@ resource "google_cloudbuildv2_connection" "github" {
   github_config {
     app_installation_id = local.github_app_installation_id
     authorizer_credential {
-      oauth_token_secret_version = google_secret_manager_secret_version.github_token.id
+      oauth_token_secret_version = data.google_secret_manager_secret_version.github_token.id
     }
   }
 }
