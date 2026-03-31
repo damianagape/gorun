@@ -1,4 +1,34 @@
 #######################################
+### Cloud Build service account
+#######################################
+
+resource "google_service_account" "cloud_build" {
+  project    = data.google_project.this.project_id
+  account_id = "cloud-build"
+}
+
+#######################################
+### Cloud Build logs bucket
+#######################################
+
+resource "google_storage_bucket" "cloud_build_logs" {
+  project  = data.google_project.this.project_id
+  location = local.gcp_region
+  name     = "${data.google_project.this.project_id}-cloud-build-logs"
+
+  storage_class = "STANDARD"
+
+  uniform_bucket_level_access = true
+  public_access_prevention    = "enforced"
+}
+
+resource "google_storage_bucket_iam_member" "cloud_build_logs_admin" {
+  bucket = google_storage_bucket.cloud_build_logs.name
+  role   = "roles/storage.admin"
+  member = google_service_account.cloud_build.member
+}
+
+#######################################
 ### GitHub access token
 #######################################
 
@@ -49,49 +79,23 @@ resource "google_cloudbuildv2_connection" "github" {
 ### GitHub repositories
 #######################################
 
-resource "google_cloudbuildv2_repository" "this" {
+data "github_repository" "gorun" {
+  full_name = "damianagape/gorun"
+}
+
+resource "google_cloudbuildv2_repository" "gorun" {
   project           = data.google_project.this.project_id
   location          = local.gcp_region
   parent_connection = google_cloudbuildv2_connection.github.name
-  name              = data.github_repository.this.full_name
-  remote_uri        = data.github_repository.this.http_clone_url
-}
-
-#######################################
-### Cloud Build service account
-#######################################
-
-resource "google_service_account" "cloud_build" {
-  project    = data.google_project.this.project_id
-  account_id = "cloud-build"
-}
-
-#######################################
-### Cloud Build logs bucket
-#######################################
-
-resource "google_storage_bucket" "cloud_build_logs" {
-  project  = data.google_project.this.project_id
-  location = local.gcp_region
-  name     = "${data.google_project.this.project_id}-cloud-build-logs"
-
-  storage_class = "STANDARD"
-
-  uniform_bucket_level_access = true
-  public_access_prevention    = "enforced"
-}
-
-resource "google_storage_bucket_iam_member" "cloud_build_logs_admin" {
-  bucket = google_storage_bucket.cloud_build_logs.name
-  role   = "roles/storage.admin"
-  member = google_service_account.cloud_build.member
+  name              = data.github_repository.gorun.full_name
+  remote_uri        = data.github_repository.gorun.http_clone_url
 }
 
 #######################################
 ### GitHub triggers
 #######################################
 
-resource "google_cloudbuild_trigger" "push" {
+resource "google_cloudbuild_trigger" "gorun_push_branch" {
   depends_on = [
     google_storage_bucket_iam_member.cloud_build_logs_admin,
   ]
@@ -99,11 +103,11 @@ resource "google_cloudbuild_trigger" "push" {
 
   project     = data.google_project.this.project_id
   location    = local.gcp_region
-  name        = "${data.github_repository.this.name}-${each.value.project_slug}-push"
-  description = "github.com/${data.github_repository.this.full_name}/tree/main/${each.value.project_path}"
+  name        = "${data.github_repository.gorun.name}-${each.value.project_slug}"
+  description = "github.com/${data.github_repository.gorun.full_name}/${each.value.project_path}"
 
   repository_event_config {
-    repository = google_cloudbuildv2_repository.this.id
+    repository = google_cloudbuildv2_repository.gorun.id
     push {
       branch = "^feature/cloud-build$" # TODO "^main$"
     }
@@ -119,15 +123,12 @@ resource "google_cloudbuild_trigger" "push" {
           script = "pwd"
         },
         {
-          args = ["echo", "${each.value.project_path}"]
+          script = "echo ${each.value.project_path}"
         },
       ]
       content {
-        name = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
-
-        entrypoint = try(step.value.entrypoint, null)
-        args       = try(step.value.args, null)
-        script     = try(step.value.script, null)
+        name   = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+        script = step.value.script
       }
     }
 
@@ -139,28 +140,27 @@ resource "google_cloudbuild_trigger" "push" {
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 }
 
-resource "google_cloudbuild_trigger" "pr" {
+resource "google_cloudbuild_trigger" "gorun_pull_request" {
   depends_on = [
     google_storage_bucket_iam_member.cloud_build_logs_admin,
   ]
   for_each = { for _, v in local.projects : v.project_path => v }
 
-  project     = data.google_project.this.project_id
-  location    = local.gcp_region
-  name        = "${data.github_repository.this.name}-${each.value.project_slug}-pr"
-  description = "github.com/${data.github_repository.this.full_name}/tree/main/${each.value.project_path}"
+  project     = google_cloudbuild_trigger.gorun_push_branch[each.key].project
+  location    = google_cloudbuild_trigger.gorun_push_branch[each.key].location
+  name        = "${google_cloudbuild_trigger.gorun_push_branch[each.key].name}-pr"
+  description = google_cloudbuild_trigger.gorun_push_branch[each.key].description
 
   repository_event_config {
-    repository = google_cloudbuildv2_repository.this.id
+    repository = google_cloudbuild_trigger.gorun_push_branch[each.key].repository_event_config[0].repository
     pull_request {
-      branch          = "^main$"
-      comment_control = "COMMENTS_ENABLED"
+      branch = google_cloudbuild_trigger.gorun_push_branch[each.key].repository_event_config[0].push[0].branch
     }
   }
-  included_files = ["${each.value.project_path}/**"]
-  ignored_files  = ["${each.value.project_path}/README.md"]
+  included_files = google_cloudbuild_trigger.gorun_push_branch[each.key].included_files
+  ignored_files  = google_cloudbuild_trigger.gorun_push_branch[each.key].ignored_files
 
-  service_account = google_service_account.cloud_build.id
+  service_account = google_cloudbuild_trigger.gorun_push_branch[each.key].service_account
   build {
     dynamic "step" {
       for_each = [
@@ -168,22 +168,19 @@ resource "google_cloudbuild_trigger" "pr" {
           script = "pwd"
         },
         {
-          args = ["echo", "${each.value.project_path}"]
+          script = "echo ${each.value.project_path}"
         },
       ]
       content {
-        name = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
-
-        entrypoint = try(step.value.entrypoint, null)
-        args       = try(step.value.args, null)
-        script     = try(step.value.script, null)
+        name   = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+        script = step.value.script
       }
     }
 
     options {
-      logging = "GCS_ONLY"
+      logging = google_cloudbuild_trigger.gorun_push_branch[each.key].build[0].options[0].logging
     }
-    logs_bucket = google_storage_bucket.cloud_build_logs.url
+    logs_bucket = google_cloudbuild_trigger.gorun_push_branch[each.key].build[0].logs_bucket
   }
-  include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
+  include_build_logs = google_cloudbuild_trigger.gorun_push_branch[each.key].include_build_logs
 }
