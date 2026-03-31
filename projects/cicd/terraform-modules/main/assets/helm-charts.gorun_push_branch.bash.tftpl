@@ -1,9 +1,0 @@
-#!/bin/bash
-set -ex
-
-gcloud auth print-access-token | helm registry login --username="oauth2accesstoken" --password-stdin "europe-central2-docker.pkg.dev"
-
-./scripts/helm-chart build "${project_path}"
-./scripts/helm-chart test "${project_path}"
-./scripts/helm-chart publish "${project_path}"
-./scripts/helm-chart show "${project_path}"

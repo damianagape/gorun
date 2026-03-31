@@ -119,7 +119,8 @@ resource "google_cloudbuild_trigger" "gorun_push_branch" {
   build {
     step {
       name = local.devcontainer
-      script = templatefile("${path.module}/assets/${each.value.project_type}.gorun_push_branch.bash.tftpl", {
+      script = templatefile("${path.module}/assets/gorun.${each.value.project_type}.bash.tftpl", {
+        github_event = "push_branch"
         project_path = each.value.project_path
       })
     }
@@ -156,7 +157,8 @@ resource "google_cloudbuild_trigger" "gorun_pull_request" {
   build {
     step {
       name = google_cloudbuild_trigger.gorun_push_branch[each.key].build[0].step[0].name
-      script = templatefile("${path.module}/assets/${each.value.project_type}.gorun_pull_request.bash.tftpl", {
+      script = templatefile("${path.module}/assets/gorun.${each.value.project_type}.bash.tftpl", {
+        github_event = "pull_request"
         project_path = each.value.project_path
       })
     }

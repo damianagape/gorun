@@ -1,7 +1,0 @@
-#!/bin/bash
-set -ex
-
-./scripts/terraform-submodule build "${project_path}"
-./scripts/terraform-submodule test "${project_path}"
-./scripts/terraform-submodule pre-publish "${project_path}"
-./scripts/terraform-submodule show "${project_path}"
