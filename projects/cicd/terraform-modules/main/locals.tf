@@ -1,15 +1,6 @@
 locals {
-  projects = [
-    for _, v in fileset("${path.module}/../../../../projects", "**/.project.yaml") :
-    {
-      project_path  = join("/", slice(split("/", v), 0, 3))
-      project_slug  = join("-", slice(split("/", v), 0, 3))
-      project_scope = split("/", v)[0]
-      project_type  = split("/", v)[1]
-      project_name  = split("/", v)[2]
-    }
-  ]
-}
-output "_projects" {
-  value = local.projects
+  github_app_installation_id = 120316641 # https://github.com/settings/installations/120316641
+
+  gcp_region = "europe-central2"
+  gsa        = "service-${data.google_project.this.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com" # the Cloud Build Service Agent account
 }
