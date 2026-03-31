@@ -10,7 +10,3 @@ locals {
     }
   ]
 }
-
-output "_projects" {
-  value = local.projects
-}

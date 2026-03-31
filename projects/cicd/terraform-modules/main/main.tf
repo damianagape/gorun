@@ -91,6 +91,10 @@ resource "google_storage_bucket_iam_member" "cloud_build_logs_admin" {
 ### GitHub triggers
 #######################################
 
+locals {
+  todo = "push github.com/damianagape/gorun projects/cicd/terraform-modules/main"
+}
+
 resource "google_cloudbuild_trigger" "todo" {
   depends_on = [
     google_storage_bucket_iam_member.cloud_build_logs_admin,
@@ -98,16 +102,21 @@ resource "google_cloudbuild_trigger" "todo" {
 
   project     = data.google_project.this.project_id
   location    = local.gcp_region
-  name        = "push"
-  description = "push github.com/damianagape/gorun projects/cicd/terraform-modules/main"
+  name        = trim(substr(replace(local.todo, "/[\\W]/", "-"), 0, 63), "-")
+  description = local.todo
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.this.id
+    # pull_request {
+    #   branch          = "^main$"
+    #   comment_control = "COMMENTS_ENABLED"
+    # }
     push {
       branch = "^feature/cloud-build$" # TODO "^main$"
     }
   }
   included_files = ["projects/cicd/terraform-modules/main/**"]
+  ignored_files  = ["projects/cicd/terraform-modules/main/README.md"]
 
   service_account = google_service_account.cloud_build.id
   build {
@@ -117,12 +126,15 @@ resource "google_cloudbuild_trigger" "todo" {
           script = "pwd"
         },
         {
-          script = "ls -la"
+          args = ["ls -la"]
         },
       ]
       content {
-        name   = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
-        script = step.value.script
+        name = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+
+        entrypoint = try(step.value.entrypoint, null)
+        args       = try(step.value.args, null)
+        script     = try(step.value.script, null)
       }
     }
 
