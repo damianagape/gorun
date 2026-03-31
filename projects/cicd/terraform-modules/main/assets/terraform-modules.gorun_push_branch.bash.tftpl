@@ -1,0 +1,7 @@
+#!/bin/bash
+set -ex
+
+./scripts/terraform-module test "${project_path}"
+
+terraform -chdir="${project_path}" init -input=false
+terraform -chdir="${project_path}" apply -input=false -auto-approve

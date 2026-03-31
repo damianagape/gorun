@@ -117,19 +117,11 @@ resource "google_cloudbuild_trigger" "gorun_push_branch" {
 
   service_account = google_service_account.cloud_build.id
   build {
-    dynamic "step" {
-      for_each = [
-        {
-          script = "pwd"
-        },
-        {
-          script = "echo ${each.value.project_path}"
-        },
-      ]
-      content {
-        name   = local.devcontainer
-        script = step.value.script
-      }
+    step {
+      name = local.devcontainer
+      script = templatefile("${path.module}/assets/${each.value.project_type}.gorun_push_branch.bash.tftpl", {
+        project_path = each.value.project_path
+      })
     }
 
     options {
@@ -162,19 +154,11 @@ resource "google_cloudbuild_trigger" "gorun_pull_request" {
 
   service_account = google_cloudbuild_trigger.gorun_push_branch[each.key].service_account
   build {
-    dynamic "step" {
-      for_each = [
-        {
-          script = "pwd"
-        },
-        {
-          script = "echo ${each.value.project_path}"
-        },
-      ]
-      content {
-        name   = local.devcontainer
-        script = step.value.script
-      }
+    step {
+      name = google_cloudbuild_trigger.gorun_push_branch[each.key].build[0].step[0].name
+      script = templatefile("${path.module}/assets/${each.value.project_type}.gorun_pull_request.bash.tftpl", {
+        project_path = each.value.project_path
+      })
     }
 
     options {

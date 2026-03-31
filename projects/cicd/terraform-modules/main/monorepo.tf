@@ -2,7 +2,6 @@ locals {
   short_project_types = {
     "docker-images"        = "image"
     "helm-charts"          = "chart"
-    "helm-releases"        = "release"
     "terraform-submodules" = "tfsub"
     "terraform-modules"    = "tfmod"
   }

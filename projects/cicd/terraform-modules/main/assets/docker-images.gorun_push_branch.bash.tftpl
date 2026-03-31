@@ -1,0 +1,9 @@
+#!/bin/bash
+set -ex
+
+gcloud auth configure-docker "europe-central2-docker.pkg.dev"
+
+./scripts/docker-image build "${project_path}"
+./scripts/docker-image test "${project_path}"
+./scripts/docker-image publish "${project_path}"
+./scripts/docker-image show "${project_path}"

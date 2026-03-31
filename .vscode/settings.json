@@ -29,6 +29,7 @@
     "docs/decisions/0003-otel-backend": true
   },
   "files.associations": {
+    "*.bash.tftpl": "shellscript",
     "*.gotmpl": "gotmpl",
     "*.yaml.gotmpl": "helm",
     "*.yaml.tftpl": "yaml",
