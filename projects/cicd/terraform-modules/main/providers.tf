@@ -1,7 +1,7 @@
 provider "github" {
 }
 
-data "github_repository" "gorun" {
+data "github_repository" "this" {
   full_name = "damianagape/gorun"
 }
 

@@ -1,14 +1,4 @@
 #######################################
-###
-#######################################
-
-resource "google_project_iam_member" "secret_manager_admin" {
-  project = data.google_project.this.project_id
-  role    = "roles/secretmanager.admin"
-  member  = "serviceAccount:${local.gsa}"
-}
-
-#######################################
 ### GitHub access token
 #######################################
 
@@ -59,10 +49,81 @@ resource "google_cloudbuildv2_connection" "github" {
 ### GitHub repositories
 #######################################
 
-resource "google_cloudbuildv2_repository" "gorun" {
+resource "google_cloudbuildv2_repository" "this" {
   project           = data.google_project.this.project_id
   location          = local.gcp_region
   parent_connection = google_cloudbuildv2_connection.github.name
-  name              = data.github_repository.gorun.full_name
-  remote_uri        = data.github_repository.gorun.http_clone_url
+  name              = data.github_repository.this.full_name
+  remote_uri        = data.github_repository.this.http_clone_url
+}
+
+#######################################
+### Cloud Build service account
+#######################################
+
+resource "google_service_account" "cloud_build" {
+  project    = data.google_project.this.project_id
+  account_id = "cloud-build"
+}
+
+#######################################
+### Cloud Build logs bucket
+#######################################
+
+resource "google_storage_bucket" "cloud_build_logs" {
+  project  = data.google_project.this.project_id
+  location = local.gcp_region
+  name     = "${data.google_project.this.project_id}-cloud-build-logs"
+
+  storage_class = "STANDARD"
+
+  uniform_bucket_level_access = true
+  public_access_prevention    = "enforced"
+}
+
+resource "google_storage_bucket_iam_member" "cloud_build_logs_admin" {
+  bucket = google_storage_bucket.cloud_build_logs.name
+  role   = "roles/storage.admin"
+  member = google_service_account.cloud_build.member
+}
+
+#######################################
+### GitHub triggers
+#######################################
+
+resource "google_cloudbuild_trigger" "todo" {
+  depends_on = [
+    google_storage_bucket_iam_member.cloud_build_logs_admin,
+  ]
+
+  project     = data.google_project.this.project_id
+  location    = local.gcp_region
+  name        = "push"
+  description = "push github.com/damianagape/gorun projects/cicd/terraform-modules/main"
+
+  repository_event_config {
+    repository = google_cloudbuildv2_repository.this.id
+    push {
+      branch = "^feature/cloud-build$" # TODO "^main$"
+    }
+  }
+  included_files = ["projects/cicd/terraform-modules/main/**"]
+
+  service_account = google_service_account.cloud_build.id
+  build {
+    step {
+      name   = "print"
+      script = "pwd"
+    }
+    step {
+      name   = "list"
+      script = "ls -la"
+    }
+
+    options {
+      logging = "GCS_ONLY"
+    }
+    logs_bucket = google_storage_bucket.cloud_build_logs.url
+  }
+  include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 }
