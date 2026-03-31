@@ -111,13 +111,19 @@ resource "google_cloudbuild_trigger" "todo" {
 
   service_account = google_service_account.cloud_build.id
   build {
-    step {
-      name   = "print"
-      script = "pwd"
-    }
-    step {
-      name   = "list"
-      script = "ls -la"
+    dynamic "step" {
+      for_each = [
+        {
+          script = "pwd"
+        },
+        {
+          script = "ls -la"
+        },
+      ]
+      content {
+        name   = "europe-central2-docker.pkg.dev/gogcp-main-8/private-docker-images/gorun/core/devcontainer:0.8.100"
+        script = step.value.script
+      }
     }
 
     options {
