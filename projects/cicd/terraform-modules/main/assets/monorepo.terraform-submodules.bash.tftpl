@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+export TF_IN_AUTOMATION="1"
+
 ./scripts/terraform-submodule build "${project_path}"
 ./scripts/terraform-submodule test "${project_path}"
 %{~ if github_event == "pull_request" }

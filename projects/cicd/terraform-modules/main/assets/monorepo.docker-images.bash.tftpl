@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+export DOCKER_BUILDKIT="1"
+
 gcloud auth configure-docker "europe-central2-docker.pkg.dev"
 
 ./scripts/docker-image build "${project_path}"
