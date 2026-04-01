@@ -2,6 +2,7 @@ image: damianagape/gorun-devcontainer:0.8.100
 definitions:
   caches:
     apps-tfmod-test-0: projects/apps/terraform-modules/test/.terraform
+    cicd-tfmod-cloud-build-0: projects/cicd/terraform-modules/cloud-build/.terraform
     core-tfmod-main-0: projects/core/terraform-modules/main/.terraform
     core-tfmod-prod-0: projects/core/terraform-modules/prod/.terraform
     core-tfmod-test-0: projects/core/terraform-modules/test/.terraform
@@ -102,6 +103,42 @@ definitions:
           - *auth
           - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
           - terraform -chdir="projects/apps/terraform-modules/test" apply -input="false" -auto-approve
+        trigger: manual
+    - step: &test-cicd-tfmod-cloud-build
+        name: test cicd-tfmod-cloud-build
+        condition:
+          changesets:
+            includePaths:
+              - "projects/cicd/terraform-modules/cloud-build/**"
+        caches:
+          - cicd-tfmod-cloud-build-0
+        script:
+          - *auth
+          - ./scripts/terraform-module test "projects/cicd/terraform-modules/cloud-build"
+    - step: &plan-cicd-tfmod-cloud-build
+        name: plan cicd-tfmod-cloud-build
+        condition:
+          changesets:
+            includePaths:
+              - "projects/cicd/terraform-modules/cloud-build/**"
+        caches:
+          - cicd-tfmod-cloud-build-0
+        script:
+          - *auth
+          - terraform -chdir="projects/cicd/terraform-modules/cloud-build" init -input="false"
+          - terraform -chdir="projects/cicd/terraform-modules/cloud-build" plan -input="false"
+    - step: &apply-cicd-tfmod-cloud-build
+        name: apply cicd-tfmod-cloud-build
+        condition:
+          changesets:
+            includePaths:
+              - "projects/cicd/terraform-modules/cloud-build/**"
+        caches:
+          - cicd-tfmod-cloud-build-0
+        script:
+          - *auth
+          - terraform -chdir="projects/cicd/terraform-modules/cloud-build" init -input="false"
+          - terraform -chdir="projects/cicd/terraform-modules/cloud-build" apply -input="false" -auto-approve
         trigger: manual
     - step: &test-core-image-devcontainer
         name: test core-image-devcontainer
@@ -1166,6 +1203,7 @@ pipelines:
       - parallel:
           - step: *test-apps-chart-http-server
           - step: *test-apps-tfmod-test
+          - step: *test-cicd-tfmod-cloud-build
           - step: *test-core-image-devcontainer
           - step: *test-core-image-go1-rte
           - step: *test-core-image-go1-sdk
@@ -1203,6 +1241,7 @@ pipelines:
           - step: *test-o11y-tfsub-gke-observability-stack
       - parallel:
           - step: *plan-apps-tfmod-test
+          - step: *plan-cicd-tfmod-cloud-build
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod
           - step: *plan-core-tfmod-test
@@ -1244,6 +1283,7 @@ pipelines:
           - step: *publish-o11y-tfsub-gke-observability-stack
       - parallel:
           - step: *plan-apps-tfmod-test
+          - step: *plan-cicd-tfmod-cloud-build
           - step: *plan-core-tfmod-main
           - step: *plan-core-tfmod-prod
           - step: *plan-core-tfmod-test
@@ -1251,6 +1291,7 @@ pipelines:
           - step: *plan-o11y-tfmod-test
       - parallel:
           - step: *apply-apps-tfmod-test
+          - step: *apply-cicd-tfmod-cloud-build
           - step: *apply-core-tfmod-main
           - step: *apply-core-tfmod-prod
           - step: *apply-core-tfmod-test
