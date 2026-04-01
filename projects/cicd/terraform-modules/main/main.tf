@@ -103,7 +103,7 @@ resource "google_cloudbuild_trigger" "monorepo_push_branch" {
   depends_on = [
     google_storage_bucket_iam_member.cloud_build_logs_admin,
   ]
-  for_each = { for _, v in local.projects : v.project_path => v }
+  for_each = local.monorepo_projects
 
   project     = data.google_project.this.project_id
   location    = local.gcp_region
@@ -142,7 +142,7 @@ resource "google_cloudbuild_trigger" "monorepo_pull_request" {
   depends_on = [
     google_storage_bucket_iam_member.cloud_build_logs_admin,
   ]
-  for_each = { for _, v in local.projects : v.project_path => v }
+  for_each = local.monorepo_projects
 
   project     = google_cloudbuild_trigger.monorepo_push_branch[each.key].project
   location    = google_cloudbuild_trigger.monorepo_push_branch[each.key].location
