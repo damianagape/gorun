@@ -1,3 +1,10 @@
+This module manages Google Cloud Build.
+
+```
+$ terraform apply -target=google_secret_manager_secret.github_token
+$ terraform apply
+```
+
 Links:
 
 - https://docs.cloud.google.com/build/docs/automating-builds/github/connect-repo-github?generation=2nd-gen

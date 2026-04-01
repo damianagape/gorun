@@ -113,7 +113,7 @@ resource "google_cloudbuild_trigger" "monorepo_push_branch" {
   repository_event_config {
     repository = google_cloudbuildv2_repository.monorepo.id
     push {
-      branch = "^feature/cloud-build$" # TODO "^main$"
+      branch = "^main$"
     }
   }
   included_files = ["${each.value.project_path}/**"]

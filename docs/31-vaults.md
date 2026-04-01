@@ -1,5 +1,9 @@
 # Vaults
 
+## Google Secret Manager secrets
+
+- [gogcp-main-8](https://console.cloud.google.com/security/secret-manager?project=gogcp-main-8)
+
 ## Kubernetes secrets
 
 ```
