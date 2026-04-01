@@ -1,6 +1,9 @@
 #!/bin/bash
 set -ex
 
+git config --global user.name "${git_name}"
+git config --global user.email "${git_email}"
+
 %{~ if project_type == "docker-images" }
 export DOCKER_BUILDKIT="1"
 

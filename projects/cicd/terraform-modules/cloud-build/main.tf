@@ -124,9 +124,11 @@ resource "google_cloudbuild_trigger" "monorepo_push_branch" {
     step {
       name = local.devcontainer
       script = templatefile("${path.module}/assets/monorepo.bash.tftpl", {
-        github_event = "push_branch"
         project_path = each.value.project_path
         project_type = each.value.project_type
+        git_name     = google_service_account.cloud_build.account_id
+        git_email    = google_service_account.cloud_build.email
+        github_event = "push_branch"
       })
     }
 
@@ -163,9 +165,11 @@ resource "google_cloudbuild_trigger" "monorepo_pull_request" {
     step {
       name = google_cloudbuild_trigger.monorepo_push_branch[each.key].build[0].step[0].name
       script = templatefile("${path.module}/assets/monorepo.bash.tftpl", {
-        github_event = "pull_request"
         project_path = each.value.project_path
         project_type = each.value.project_type
+        git_name     = google_service_account.cloud_build.account_id
+        git_email    = google_service_account.cloud_build.email
+        github_event = "pull_request"
       })
     }
 
