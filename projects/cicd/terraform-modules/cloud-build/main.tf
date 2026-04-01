@@ -109,6 +109,7 @@ resource "google_cloudbuild_trigger" "monorepo_push_branch" {
   location    = local.gcp_region
   name        = "${data.github_repository.monorepo.name}-${each.value.project_slug}"
   description = "${google_cloudbuildv2_connection.github.name}/${data.github_repository.monorepo.full_name}/${each.value.project_path}"
+  disabled    = true
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.monorepo.id
@@ -150,6 +151,7 @@ resource "google_cloudbuild_trigger" "monorepo_pull_request" {
   location    = google_cloudbuild_trigger.monorepo_push_branch[each.key].location
   name        = "${google_cloudbuild_trigger.monorepo_push_branch[each.key].name}-pr"
   description = google_cloudbuild_trigger.monorepo_push_branch[each.key].description
+  disabled    = google_cloudbuild_trigger.monorepo_push_branch[each.key].disabled
 
   repository_event_config {
     repository = google_cloudbuild_trigger.monorepo_push_branch[each.key].repository_event_config[0].repository
