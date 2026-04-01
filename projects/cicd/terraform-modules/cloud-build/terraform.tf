@@ -14,6 +14,6 @@ terraform {
 
   backend "gcs" {
     bucket = "gogcp-main-8-terraform-state"
-    prefix = "github.com/damianagape/gorun/projects/cicd/terraform-modules/main"
+    prefix = "github.com/damianagape/gorun/projects/cicd/terraform-modules/cloud-build"
   }
 }
