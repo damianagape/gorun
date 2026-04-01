@@ -42,6 +42,13 @@ resource "google_secret_manager_secret" "github_token" {
   }
 }
 
+resource "google_secret_manager_secret_iam_member" "github_token" {
+  project   = data.google_project.this.project_id
+  secret_id = google_secret_manager_secret.github_token.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${local.gsa}"
+}
+
 # resource "google_secret_manager_secret_version" "github_token" {
 #   secret      = google_secret_manager_secret.github_token.id
 #   secret_data = var.github_token
@@ -49,13 +56,6 @@ resource "google_secret_manager_secret" "github_token" {
 
 data "google_secret_manager_secret_version" "github_token" {
   secret = google_secret_manager_secret.github_token.id
-}
-
-resource "google_secret_manager_secret_iam_member" "github_token" {
-  project   = data.google_project.this.project_id
-  secret_id = google_secret_manager_secret.github_token.id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${local.gsa}"
 }
 
 #######################################
@@ -123,9 +123,10 @@ resource "google_cloudbuild_trigger" "monorepo_push_branch" {
   build {
     step {
       name = local.devcontainer
-      script = templatefile("${path.module}/assets/monorepo.${each.value.project_type}.bash.tftpl", {
+      script = templatefile("${path.module}/assets/monorepo.bash.tftpl", {
         github_event = "push_branch"
         project_path = each.value.project_path
+        project_type = each.value.project_type
       })
     }
 
@@ -161,9 +162,10 @@ resource "google_cloudbuild_trigger" "monorepo_pull_request" {
   build {
     step {
       name = google_cloudbuild_trigger.monorepo_push_branch[each.key].build[0].step[0].name
-      script = templatefile("${path.module}/assets/monorepo.${each.value.project_type}.bash.tftpl", {
+      script = templatefile("${path.module}/assets/monorepo.bash.tftpl", {
         github_event = "pull_request"
         project_path = each.value.project_path
+        project_type = each.value.project_type
       })
     }
 
