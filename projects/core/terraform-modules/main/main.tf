@@ -12,6 +12,7 @@ module "main_project" {
   billing_account_id = data.google_billing_account.this.id
 
   iam_owners = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -26,6 +27,7 @@ module "test_project" {
   billing_account_id = data.google_billing_account.this.id
 
   iam_owners = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -40,6 +42,7 @@ module "prod_project" {
   billing_account_id = data.google_billing_account.this.id
 
   iam_owners = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -56,6 +59,7 @@ module "terraform_state_bucket" {
   bucket_name    = "terraform-state"
 
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -75,6 +79,7 @@ module "public_docker_images_registry" {
 
   iam_readers = ["allUsers"]
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gomod@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
@@ -93,6 +98,7 @@ module "private_docker_images_registry" {
     "serviceAccount:gogke-test-8-gke-node@gogcp-test-8.iam.gserviceaccount.com",
   ]
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gomod@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
@@ -113,6 +119,7 @@ module "public_helm_charts_registry" {
 
   iam_readers = ["allUsers"]
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -130,6 +137,7 @@ module "private_helm_charts_registry" {
     "serviceAccount:gha-damianagape-gomod@gogcp-main-8.iam.gserviceaccount.com",
   ]
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -149,6 +157,7 @@ module "public_terraform_modules_registry" {
 
   iam_readers = ["allUsers"]
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }
@@ -163,6 +172,7 @@ module "private_terraform_modules_registry" {
   registry_immutability = false
 
   iam_writers = [
+    "serviceAccount:cloud-build@gogcp-main-8.iam.gserviceaccount.com",
     "serviceAccount:gha-damianagape-gorun@gogcp-main-8.iam.gserviceaccount.com",
   ]
 }

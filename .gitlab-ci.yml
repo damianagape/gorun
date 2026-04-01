@@ -72,6 +72,45 @@ apply-apps-tfmod-test:
     - terraform -chdir="projects/apps/terraform-modules/test" init -input="false"
     - terraform -chdir="projects/apps/terraform-modules/test" apply -input="false" -auto-approve
   when: manual
+test-cicd-tfmod-cloud-build:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/cicd/terraform-modules/cloud-build/**"
+  cache:
+    paths:
+      - projects/cicd/terraform-modules/cloud-build/.terraform
+  script:
+    - ./scripts/terraform-module test "projects/cicd/terraform-modules/cloud-build"
+plan-cicd-tfmod-cloud-build:
+  stage: plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+      changes:
+        - "projects/cicd/terraform-modules/cloud-build/**"
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/cicd/terraform-modules/cloud-build/**"
+  cache:
+    paths:
+      - projects/cicd/terraform-modules/cloud-build/.terraform
+  script:
+    - terraform -chdir="projects/cicd/terraform-modules/cloud-build" init -input="false"
+    - terraform -chdir="projects/cicd/terraform-modules/cloud-build" plan -input="false"
+apply-cicd-tfmod-cloud-build:
+  stage: apply
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH == 'main'
+      changes:
+        - "projects/cicd/terraform-modules/cloud-build/**"
+  cache:
+    paths:
+      - projects/cicd/terraform-modules/cloud-build/.terraform
+  script:
+    - terraform -chdir="projects/cicd/terraform-modules/cloud-build" init -input="false"
+    - terraform -chdir="projects/cicd/terraform-modules/cloud-build" apply -input="false" -auto-approve
+  when: manual
 test-core-image-devcontainer:
   stage: test
   rules:
